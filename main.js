@@ -61,6 +61,21 @@ router.use(errorController.internalServerError);
 
 app.use("/", router);
 
+// 데이터베이스 모델 불러오기
+const models = [
+  require("./models/member"),
+  require("./models/studentProfile"),
+  require("./models/chatRoom"),
+  require("./models/message"),
+  require("./models/seniorProfile"),
+  require("./models/matching"),
+  require("./models/promise"),
+  require("./models/review"),
+  require("./models/interestField"),
+  require("./models/report"),
+  require("./models/keep")
+];
+
 // 데이터베이스 동기화 및 서버 시작
 sequelize.sync().then(() => {
   app.listen(app.get("port"), () => {
