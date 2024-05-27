@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>noguet</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1></h1>
+  </header>
+  <main>
+    <%- body %>
+  </main>
+  <footer>
+    <p></p>
+  </footer>
+</body>
+</html>
+g20221146@test2:~/sorting$ sudo node main.js
+/home/g20221146/sorting/main.js:10
+o
+^
+
+ReferenceError: o is not defined
+    at Object.<anonymous> (/home/g20221146/sorting/main.js:10:1)
+    at Module._compile (node:internal/modules/cjs/loader:1358:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1416:10)
+    at Module.load (node:internal/modules/cjs/loader:1208:32)
+    at Module._load (node:internal/modules/cjs/loader:1024:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)
+    at node:internal/main/run_main_module:28:49
+
+Node.js v20.13.1
+g20221146@test2:~/sorting$
