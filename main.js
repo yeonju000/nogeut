@@ -4,6 +4,7 @@ const express = require("express"),
   router = express.Router(),
   errorController = require("./controllers/errorController"),
   categoryController = require("./controllers/categoryController.js"),
+  loginController = require("./controllers/loginController.js"),
   methodOverride = require("method-override"),
   multer = require("multer"),
   sequelize = require("./config/database"); // Sequelize 인스턴스
@@ -46,6 +47,11 @@ router.post("/upload", upload.single("image"), (req, res) => {
   res.send("파일 업로드 완료");
 });
 
+//로그인 페이지로 이동
+//app.get("/", loginController.connect);
+//app.post("/", loginController.login);
+router.get("/", loginController.connect);
+router.post("/", loginController.login);
 // 카테고리 라우트
 router.get("/categories", categoryController.index, categoryController.indexView);
 router.get("/categories/new", categoryController.new);
