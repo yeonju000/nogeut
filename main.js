@@ -1,75 +1,36 @@
 const express = require("express"),
   layouts = require("express-ejs-layouts"),
   app = express(),
-  router = express.Router(),
-  errorController = require("./controllers/errorController"),
-  categoryController = require("./controllers/categoryController.js"),
-  loginController = require("./controllers/loginController.js"),
   methodOverride = require("method-override"),
-  multer = require("multer"),
-  sequelize = require("./config/database"); // Sequelize 인스턴스
-exports.express = express;
-exports.layouts = layouts;
-exports.app = app;
-exports.router = router;
-exports.errorController = errorController;
-exports.categoryController = categoryController;
-exports.loginController = loginController;
-exports.methodOverride = methodOverride;
-exports.multer = multer;
-exports.sequelize = sequelize;
+  sequelize = require("./config/database"), // Sequelize 인스턴스
+  errorController = require("./controllers/errorController");
 
-// Multer 설정
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
-});
-
-const upload = multer({ storage: storage });
-
-// 정적 파일 제공 설정
-app.use(express.static("public"));
+const loginRoutes = require("./routes/loginRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
+const matchingRoutes = require("./routes/matchingRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 app.set("port", process.env.PORT || 80);
 app.set("view engine", "ejs");
 
-router.use(
-  methodOverride("_method", {
-    methods: ["POST", "GET"]
-  })
-);
+// Middleware 설정
+app.use(express.static("public"));
+app.use(layouts);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method", {
+  methods: ["POST", "GET"]
+}));
 
-router.use(layouts);
-router.use(express.json());
-
-// 파일 업로드 라우트
-router.post("/upload", upload.single("image"), (req, res) => {
-  res.send("파일 업로드 완료");
-});
-
-//로그인 페이지로 이동
-app.get("/", loginController.connect);
-app.post("/", loginController.login);
-//router.get("/", loginController.connect);
-//router.post("/", loginController.login);
-// 카테고리 라우트
-router.get("/categories", categoryController.index, categoryController.indexView);
-router.get("/categories/new", categoryController.new);
-router.post("/categories/create", categoryController.create, categoryController.redirectView);
-router.get("/categories/:id/edit", categoryController.edit);
-router.put("/categories/:id/update", categoryController.update, categoryController.redirectView);
-router.get("/categories/:id", categoryController.show, categoryController.showView);
-router.delete("/categories/:id/delete", categoryController.delete, categoryController.redirectView);
+// 라우트 설정
+app.use("/", loginRoutes);
+app.use("/", uploadRoutes);
+app.use("/", matchingRoutes);
+app.use("/", categoryRoutes);
 
 // 에러 핸들링
-router.use(errorController.pageNotFoundError);
-router.use(errorController.internalServerError);
-
-app.use("/", router);
+app.use(errorController.pageNotFoundError);
+app.use(errorController.internalServerError);
 
 // 데이터베이스 모델 불러오기
 const models = [

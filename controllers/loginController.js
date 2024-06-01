@@ -1,10 +1,9 @@
 const Member = require('../models/member');
-const Sequelize = require('sequelize');
 
 async function fetchData(userID) {
     try {
-        const users = await Member.findOne({ where: { memberID: userID } });
-        return users; // fetchData 함수가 Promise를 반환하도록 수정
+        const user = await Member.findOne({ where: { memberID: userID } });
+        return user; // fetchData 함수가 Promise를 반환하도록 수정
     } catch (error) {
         console.error(error);
         throw error;
@@ -28,17 +27,20 @@ async function insertData() {
 }
 
 exports.connect = async (req, res) => {
-    res.render("mainLogin", {error: null}); // 로그인 성공 시    
+    res.render("mainLogin", { error: null }); // 로그인 페이지 렌더링
 };
 
 exports.login = async (req, res) => {
-	const { userID, password } = req.body;
-	console.log(userID, password);
-    //res.render("mainLogin.ejs");
+    const { userID, password } = req.body;
+    console.log(`UserID: ${userID}, Password: ${password}`);
+
     try {
         const user = await fetchData(userID); // fetchData 함수 호출
         if (user) {
             if (user.memberPW === password) {
+                // 세션에 사용자 정보 저장
+                req.session.memberID = user.memberID;
+                req.session.memberNum = user.memberNum;
                 res.render("CreateProfile_old"); // 로그인 성공 시
             } else {
                 res.render("mainLogin", { error: "비밀번호가 틀렸습니다." }); // 비밀번호 틀림
@@ -51,11 +53,3 @@ exports.login = async (req, res) => {
         res.render("mainLogin", { error: "오류가 발생했습니다." }); // 일반 오류
     }
 };
-
-// insertData 함수는 필요에 따라 호출하도록 수정
-// insertData();
-
-// fetchData 함수는 login 함수 내에서 호출되므로 주석 처리
-// const user = fetchData();
-// console.log(user);
-

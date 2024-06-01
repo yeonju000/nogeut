@@ -1,22 +1,46 @@
-const Category = require("../models/category");
+const Member = require("../models/member");
+const SeniorProfile = require("../models/seniorProfile");
+const StudentProfile = require("../models/studentProfile");
+
+const sortOptions = {
+  rating: ["score", "DESC"],
+  matchingCount: ["matchingCount", "DESC"],
+  recentMatching: ["recentMatchingTime", "DESC"],
+  recentJoin: ["creationTime", "DESC"],
+  lowPrice: ["desiredAmount", "ASC"],
+  highPrice: ["desiredAmount", "DESC"]
+};
 
 module.exports = {
-  index: (req, res, next) => {
-    Category.findAll()
-      .then(categories => {
-        res.locals.categories = categories;
-        next();
-      })
-      .catch(error => {
-        console.log(`Error fetching categories: ${error.message}`);
-        next(error);
-      });
-  },
+  index: async (req, res, next) => {
+    try {
+      const userType = req.query.userType || 'student'; // 기본값으로 'student'
+      const sortBy = req.query.sortBy || "rating";
+      const order = sortOptions[sortBy] || sortOptions.rating;
 
-  indexView: (req, res) => {
-    res.render("category", {
-      categories: res.locals.categories
-    });
+      let profiles;
+
+      if (userType === 'student') {
+        profiles = await SeniorProfile.findAll({
+          include: [{ model: Member, attributes: ['name'] }],
+          order: [order]
+        });
+      } else {
+        profiles = await StudentProfile.findAll({
+          include: [{ model: Member, attributes: ['name'] }],
+          order: [order]
+        });
+      }
+
+      res.render("category", {
+        categories: profiles,
+        userType: userType,
+        sortBy: sortBy
+      });
+    } catch (error) {
+      console.log(`Error fetching profiles: ${error.message}`);
+      next(error);
+    }
   },
 
   new: (req, res) => {
@@ -112,6 +136,46 @@ module.exports = {
       })
       .catch(error => {
         console.log(`Error deleting category by ID: ${error.message}`);
+        next(error);
+      });
+  },
+
+  getSortedStudents: (req, res, next) => {
+    const sortBy = req.query.sortBy || "rating";
+    const order = sortOptions[sortBy] || sortOptions.rating;
+
+    StudentProfile.findAll({
+      include: [{ model: Member, attributes: ['name'] }],
+      order: [order]
+    })
+      .then(students => {
+        res.json({
+          categories: students,
+          userType: "student"
+        });
+      })
+      .catch(error => {
+        console.log(`Error fetching students: ${error.message}`);
+        next(error);
+      });
+  },
+
+  getSortedSeniors: (req, res, next) => {
+    const sortBy = req.query.sortBy || "rating";
+    const order = sortOptions[sortBy] || sortOptions.rating;
+
+    SeniorProfile.findAll({
+      include: [{ model: Member, attributes: ['name'] }],
+      order: [order]
+    })
+      .then(seniors => {
+        res.json({
+          categories: seniors,
+          userType: "senior"
+        });
+      })
+      .catch(error => {
+        console.log(`Error fetching seniors: ${error.message}`);
         next(error);
       });
   }

@@ -31,6 +31,8 @@ const Member = sequelize.define("Member", {
     allowNull: false,
     defaultValue: false
   }
+}, {
+  timestamps: true
 });
 
 module.exports = Member;

@@ -189,9 +189,20 @@ body{
     font-weight: 100;
 }
 
-.profile6{
-    padding-left: 15px;
+.profile6 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Add this line */
+  padding-left: 15px;
 }
+
+.profile7 {
+  font-size: var(--font-xsmall);
+  font-weight: 100;
+  padding-left: 0;
+  padding-right: 10px;
+}
+
 
 /* Footer CSS */
 .footer__container {

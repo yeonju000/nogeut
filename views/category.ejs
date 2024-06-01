@@ -10,6 +10,7 @@
   <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/all.js"
     integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f"
     crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
   <!-- Header Section -->
@@ -61,24 +62,37 @@
     </div>
   </header>
   
-  <div class = "top_category">
-    <button class = "top_category2" type="button"> 별점순 </button>
-    <button class = "top_category2" type="button"> 매칭횟수순 </button>
-    <button class = "top_category2" type="button"> 최근성사순 </button>
-    <button class = "top_category2" type="button"> 최근가입순 </button>
-    <button class = "top_category2" type="button"> 낮은가격순 </button>
-    <button class = "top_category2" type="button"> 높은가격순 </button>
+  <div class="top_category">
+    <button class="top_category2" type="button" onclick="sortProfiles('rating')">별점순</button>
+    <button class="top_category2" type="button" onclick="sortProfiles('matchingCount')">매칭횟수순</button>
+    <button class="top_category2" type="button" onclick="sortProfiles('recentMatching')">최근성사순</button>
+    <button class="top_category2" type="button" onclick="sortProfiles('recentJoin')">최근가입순</button>
+    <button class="top_category2" type="button" onclick="sortProfiles('lowPrice')">낮은가격순</button>
+    <button class="top_category2" type="button" onclick="sortProfiles('highPrice')">높은가격순</button>
   </div>
-  <div class = "profile">
+  <div class="profile" id="profile-container">
     <% categories.forEach(function(category) { %>
     <a href="#">
       <div class="profile2">
         <div class="profile6">
-          <img src="<%= category.image %>" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
-          <div class="profile3">
-            <span class="profile4"><%= category.name %></span>
-            <span class="profile5"><%= category.description %></span>
+          <div class="profile-left">
+            <img src="<%= category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg' %>" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
+            <div class="profile3">
+              <span class="profile4"><%= category.Member.name %></span>
+              <% if (userType === 'student') { %>
+                <span class="profile5"><%= category.university %> <%= category.major %></span>
+              <% } else { %>
+                <span class="profile5"><%= category.introduce %></span>
+              <% } %>
+            </div>
           </div>
+          <span class="profile7" id="detail-<%= category.stdNum || category.seniorNum %>">
+            ${criteria === 'rating' ? `별점: ${category.score}` : ''}
+            ${criteria === 'matchingCount' ? `매칭 횟수: ${category.matchingCount}` : ''}
+            ${criteria === 'recentMatching' ? `최근 성사 날짜: ${new Date(category.recentMatchingTime).toLocaleDateString()}` : ''}
+            ${criteria === 'recentJoin' ? `최근 가입 날짜: ${new Date(category.creationTime).toLocaleDateString()}` : ''}
+            ${criteria === 'lowPrice' || criteria === 'highPrice' ? `희망 금액: ${category.desiredAmount}` : ''}
+          </span>
         </div>
       </div>
     </a>
@@ -93,5 +107,50 @@
       <a href="#">문의하기</a>
     </section>
   </footer>
+
+  <script>
+    function sortProfiles(criteria) {
+      const userType = "<%= userType %>";
+      $.ajax({
+        url: `/${userType}s?sortBy=${criteria}`,
+        method: 'GET',
+        success: function(data) {
+          $('#profile-container').html('');
+          data.categories.forEach(function(category) {
+            $('#profile-container').append(`
+              <a href="#">
+                <div class="profile2">
+                  <div class="profile6">
+                    <div class="profile-left">
+                      <img src="${category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg'}" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
+                      <div class="profile3">
+                        <span class="profile4">${category.Member.name}</span>
+                        ${userType === 'student' ? `<span class="profile5">${category.university} ${category.major}</span>` : `<span class="profile5">${category.introduce}</span>`}
+                      </div>
+                    </div>
+                    <span class="profile7" id="detail-${category.stdNum || category.seniorNum}">
+                      ${criteria === 'rating' ? `별점: ${category.score}` : ''}
+                      ${criteria === 'matchingCount' ? `매칭 횟수: ${category.matchingCount}` : ''}
+                      ${criteria === 'recentMatching' ? `최근 성사 날짜: ${new Date(category.recentMatchingTime).toLocaleDateString()}` : ''}
+                      ${criteria === 'recentJoin' ? `최근 가입 날짜: ${new Date(category.creationTime).toLocaleDateString()}` : ''}
+                      ${criteria === 'lowPrice' || criteria === 'highPrice' ? `희망 금액: ${category.desiredAmount}` : ''}
+                    </span>
+                  </div>
+                </div>
+              </a>
+            `);
+          });
+        },
+        error: function(error) {
+          console.error('Error:', error);
+        }
+      });
+    }
+
+    // 페이지 로드 시 기본 정렬 기준으로 프로필을 정렬하여 표시
+    $(document).ready(function() {
+      sortProfiles('rating');
+    });
+  </script>
 </body>
 </html>

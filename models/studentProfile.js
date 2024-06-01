@@ -85,6 +85,11 @@ const StudentProfile = sequelize.define("StudentProfile", {
     type: DataTypes.STRING(20),
     allowNull: false
   }
+}, {
+  timestamps: true
 });
+
+//관계
+StudentProfile.belongsTo(Member, { foreignKey: 'stdNum' });
 
 module.exports = StudentProfile;
