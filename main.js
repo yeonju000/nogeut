@@ -8,6 +8,16 @@ const express = require("express"),
   methodOverride = require("method-override"),
   multer = require("multer"),
   sequelize = require("./config/database"); // Sequelize 인스턴스
+exports.express = express;
+exports.layouts = layouts;
+exports.app = app;
+exports.router = router;
+exports.errorController = errorController;
+exports.categoryController = categoryController;
+exports.loginController = loginController;
+exports.methodOverride = methodOverride;
+exports.multer = multer;
+exports.sequelize = sequelize;
 
 // Multer 설정
 const storage = multer.diskStorage({
@@ -34,12 +44,6 @@ router.use(
 );
 
 router.use(layouts);
-
-router.use(
-  express.urlencoded({
-    extended: false
-  })
-);
 router.use(express.json());
 
 // 파일 업로드 라우트
@@ -48,10 +52,10 @@ router.post("/upload", upload.single("image"), (req, res) => {
 });
 
 //로그인 페이지로 이동
-//app.get("/", loginController.connect);
-//app.post("/", loginController.login);
-router.get("/", loginController.connect);
-router.post("/", loginController.login);
+app.get("/", loginController.connect);
+app.post("/", loginController.login);
+//router.get("/", loginController.connect);
+//router.post("/", loginController.login);
 // 카테고리 라우트
 router.get("/categories", categoryController.index, categoryController.indexView);
 router.get("/categories/new", categoryController.new);
