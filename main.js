@@ -9,6 +9,7 @@ const loginRoutes = require("./routes/loginRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const matchingRoutes = require("./routes/matchingRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const keepRouter = require("./routes/keepRouter"); // Add this line
 
 app.set("port", process.env.PORT || 80);
 app.set("view engine", "ejs");
@@ -27,6 +28,7 @@ app.use("/", loginRoutes);
 app.use("/", uploadRoutes);
 app.use("/", matchingRoutes);
 app.use("/", categoryRoutes);
+app.use("/", keepRouter); // Add this line
 
 // 에러 핸들링
 app.use(errorController.pageNotFoundError);

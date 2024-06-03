@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="start-date" content="2024-05-10">
-  <title>노긋노긋</title>
+  <title>찜 목록</title>
   <link href="/css/category.css?v=1.0" rel="stylesheet" type="text/css">
   <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/all.js"
     integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f"
@@ -16,7 +16,7 @@
   <!-- Header Section -->
   <header class="header__container">
     <!-- Site H1 / display: none -->
-    <h1 class="main-title">노긋메인홈</h1>
+    <h1 class="main-title">찜 목록</h1>
       <div class="header__block">
         <a href="#"> 마이페이지 </a>
         <a href="#"> 로그인 </a>
@@ -63,12 +63,8 @@
   </header>
   
   <div class="top_category">
-    <button class="top_category2" type="button" onclick="sortProfiles('rating')">별점순</button>
-    <button class="top_category2" type="button" onclick="sortProfiles('matchingCount')">매칭횟수순</button>
-    <button class="top_category2" type="button" onclick="sortProfiles('recentMatching')">최근성사순</button>
-    <button class="top_category2" type="button" onclick="sortProfiles('recentJoin')">최근가입순</button>
-    <button class="top_category2" type="button" onclick="sortProfiles('lowPrice')">낮은가격순</button>
-    <button class="top_category2" type="button" onclick="sortProfiles('highPrice')">높은가격순</button>
+    <button class="top_category2" type="button" onclick="sortProfiles('newest')">최신순</button>
+    <button class="top_category2" type="button" onclick="sortProfiles('oldest')">오래된순</button>
   </div>
   <div class="profile" id="profile-container">
     <% categories.forEach(function(category) { %>
@@ -79,19 +75,11 @@
             <img src="<%= category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg' %>" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
             <div class="profile3">
               <span class="profile4"><%= category.Member.name %></span>
-              <% if (userType === 'student') { %>
-                <span class="profile5"><%= category.university %> <%= category.major %></span>
-              <% } else { %>
-                <span class="profile5"><%= category.introduce %></span>
-              <% } %>
+              <span class="profile5"><%= category.university %> <%= category.major %></span>
             </div>
           </div>
-          <span class="profile7" id="detail-<%= category.stdNum || category.seniorNum %>">
-            ${criteria === 'rating' ? `별점: ${category.score}` : ''}
-            ${criteria === 'matchingCount' ? `매칭 횟수: ${category.matchingCount}` : ''}
-            ${criteria === 'recentMatching' ? `최근 성사 날짜: ${new Date(category.recentMatchingTime).toLocaleDateString()}` : ''}
-            ${criteria === 'recentJoin' ? `최근 가입 날짜: ${new Date(category.creationTime).toLocaleDateString()}` : ''}
-            ${criteria === 'lowPrice' || criteria === 'highPrice' ? `희망 금액: ${category.desiredAmount}` : ''}
+          <span class="profile7" id="detail-<%= category.stdNum %>">
+            찜한 날짜: <%= new Date(category.keepTime).toLocaleDateString() %>
           </span>
         </div>
       </div>
@@ -110,9 +98,8 @@
 
   <script>
     function sortProfiles(criteria) {
-      const userType = "<%= userType %>";
       $.ajax({
-        url: `/${userType}s?sortBy=${criteria}`,
+        url: `/keeps?sortBy=${criteria}`,
         method: 'GET',
         success: function(data) {
           $('#profile-container').html('');
@@ -125,15 +112,11 @@
                       <img src="${category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg'}" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
                       <div class="profile3">
                         <span class="profile4">${category.Member.name}</span>
-                        ${userType === 'student' ? `<span class="profile5">${category.university} ${category.major}</span>` : `<span class="profile5">${category.introduce}</span>`}
+                        <span class="profile5">${category.university} ${category.major}</span>
                       </div>
                     </div>
-                    <span class="profile7" id="detail-${category.stdNum || category.seniorNum}">
-                      ${criteria === 'rating' ? `별점: ${category.score}` : ''}
-                      ${criteria === 'matchingCount' ? `매칭 횟수: ${category.matchingCount}` : ''}
-                      ${criteria === 'recentMatching' ? `최근 성사 날짜: ${new Date(category.recentMatchingTime).toLocaleDateString()}` : ''}
-                      ${criteria === 'recentJoin' ? `최근 가입 날짜: ${new Date(category.creationTime).toLocaleDateString()}` : ''}
-                      ${criteria === 'lowPrice' || criteria === 'highPrice' ? `희망 금액: ${category.desiredAmount}` : ''}
+                    <span class="profile7" id="detail-${category.stdNum}">
+                      찜한 날짜: ${new Date(category.keepTime).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
@@ -149,7 +132,7 @@
 
     // 페이지 로드 시 기본 정렬 기준으로 프로필을 정렬하여 표시
     $(document).ready(function() {
-      sortProfiles('rating');
+      sortProfiles('newest');
     });
   </script>
 </body>
