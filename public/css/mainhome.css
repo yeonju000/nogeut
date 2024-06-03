@@ -47,7 +47,7 @@ a {
   --weight-bold: 700;
 }
 
-body{
+body {
   background-color: var(--color-deep-grey);
   margin: 0;
   font-family: "Noto Sans KR", sans-serif;
@@ -164,10 +164,11 @@ body{
 
 .main-button {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 150px;
-  height: 50px;
+  height: 80px;
   border-radius: 10px;
   background-color: var(--color-green);
   font-size: var(--font-xsmall);
@@ -175,6 +176,10 @@ body{
   text-align: center;
   text-decoration: none;
   color: var(--color-black-basic);
+}
+
+.main-button span.material-icons {
+  margin-bottom: 4px;
 }
 
 .main-button:hover {
