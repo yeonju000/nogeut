@@ -9,14 +9,14 @@ const loginRoutes = require("./routes/loginRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const matchingRoutes = require("./routes/matchingRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
-const keepRouter = require("./routes/keepRouter"); // Add this line
+const keepRouter = require("./routes/keepRouter");
+const mainhomeRoutes = require("./routes/mainhomeRoutes");
 
 app.set("port", process.env.PORT || 80);
 app.set("view engine", "ejs");
 
 // Middleware 설정
 app.use(express.static("public"));
-app.use(layouts);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method", {
@@ -24,6 +24,7 @@ app.use(methodOverride("_method", {
 }));
 
 // 라우트 설정
+app.use("/", require("./routes/mainhomeRoutes"));
 app.use("/", loginRoutes);
 app.use("/", uploadRoutes);
 app.use("/", matchingRoutes);
