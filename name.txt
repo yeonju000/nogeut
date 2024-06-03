@@ -6,6 +6,7 @@
 나이 age INT NOTNULL 제약조건 0이상
 프로필생성여부 profileCreationStatus BOOL NOTNULL 기본값FALSE
 
+nn
 학생프로필 테이블 studentProfile
 회원번호 stdNum BIGINT NOTNULL PK FK
 프로필 사진 profileImage MEDIUMBLOB NULL허용
