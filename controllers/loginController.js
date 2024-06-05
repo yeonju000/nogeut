@@ -1,9 +1,10 @@
 const Member = require('../models/member');
+const Sequelize = require('sequelize');
 
 async function fetchData(userID) {
     try {
-        const user = await Member.findOne({ where: { memberID: userID } });
-        return user; // fetchData 함수가 Promise를 반환하도록 수정
+        const users = await Member.findOne({ where: { memberID: userID } });
+        return users; // fetchData 함수가 Promise를 반환하도록 수정
     } catch (error) {
         console.error(error);
         throw error;
@@ -13,12 +14,11 @@ async function fetchData(userID) {
 async function insertData() {
     try {
         await Member.create({
-            memberNum: 111,
-            memberID: 'galim469',
-            memberPW: 'galim4692',
-            name: '이가림',
-            age: 22,
-            profileCreationStatus: true
+            memberID: 'final',
+            memberPW: 'final',
+            name: '종강어머니송강호',
+            age: 614,
+            profileCreationStatus: false
         });
     } catch (error) {
         console.error(error);
@@ -27,21 +27,27 @@ async function insertData() {
 }
 
 exports.connect = async (req, res) => {
-    res.render("mainLogin", { error: null }); // 로그인 페이지 렌더링
+    res.render("mainHome", {user:null}); // 로그인 성공 시    
 };
 
 exports.login = async (req, res) => {
-    const { userID, password } = req.body;
-    console.log(`UserID: ${userID}, Password: ${password}`);
+    res.render("mainLogin",{err:null});
+}
 
+exports.postLogin = async (req, res) => {
+	const { userID, password } = req.body;
+	console.log(userID, password);
     try {
+        //await insertData();
         const user = await fetchData(userID); // fetchData 함수 호출
         if (user) {
             if (user.memberPW === password) {
-                // 세션에 사용자 정보 저장
-                req.session.memberID = user.memberID;
-                req.session.memberNum = user.memberNum;
-                res.render("CreateProfile_old"); // 로그인 성공 시
+                req.session.userID = user.memberNum;
+                if(user.profileCreationStatus) {
+                    res.redirect('/main'); //로그인 완료후 프로필을 생성한 사람
+                }else{
+                    res.redirect('/Creation')
+                }
             } else {
                 res.render("mainLogin", { error: "비밀번호가 틀렸습니다." }); // 비밀번호 틀림
             }
@@ -53,3 +59,10 @@ exports.login = async (req, res) => {
         res.render("mainLogin", { error: "오류가 발생했습니다." }); // 일반 오류
     }
 };
+
+// insertData 함수는 필요에 따라 호출하도록 수정
+// insertData();
+
+// fetchData 함수는 login 함수 내에서 호출되므로 주석 처리
+// const user = fetchData();
+// console.log(user);

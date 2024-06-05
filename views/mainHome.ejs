@@ -19,15 +19,19 @@
     <!-- Site H1 / display: none -->
     <h1 class="main-title">노긋메인홈</h1>
     <div class="header__block">
-      <a href="#"> 마이페이지 </a>
-      <a href="#"> 로그인 </a>
+      <% if (typeof user !== 'undefined' && user) { %>
+        <h6 style="font-size: small; padding: 0; margin-top: 0; margin-bottom: 0; margin-right: 20px;">반갑습니다, <%= user.name %>님!</h6>
+      <% } %>
+      <a href="/Detail"> 마이페이지 </a>
+      <a href="/Login"> 로그인 </a>
+
     </div>
     <div class="header_nav-main-block">
       <!-- 네비게이션에 해당하는 부분 -->
       <nav class="header__nav-block">
         <ul class="nav__list" role="navigation">
           <li class="nav__list-item">
-            <a href="/mainhome" aria-label="노긋노긋 홈페이지">
+            <a href="/main" aria-label="노긋노긋 홈페이지">
               <img src="/images/logo.png" width="50" alt="로고">
             </a>
           </li>

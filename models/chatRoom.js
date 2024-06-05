@@ -3,7 +3,7 @@ const sequelize = require("../config/database");
 
 const ChatRoom = sequelize.define("ChatRoom", {
   roomNum: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,  // 여기서 INTEGER를 BIGINT로 변경
     primaryKey: true,
     allowNull: false,
     autoIncrement: true

@@ -25,7 +25,7 @@
 
           <li class="nav__list-item">
             <a href="#" aria-label="노긋노긋 홈페이지">
-                <img src="./logo.png" width=50px alt="로고">
+                <img src="/images/logo.png" width=50px alt="로고">
               </a>
           </li>
           <li class="nav__list-item">
@@ -51,9 +51,10 @@
         <div style="width: 710px; margin: auto;">
             <h2>노인 프로필 등록하기</h2>
             <div style="width: 800px; background-color: white; margin: auto; padding: 50px;">
-                    <form action="/Create" method="POST">
+                    <form action="/Creation/Senior" method="POST" enctype="multipart/form-data">
 		    <h3 style="display: inline;">프로필 사진</h3><br><br>
-                    <img id="profileImage" src="Yii.jpg" onerror="this.src='https://i.ytimg.com/vi/as9gGq8itrk/maxresdefault.jpg'" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">                    <input type="file" id="chooseFile" name="profileImage" accept="image/*" onchange="loadFile(event)" style="display: none;">
+                    <img id="profileImage" src="Yii.jpg" onerror="this.src='https://i.ytimg.com/vi/as9gGq8itrk/maxresdefault.jpg'" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">                    
+                    <input type="file" id="chooseFile" name="profileImage" accept="image/*" onchange="loadFile(event)" style="display: none;">
                     <input type="button" value="사진 업로드" onclick="document.getElementById('chooseFile').click();" style="background-color:#F8F8F8; border: 0; width: 90px; height: 30px; border-radius: 10px;"><br><br>
                     <h3 style="display: inline;">이름</h3><h6 style="display: inline;"> 이름을 입력해 주세요.</h6><br><br>
                     <input type="text" name="name" style="border: 0; background-color: #F8F8F8; height: 30px; border-radius: 10px; padding: 10px;"><br><br><br>
@@ -96,17 +97,17 @@
                     <input type="radio" name="desiredAmount" value="DA_disscu">협의<br><br><br>
                     <h3 style="display: inline;">가능 시간</h3><h6 style="display: inline;"> 가능한 시간대를 선택해 주세요.(중복 선택 가능)</h6><br><br>
                     <h4 style="display: inline; color: #434343;">요일</h4><br>
-                    <input type="checkbox" name="ableDay" value="ableDay_1">월
-                    <input type="checkbox" name="ableDay" value="ableDay_2">화
-                    <input type="checkbox" name="ableDay" value="ableDay_3">수
-                    <input type="checkbox" name="ableDay" value="ableDay_4">목
-                    <input type="checkbox" name="ableDay" value="ableDay_5">금
-                    <input type="checkbox" name="ableDay" value="ableDay_6">토
-                    <input type="checkbox" name="ableDay" value="ableDay_7">일<br><br>
+                    <input type="radio" name="ableDay" value="ableDay_1">월
+                    <input type="radio" name="ableDay" value="ableDay_2">화
+                    <input type="radio" name="ableDay" value="ableDay_3">수
+                    <input type="radio" name="ableDay" value="ableDay_4">목
+                    <input type="radio" name="ableDay" value="ableDay_5">금
+                    <input type="radio" name="ableDay" value="ableDay_6">토
+                    <input type="radio" name="ableDay" value="ableDay_7">일<br><br>
                     <h4 style="display: inline; color: #434343;">시간</h4><br>
-                    <input type="checkbox" name="ableTime" value="ableTime_morn">오전
-                    <input type="checkbox" name="ableTime" value="ableTime_noon">오후
-                    <input type="checkbox" name="ableTime" value="ableTime_disscu">협의<br><br><br>
+                    <input type="radio" name="ableTime" value="ableTime_morn">오전
+                    <input type="radio" name="ableTime" value="ableTime_noon">오후
+                    <input type="radio" name="ableTime" value="ableTime_disscu">협의<br><br><br>
                     <h3 style="display: inline;">자기 소개</h3><br><br>
                     <textarea name="selfIntro" style="width: 700px; height: 300px; padding: 10px;" placeholder="좀 더 구체적인 본인 소개와 가능 시간을 기재해 주세요. (500자 이내)" maxlength="500"></textarea>
                     <br><br>
