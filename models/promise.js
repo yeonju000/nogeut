@@ -18,7 +18,7 @@ const Promise = sequelize.define("Promise", {
   },
   roomNum: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   promiseCreationDate: {
     type: DataTypes.DATE,

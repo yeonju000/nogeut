@@ -15,53 +15,37 @@
 <body>
   <!-- Header Section -->
   <header class="header__container">
-    <!-- Site H1 / display: none -->
     <h1 class="main-title">노긋메인홈</h1>
-      <div class="header__block">
-        <a href="#"> 마이페이지 </a>
-        <a href="#"> 로그인 </a>
-      </div>
+    <div class="header__block">
+      <a href="#"> 마이페이지 </a>
+      <a href="#"> 로그인 </a>
+    </div>
     <div class="header_nav-main-block">
-      <!-- 네비게이션에 해당하는 부분 -->
       <nav class="header__nav-block">
         <ul class="nav__list" role="navigation">
           <li class="nav__list-item">
             <a href="/mainHome" aria-label="노긋노긋 홈페이지">
-                <img src="/images/logo.png" width=50px alt="로고">
-              </a>
+              <img src="/images/logo.png" width=50px alt="로고">
+            </a>
           </li>
-          <li class="nav__list-item">
-            <a href="#"> 매칭하기 </a>
-          </li>
-          <li class="nav__list-item">
-            <a href="#"> 채팅 </a>
-          </li>
-          <li class="nav__list-item">
-            <a href="#"> 보고서작성 </a>
-          </li>
-          <li class="nav__list-item">
-            <a href="#"> 후기작성 </a>
-          </li>
-          <li class="nav__list-item">
-            <a href="#"> 보고서확인 </a>
-          </li>
+          <li class="nav__list-item"><a href="#"> 매칭하기 </a></li>
+          <li class="nav__list-item"><a href="#"> 채팅 </a></li>
+          <li class="nav__list-item"><a href="#"> 보고서작성 </a></li>
+          <li class="nav__list-item"><a href="#"> 후기작성 </a></li>
+          <li class="nav__list-item"><a href="#"> 보고서확인 </a></li>
         </ul>
       </nav>
     </div>
     <div class="header2">
-        <nav class="header2-2">
-            <ul class="nav__list2" role="navigation">
-              <li class="nav__list-item2">
-                <a href="/categories"> 카테고리 </a>
-              </li>
-              <li class="nav__list-item2">
-                <a href="/keeps"> 찜 목록 </a>
-              </li>
-            </ul>
-        </nav>
+      <nav class="header2-2">
+        <ul class="nav__list2" role="navigation">
+          <li class="nav__list-item2"><a href="/categories"> 카테고리 </a></li>
+          <li class="nav__list-item2"><a href="/keeps"> 찜 목록 </a></li>
+        </ul>
+      </nav>
     </div>
   </header>
-  
+
   <div class="top_category">
     <button class="top_category2" type="button" onclick="sortProfiles('rating')">별점순</button>
     <button class="top_category2" type="button" onclick="sortProfiles('matchingCount')">매칭횟수순</button>
@@ -70,34 +54,36 @@
     <button class="top_category2" type="button" onclick="sortProfiles('lowPrice')">낮은가격순</button>
     <button class="top_category2" type="button" onclick="sortProfiles('highPrice')">높은가격순</button>
   </div>
+
   <div class="profile" id="profile-container">
     <% categories.forEach(function(category) { %>
-    <a href="#">
-      <div class="profile2">
-        <div class="profile6">
-          <div class="profile-left">
-            <img src="<%= category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg' %>" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
-            <div class="profile3">
-              <span class="profile4"><%= category.Member.name %></span>
-              <% if (userType === 'student') { %>
-                <span class="profile5"><%= category.university %> <%= category.major %></span>
-              <% } else { %>
-                <span class="profile5"><%= category.introduce %></span>
-              <% } %>
+      <a href="#">
+        <div class="profile2">
+          <div class="profile6">
+            <div class="profile-left">
+              <img src="<%= category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg' %>" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
+              <div class="profile3">
+                <span class="profile4"><%= category.Member ? category.Member.name : '이름 없음' %></span>
+                <% if (isStudent) { %>
+                  <span class="profile5"><%= category.university %> <%= category.major %></span>
+                <% } else { %>
+                  <span class="profile5"><%= category.introduce %></span>
+                <% } %>
+              </div>
             </div>
+            <span class="profile7" id="detail-<%= category.stdNum || category.seniorNum %>">
+              <%= sortBy === 'rating' ? `별점: ${category.score}` : '' %>
+              <%= sortBy === 'matchingCount' ? `매칭 횟수: ${category.matchingCount}` : '' %>
+              <%= sortBy === 'recentMatching' ? `최근 성사 날짜: ${new Date(category.recentMatchingTime).toLocaleDateString()}` : '' %>
+              <%= sortBy === 'recentJoin' ? `최근 가입 날짜: ${new Date(category.creationTime).toLocaleDateString()}` : '' %>
+              <%= sortBy === 'lowPrice' || sortBy === 'highPrice' ? `희망 금액: ${category.desiredAmount}` : '' %>
+            </span>
           </div>
-          <span class="profile7" id="detail-<%= category.stdNum || category.seniorNum %>">
-            ${criteria === 'rating' ? `별점: ${category.score}` : ''}
-            ${criteria === 'matchingCount' ? `매칭 횟수: ${category.matchingCount}` : ''}
-            ${criteria === 'recentMatching' ? `최근 성사 날짜: ${new Date(category.recentMatchingTime).toLocaleDateString()}` : ''}
-            ${criteria === 'recentJoin' ? `최근 가입 날짜: ${new Date(category.creationTime).toLocaleDateString()}` : ''}
-            ${criteria === 'lowPrice' || criteria === 'highPrice' ? `희망 금액: ${category.desiredAmount}` : ''}
-          </span>
         </div>
-      </div>
-    </a>
+      </a>
     <% }); %>
   </div>
+
   <!-- Footer Section -->
   <footer class="footer__container">
     <section class="pages__container">
@@ -110,9 +96,9 @@
 
   <script>
     function sortProfiles(criteria) {
-      const userType = "<%= userType %>";
+      const userType = "<%= isSenior ? 'senior' : 'student' %>";
       $.ajax({
-        url: `/${userType}s?sortBy=${criteria}`,
+        url: `/categories?userType=${userType}&sortBy=${criteria}`,
         method: 'GET',
         success: function(data) {
           $('#profile-container').html('');
@@ -124,7 +110,7 @@
                     <div class="profile-left">
                       <img src="${category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg'}" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
                       <div class="profile3">
-                        <span class="profile4">${category.Member.name}</span>
+                        <span class="profile4">${category.Member ? category.Member.name : '이름 없음'}</span>
                         ${userType === 'student' ? `<span class="profile5">${category.university} ${category.major}</span>` : `<span class="profile5">${category.introduce}</span>`}
                       </div>
                     </div>
@@ -149,7 +135,7 @@
 
     // 페이지 로드 시 기본 정렬 기준으로 프로필을 정렬하여 표시
     $(document).ready(function() {
-      sortProfiles('rating');
+      sortProfiles('<%= sortBy %>');
     });
   </script>
 </body>

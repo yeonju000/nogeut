@@ -1,5 +1,5 @@
-const express = require("express");
-const methodOverride = require("method-override");
+const express = require('express');
+const methodOverride = require('method-override');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 const path = require('path');
@@ -21,22 +21,21 @@ const uploadRoutes = require("./routes/uploadRoutes");
 const matchingRoutes = require("./routes/matchingRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const keepRouter = require("./routes/keepRouter");
-const mainhomeRoutes = require("./routes/mainhomeRoutes"); 
+const mainhomeRoutes = require("./routes/mainhomeRoutes");
 const filterRoutes = require("./routes/filterRoutes");
-const mainRoutes = require("./routes/mainRoutes"); 
+const mainRoutes = require("./routes/mainRoutes");
+const seniorProfileRoutes = require("./routes/seniorProfileRoutes");
 
 // 컨트롤러
 const errorController = require("./controllers/errorController");
 const loginController = require("./controllers/loginController");
 const mainController = require("./controllers/mainController");
 const detailedController = require("./controllers/detailedController");
-const seniorProfileRoutes = require("./routes/seniorProfileRoutes");
 
 const app = express();
 app.set("port", process.env.PORT || 80);
 
 // EJS 설정 추가
-app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // 모델 관계 설정
@@ -128,8 +127,9 @@ app.post("/login", loginController.postLogin);
 app.get("/main", mainController.mainRender);
 app.get('/logout', loginController.logout);
 app.get("/Detail", detailedController.detail);
+app.get("/chat", chatRoutes);
 app.use('/senior', seniorProfileRoutes); // 시니어 프로필 라우터 추가
-app.use('/Creation', require('./routes/creationRoutes.js'));
+app.use('/Creation', creationRoutes);
 
 app.use("/", categoryRoutes);
 app.use("/", loginRoutes);
