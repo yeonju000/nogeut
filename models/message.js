@@ -2,30 +2,57 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
 const Message = sequelize.define("Message", {
-  senderNum: {
+  messageID: {
     type: DataTypes.BIGINT,
     primaryKey: true,
-    allowNull: false
+    autoIncrement: true
+  },
+  senderNum: {
+    type: DataTypes.BIGINT,
+    allowNull: false,
+    references: {
+      model: 'Members',
+      key: 'memberNum'
+    }
   },
   receiverNum: {
     type: DataTypes.BIGINT,
-    primaryKey: true,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: 'Members',
+      key: 'memberNum'
+    }
+  },
+  roomNum: {
+    type: DataTypes.BIGINT,
+    allowNull: false,
+    references: {
+      model: 'ChatRooms',
+      key: 'roomNum'
+    }
   },
   sendDay: {
     type: DataTypes.DATE,
-    primaryKey: true,
     allowNull: false,
     defaultValue: DataTypes.NOW
   },
   check: {
     type: DataTypes.BOOLEAN,
-    allowNull: false
+    allowNull: false,
+    defaultValue: false
   },
   message: {
     type: DataTypes.TEXT,
     allowNull: false
   }
+}, {
+  timestamps: false,
+  indexes: [
+    {
+      unique: true,
+      fields: ['senderNum', 'receiverNum', 'sendDay']
+    }
+  ]
 });
 
 module.exports = Message;

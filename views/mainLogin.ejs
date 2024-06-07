@@ -1,6 +1,6 @@
+<!-- mainLogin.ejs -->
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,40 +13,33 @@
     integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f"
     crossorigin="anonymous"></script>
 </head>
-
 <body>
   <!-- Header Section -->
   <header class="header__container">
-    <!-- Site H1 / display: none -->
     <h1 class="main-title">코밋메인홈</h1>
-    <div class="header__block">
-      <a href="#"> 마이페이지 </a>
-      <a href="#"> 로그인 </a>
-    </div>
-
+    <div style="height: 30px; background-color: white;"></div>
     <div class="header_nav-main-block">
-      <!-- 네비게이션에 해당하는 부분 -->
       <nav class="header__nav-block">
         <ul class="nav__list" role="navigation">
           <li class="nav__list-item">
-            <a href="#" aria-label="노긋노긋 홈페이지">
+            <a href="/main" aria-label="노긋노긋 홈페이지">
               <img src="/images/logo.png" width="50" alt="로고">
             </a>
           </li>
           <li class="nav__list-item">
-            <a href="#"> 매칭하기 </a>
+            <a href="/Login"> 매칭하기 </a>
           </li>
           <li class="nav__list-item">
-            <a href="#"> 채팅 </a>
+            <a href="/Login"> 채팅 </a>
           </li>
           <li class="nav__list-item">
-            <a href="#"> 보고서작성 </a>
+            <a href="/Login"> 보고서작성 </a>
           </li>
           <li class="nav__list-item">
-            <a href="#"> 후기작성 </a>
+            <a href="/Login"> 후기작성 </a>
           </li>
           <li class="nav__list-item">
-            <a href="#"> 보고서확인 </a>
+            <a href="/Login"> 보고서확인 </a>
           </li>
         </ul>
       </nav>
@@ -56,24 +49,25 @@
   <!-- Main Content -->
   <div class="container">
     <div class="login-container">
-      <form class="login-form" action="/Login" method="POST">
+      <form class="login-form" action="/login" method="POST">
         <h2>로그인</h2>
         <% if (typeof error !== 'undefined' && error) { %>
           <p><%= error %></p>
         <% } %>
-        <label for="username">아이디</label>
-        <input type="text" id="username" name="userID" required>
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" placeholder="Email" required>
         <label for="password">비밀번호</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" placeholder="Password" required>
         <button type="submit">로그인</button>
         <div class="options">
           <a href="#">아이디 찾기</a>
           <a href="#">비밀번호 찾기</a>
+          <a href="/signup">회원가입</a> <!-- 회원가입 링크 추가 -->
         </div>
       </form>
     </div>
     <div class="image-container">
-      <img src="large-image.jpg" alt="Large Image">
+      <img src="/images/mainhome.jpeg" alt="Large Image">
     </div>
   </div>
 
@@ -87,6 +81,4 @@
     </section>
   </footer>
 </body>
-
 </html>
-

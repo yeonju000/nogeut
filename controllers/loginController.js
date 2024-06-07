@@ -1,68 +1,84 @@
 const Member = require('../models/member');
-const Sequelize = require('sequelize');
+const bcrypt = require('bcryptjs');
 
-async function fetchData(userID) {
+async function fetchData(email) {
     try {
-        const users = await Member.findOne({ where: { memberID: userID } });
-        return users; // fetchData 함수가 Promise를 반환하도록 수정
+        const user = await Member.findOne({ where: { email } });
+        return user;
     } catch (error) {
         console.error(error);
         throw error;
     }
 }
 
-async function insertData() {
-    try {
-        await Member.create({
-            memberID: 'final',
-            memberPW: 'final',
-            name: '종강어머니송강호',
-            age: 614,
-            profileCreationStatus: false
-        });
-    } catch (error) {
-        console.error(error);
-        throw error; // 에러를 호출자에게 전파
-    }
-}
-
-exports.connect = async (req, res) => {
-    res.render("mainHome", {user:null}); // 로그인 성공 시    
+exports.login = (req, res) => {
+    res.render("mainLogin", { error: null });
 };
 
-exports.login = async (req, res) => {
-    res.render("mainLogin",{err:null});
-}
-
-exports.postLogin = async (req, res) => {
-	const { userID, password } = req.body;
-	console.log(userID, password);
+exports.postLogin = async (req, res, next) => {
+    const { email, password } = req.body;
     try {
-        //await insertData();
-        const user = await fetchData(userID); // fetchData 함수 호출
+        const user = await fetchData(email);
         if (user) {
-            if (user.memberPW === password) {
-                req.session.userID = user.memberNum;
-                if(user.profileCreationStatus) {
-                    res.redirect('/main'); //로그인 완료후 프로필을 생성한 사람
-                }else{
-                    res.redirect('/Creation')
-                }
+            const isMatch = await bcrypt.compare(password, user.memberPW);
+            if (isMatch) {
+                req.login(user, (err) => {
+                    if (err) {
+                        console.error('로그인 중 오류:', err);
+                        return next(err);
+                    }
+                    console.log('로그인 성공:', user);
+                    req.session.user = user; // 세션에 사용자 정보 저장
+                    if (user.profileCreationStatus) {
+                        console.log('프로필 생성 상태: true');
+                        res.redirect('/main');
+                    } else {
+                        console.log('프로필 생성 상태: false');
+                        res.redirect('/creation'); // 소문자로 통일
+                    }
+                });
             } else {
-                res.render("mainLogin", { error: "비밀번호가 틀렸습니다." }); // 비밀번호 틀림
+                console.log('비밀번호가 틀렸습니다.');
+                res.render("mainLogin", { error: "비밀번호가 틀렸습니다." });
             }
         } else {
-            res.render("mainLogin", { error: "사용자를 찾을 수 없습니다." }); // 사용자 없음
+            console.log('사용자를 찾을 수 없습니다.');
+            res.render("mainLogin", { error: "사용자를 찾을 수 없습니다." });
         }
     } catch (error) {
-        console.error(error);
-        res.render("mainLogin", { error: "오류가 발생했습니다." }); // 일반 오류
+        console.error('오류 발생:', error);
+        res.render("mainLogin", { error: "오류가 발생했습니다." });
     }
 };
 
-// insertData 함수는 필요에 따라 호출하도록 수정
-// insertData();
+exports.logout = (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('로그아웃 중 오류가 발생했습니다.');
+        }
+        req.session.destroy((err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('로그아웃 중 오류가 발생했습니다.');
+            }
+            res.redirect('/');
+        });
+    });
+};
 
-// fetchData 함수는 login 함수 내에서 호출되므로 주석 처리
-// const user = fetchData();
-// console.log(user);
+exports.renderSignup = (req, res) => {
+    res.render('signUp', { error: null });
+};
+
+exports.signup = async (req, res) => {
+    try {
+        const { email, password, name, age } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await Member.create({ email, memberPW: hashedPassword, name, age, profileCreationStatus: false });
+        res.redirect('/login');
+    } catch (err) {
+        console.log(err);
+        res.render('signUp', { error: "회원가입 중 오류가 발생했습니다." });
+    }
+};

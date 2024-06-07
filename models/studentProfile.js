@@ -59,7 +59,7 @@ const StudentProfile = sequelize.define("StudentProfile", {
   },
   recentMatchingTime: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: true,   
   },
   yearOfBirth: {
     type: DataTypes.INTEGER,
@@ -85,11 +85,6 @@ const StudentProfile = sequelize.define("StudentProfile", {
     type: DataTypes.STRING(20),
     allowNull: false
   }
-}, {
-  timestamps: true
 });
-
-//관계
-StudentProfile.belongsTo(Member, { foreignKey: 'stdNum' });
 
 module.exports = StudentProfile;

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>프로필 필터</title>
+  <link href="/css/filter.css" rel="stylesheet" type="text/css">
+  <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/all.js"
+    crossorigin="anonymous"></script>
+  <script src="/js/filter.js"></script>
+</head>
+<body>
+  <!-- Header Section -->
+  <header class="header__container">
+    <h1 class="main-title">노긋노긋</h1>
+    <div class="header__block">
+      <% if (currentUser) { %>
+        <a href="/mypage">마이페이지</a>
+        <a href="/logout">로그아웃</a>
+      <% } else { %>
+        <a href="/login">로그인</a>
+      <% } %>
+    </div>
+    <div class="header_nav-main-block">
+      <nav class="header__nav-block">
+        <ul class="nav__list" role="navigation">
+          <li class="nav__list-item">
+            <a href="/mainHome" aria-label="노긋노긋 홈페이지">
+              <img src="/images/logo.png" width="50px" alt="로고">
+            </a>
+          </li>
+          <li class="nav__list-item"><a href="#">매칭하기</a></li>
+          <li class="nav__list-item"><a href="#">채팅</a></li>
+          <li class="nav__list-item"><a href="#">보고서작성</a></li>
+          <li class="nav__list-item"><a href="#">후기작성</a></li>
+          <li class="nav__list-item"><a href="#">보고서확인</a></li>
+        </ul>
+      </nav>
+      <form id="filterForm" method="POST" action="/filter">
+        <nav class="chart">
+          <ul>
+            <li><a href="#" id="a">지역</a>
+              <ul class="dropdown" id="a-dropdown">
+                <li class="notA">시/도</li>
+                <li><a href="#" class="a-item a-seoul">서울</a>
+                  <ul class="dropdown-child" id="seoul-dropdown">
+                    <li><a href="#" class="seoul-item">종로구</a></li>
+                    <li><a href="#" class="seoul-item">중구</a></li>
+                    <li><a href="#" class="seoul-item">용산구</a></li>
+                    <li><a href="#" class="seoul-item">성동구</a></li>
+                    <li><a href="#" class="seoul-item">광진구</a></li>
+                    <li><a href="#" class="seoul-item">동대문구</a></li>
+                    <li><a href="#" class="seoul-item">중랑구</a></li>
+                    <li><a href="#" class="seoul-item">성북구</a></li>
+                    <li><a href="#" class="seoul-item">강북구</a></li>
+                    <li><a href="#" class="seoul-item">도봉구</a></li>
+                    <li><a href="#" class="seoul-item">노원구</a></li>
+                    <li><a href="#" class="seoul-item">은평구</a></li>
+                    <li><a href="#" class="seoul-item">서대문구</a></li>
+                    <li><a href="#" class="seoul-item">마포구</a></li>
+                    <li><a href="#" class="seoul-item">양천구</a></li>
+                    <li><a href="#" class="seoul-item">강서구</a></li>
+                    <li><a href="#" class="seoul-item">구로구</a></li>
+                    <li><a href="#" class="seoul-item">금천구</a></li>
+                    <li><a href="#" class="seoul-item">영등포구</a></li>
+                    <li><a href="#" class="seoul-item">동작구</a></li>
+                    <li><a href="#" class="seoul-item">관악구</a></li>
+                    <li><a href="#" class="seoul-item">서초구</a></li>
+                    <li><a href="#" class="seoul-item">강남구</a></li>
+                    <li><a href="#" class="seoul-item">송파구</a></li>
+                    <li><a href="#" class="seoul-item">강동구</a></li>
+                  </ul>
+                </li>
+                <li><a href="#" class="a-item a-gyeonggi">경기</a>
+                  <ul class="dropdown-child" id="gyeonggi-dropdown">
+                    <li><a href="#" class="gyeonggi-item">가평군</a></li>
+                    <li><a href="#" class="gyeonggi-item">고양시 덕양구</a></li>
+                    <li><a href="#" class="gyeonggi-item">고양시 일산동구</a></li>
+                    <li><a href="#" class="gyeonggi-item">고양시 일산서구</a></li>
+                    <li><a href="#" class="gyeonggi-item">과천시</a></li>
+                    <li><a href="#" class="gyeonggi-item">광명시</a></li>
+                    <li><a href="#" class="gyeonggi-item">광주시</a></li>
+                    <li><a href="#" class="gyeonggi-item">구리시</a></li>
+                    <li><a href="#" class="gyeonggi-item">군포시</a></li>
+                    <li><a href="#" class="gyeonggi-item">김포시</a></li>
+                    <li><a href="#" class="gyeonggi-item">남양주시</a></li>
+                    <li><a href="#" class="gyeonggi-item">동두천시</a></li>
+                    <li><a href="#" class="gyeonggi-item">부천시</a></li>
+                    <li><a href="#" class="gyeonggi-item">성남시 분당구</a></li>
+                    <li><a href="#" class="gyeonggi-item">성남시 수정구</a></li>
+                    <li><a href="#" class="gyeonggi-item">성남시 중원구</a></li>
+                    <li><a href="#" class="gyeonggi-item">수원시 권선구</a></li>
+                    <li><a href="#" class="gyeonggi-item">수원시 영통구</a></li>
+                    <li><a href="#" class="gyeonggi-item">수원시 장안구</a></li>
+                    <li><a href="#" class="gyeonggi-item">수원시 팔달구</a></li>
+                    <li><a href="#" class="gyeonggi-item">시흥시</a></li>
+                    <li><a href="#" class="gyeonggi-item">안산시 단원구</a></li>
+                    <li><a href="#" class="gyeonggi-item">안산시 상록구</a></li>
+                    <li><a href="#" class="gyeonggi-item">안성시</a></li>
+                    <li><a href="#" class="gyeonggi-item">안양시 동안구</a></li>
+                    <li><a href="#" class="gyeonggi-item">안양시 만안구</a></li>
+                    <li><a href="#" class="gyeonggi-item">양주시</a></li>
+                    <li><a href="#" class="gyeonggi-item">양평군</a></li>
+                    <li><a href="#" class="gyeonggi-item">여주시</a></li>
+                    <li><a href="#" class="gyeonggi-item">연천군</a></li>
+                    <li><a href="#" class="gyeonggi-item">오산시</a></li>
+                    <li><a href="#" class="gyeonggi-item">용인시 기흥구</a></li>
+                    <li><a href="#" class="gyeonggi-item">용인시 수지구</a></li>
+                    <li><a href="#" class="gyeonggi-item">용인시 처인구</a></li>
+                    <li><a href="#" class="gyeonggi-item">의왕시</a></li>
+                    <li><a href="#" class="gyeonggi-item">의정부시</a></li>
+                    <li><a href="#" class="gyeonggi-item">이천시</a></li>
+                    <li><a href="#" class="gyeonggi-item">파주시</a></li>
+                    <li><a href="#" class="gyeonggi-item">평택시</a></li>
+                    <li><a href="#" class="gyeonggi-item">포천시</a></li>
+                    <li><a href="#" class="gyeonggi-item">하남시</a></li>
+                    <li><a href="#" class="gyeonggi-item">화성시</a></li>
+                  </ul>
+                </li>
+                <li><a href="#" class="a-item">인천</a></li>
+                <li><a href="#" class="a-item">부산</a></li>
+                <li><a href="#" class="a-item">광주</a></li>
+                <li><a href="#" class="a-item">대전</a></li>
+                <li><a href="#" class="a-item">울산</a></li>
+                <li><a href="#" class="a-item">경남</a></li>
+                <li><a href="#" class="a-item">경북</a></li>
+                <li><a href="#" class="a-item">충남</a></li>
+                <li><a href="#" class="a-item">충북</a></li>
+                <li><a href="#" class="a-item">전남</a></li>
+                <li><a href="#" class="a-item">전북</a></li>
+                <li><a href="#" class="a-item">강원</a></li>
+                <li><a href="#" class="a-item">제주</a></li>
+                <li><a href="#" class="a-item">세종</a></li>
+                <li><a href="#" class="a-item">전국</a></li>
+              </ul>
+            </li>
+            <li><a href="#" id="b">성별</a>
+              <ul class="dropdown" id="b-dropdown">
+                <li><a href="#" class="b-item">전체</a></li>
+                <li><a href="#" class="b-item">남</a></li>
+                <li><a href="#" class="b-item">여</a></li>
+              </ul>
+            </li>
+            <li><a href="#" id="c">금액</a>
+              <ul class="dropdown" id="c-dropdown">
+                <li><a href="#" class="c-item">전체</a></li>
+                <li><a href="#" class="c-item">무료</a></li>
+                <li><a href="#" class="c-item">1만원</a></li>
+                <li><a href="#" class="c-item">3만원</a></li>
+                <li><a href="#" class="c-item">5만원</a></li>
+                <li><a href="#" class="c-item">기타</a></li>
+                <li><a href="#" class="c-item">협의</a></li>
+              </ul>
+            </li>
+            <li><a href="#" id="d">분야</a>
+              <ul class="dropdown" id="d-dropdown">
+                <li><a href="#" class="d-item">전체</a></li>
+                <li><a href="#" class="d-item">수공예</a></li>
+                <li><a href="#" class="d-item">인터넷</a></li>
+                <li><a href="#" class="d-item">음악</a></li>
+                <li><a href="#" class="d-item">미술</a></li>
+                <li><a href="#" class="d-item">운동</a></li>
+                <li><a href="#" class="d-item">요리</a></li>
+                <li><a href="#" class="d-item">말동무</a></li>
+              </ul>
+            </li>
+            <li><a href="#" id="e">나이대</a>
+              <ul class="dropdown" id="e-dropdown">
+                <li><a href="#" class="e-item">전체</a></li>
+                <li><a href="#" class="e-item">20대</a></li>
+                <li><a href="#" class="e-item">30대</a></li>
+                <li><a href="#" class="e-item">40대</a></li>
+                <li><a href="#" class="e-item">50대</a></li>
+                <li><a href="#" class="e-item">60대</a></li>
+                <li><a href="#" class="e-item">70대</a></li>
+                <li><a href="#" class="e-item">80대</a></li>
+                <li><a href="#" class="e-item">90대</a></li>
+                <li><a href="#" class="e-item">이상</a></li>
+              </ul>
+            </li>
+            <li><a href="#" id="f">일시</a>
+              <ul class="dropdown" id="f-dropdown">
+                <li class="notA">요일</li>
+                <li><a href="#" class="f-item">전체</a></li>
+                <li><a href="#" class="f-item">월</a></li>
+                <li><a href="#" class="f-item">화</a></li>
+                <li><a href="#" class="f-item">수</a></li>
+                <li><a href="#" class="f-item">목</a></li>
+                <li><a href="#" class="f-item">금</a></li>
+                <li><a href="#" class="f-item">토</a></li>
+                <li><a href="#" class="f-item">일</a></li>
+              </ul>
+            </li>
+            <li><a href="#" id="g">시간대</a>
+              <ul class="dropdown" id="g-dropdown">
+                <li><a href="#" class="g-item">오전</a></li>
+                <li><a href="#" class="g-item">오후</a></li>
+                <li><a href="#" class="g-item">협의</a></li>
+              </ul>
+            </li>
+            <li><button id="searchButton" type="submit">검색</button></li>
+          </ul>
+        </nav>
+        <input type="hidden" name="region" id="region">
+        <input type="hidden" name="city" id="city">
+        <input type="hidden" name="gender" id="gender">
+        <input type="hidden" name="amount" id="amount">
+        <input type="hidden" name="field" id="field">
+        <input type="hidden" name="age" id="age">
+        <input type="hidden" name="day" id="day">
+        <input type="hidden" name="time" id="time">
+      </form>
+    </div>
+  </header>
+
+  <!-- Footer Section -->
+  <footer class="footer__container">
+    <section class="pages__container">
+      <a href="#">이용약관</a>
+      <a href="#">개인정보처리방침</a>
+      <a href="#">커뮤니티이용규칙</a>
+      <a href="#">문의하기</a>
+    </section>
+  </footer>
+</body>
+</html>

@@ -54,7 +54,7 @@ const SeniorProfile = sequelize.define("SeniorProfile", {
   },
   recentMatchingTime: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: true
   },
   yearOfBirth: {
     type: DataTypes.INTEGER,
@@ -84,11 +84,6 @@ const SeniorProfile = sequelize.define("SeniorProfile", {
     type: DataTypes.DOUBLE,
     allowNull: false
   }
-}, {
-  timestamps: true
 });
-
-// 연관 관계 설정
-SeniorProfile.belongsTo(Member, { foreignKey: 'seniorNum' });
 
 module.exports = SeniorProfile;

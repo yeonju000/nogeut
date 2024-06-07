@@ -17,7 +17,7 @@ const Review = sequelize.define("Review", {
     allowNull: false
   },
   reviewContent: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.STRING(100),
     allowNull: false
   },
   score: {

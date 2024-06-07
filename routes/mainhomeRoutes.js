@@ -1,9 +1,8 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const mainhomeController = require("../controllers/mainhomeController");
+const mainhomeController = require('../controllers/mainhomeController');
 
-router.get("/", mainhomeController.showLogin);
-router.post("/", mainhomeController.handleLogin);
-router.get("/mainHome", mainhomeController.showMainHome);
+// 로그인 필요 없는 메인 홈 라우트
+router.get('/', mainhomeController.connect);
 
 module.exports = router;

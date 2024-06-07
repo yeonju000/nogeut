@@ -1,24 +1,14 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Member = require("./member");
-const ChatRoom = require("./chatRoom");
 
 const MemberChatRoom = sequelize.define('MemberChatRoom', {
   memberNum: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'Members',
-      key: 'memberNum'
-    }
+    type: DataTypes.BIGINT,
+    allowNull: false
   },
   roomNum: {
     type: DataTypes.BIGINT,
-    allowNull: false,
-    references: {
-      model: 'ChatRooms',
-      key: 'roomNum'
-    }
+    allowNull: false
   }
 }, {
   timestamps: false

@@ -1,25 +1,45 @@
-const express = require("express"),
-  app = express(),
-  methodOverride = require("method-override"),
-  sequelize = require("./config/database"),
-  errorController = require("./controllers/errorController"),
-  creationRouter = require("./routes/creationRoutes.js"),
-  loginController = require("./controllers/loginController.js"),
-  mainController = require("./controllers/mainController.js"),
-  session = require('express-session'),
-  FileStore = require('session-file-store')(session);
+const express = require("express");
+const methodOverride = require("method-override");
+const session = require('express-session');
+const FileStore = require('session-file-store')(session);
+const path = require('path');
+const passport = require('./config/passportConfig');
+const multer = require('multer');
+const http = require('http');
+const fs = require('fs');
+const socketIo = require('socket.io');
+const cookieParser = require("cookie-parser");
+const expressValidator = require("express-validator");
+const connectFlash = require("connect-flash");
+const uploadDir = path.join(__dirname, 'uploads');
 
+// 라우트
+const creationRoutes = require('./routes/creationRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 const loginRoutes = require("./routes/loginRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const matchingRoutes = require("./routes/matchingRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const keepRouter = require("./routes/keepRouter");
-const mainhomeRoutes = require("./routes/mainhomeRoutes");
+const mainhomeRoutes = require("./routes/mainhomeRoutes"); 
+const filterRoutes = require("./routes/filterRoutes");
+const mainRoutes = require("./routes/mainRoutes"); 
 
-const multer = require('multer');
-const path = require('path');
+// 컨트롤러
+const errorController = require("./controllers/errorController");
+const loginController = require("./controllers/loginController");
+const mainController = require("./controllers/mainController");
+const detailedController = require("./controllers/detailedController");
+const seniorProfileRoutes = require("./routes/seniorProfileRoutes");
 
-// 데이터베이스 모델 불러오기
+const app = express();
+app.set("port", process.env.PORT || 80);
+
+// EJS 설정 추가
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
+// 모델 관계 설정
 const models = [
   require("./models/member"),
   require("./models/studentProfile"),
@@ -37,48 +57,26 @@ const models = [
 
 const [Member, StudentProfile, ChatRoom, Message, SeniorProfile, Matching, Promise, Review, InterestField, Report, Keep, MemberChatRoom] = models;
 
-// 모델 관계 설정
 Member.hasOne(StudentProfile, { foreignKey: "memberNum" });
 StudentProfile.belongsTo(Member, { foreignKey: "memberNum" });
 
-Member.hasOne(SeniorProfile, { foreignKey: "memberNum" });
-SeniorProfile.belongsTo(Member, { foreignKey: "memberNum" });
-
-SeniorProfile.hasMany(Report, { foreignKey: "seniorNum" });
-Report.belongsTo(SeniorProfile, { foreignKey: "seniorNum" });
-
-StudentProfile.hasMany(Report, { foreignKey: "stdNum" });
-Report.belongsTo(StudentProfile, { foreignKey: "stdNum" });
-
-StudentProfile.hasMany(Keep, { foreignKey: "stdNum" });
-Keep.belongsTo(StudentProfile, { foreignKey: "stdNum" });
-
-SeniorProfile.hasMany(Keep, { foreignKey: "seniorNum" });
-Keep.belongsTo(SeniorProfile, { foreignKey: "seniorNum" });
+Member.hasMany(ChatRoom, { foreignKey: "stdNum" });
+Member.hasMany(ChatRoom, { foreignKey: "protectorNum" });
+ChatRoom.belongsTo(Member, { as: "Student", foreignKey: "stdNum" });
+ChatRoom.belongsTo(Member, { as: "Protector", foreignKey: "protectorNum" });
 
 ChatRoom.hasMany(Message, { foreignKey: "roomNum" });
 Message.belongsTo(ChatRoom, { foreignKey: "roomNum" });
 
-StudentProfile.belongsToMany(SeniorProfile, { through: Matching, foreignKey: "stdNum" });
-SeniorProfile.belongsToMany(StudentProfile, { through: Matching, foreignKey: "seniorNum" });
+Message.belongsTo(Member, { as: 'Sender', foreignKey: 'senderNum' });
+Message.belongsTo(Member, { as: 'Receiver', foreignKey: 'receiverNum' });
 
-Member.belongsToMany(ChatRoom, { through: MemberChatRoom, foreignKey: "memberNum" });
-ChatRoom.belongsToMany(Member, { through: MemberChatRoom, foreignKey: "roomNum" });
+StudentProfile.belongsTo(Member, { foreignKey: "memberNum" });
 
-StudentProfile.belongsToMany(SeniorProfile, { through: Promise, foreignKey: "stdNum" });
-SeniorProfile.belongsToMany(StudentProfile, { through: Promise, foreignKey: "seniorNum" });
-
-app.set("port", process.env.PORT || 80);
-app.set("view engine", "ejs");
-
-// Middleware 설정
-app.use(express.static("public"));
+app.use(methodOverride("_method", { methods: ["POST", "GET"] }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride("_method", {
-  methods: ["POST", "GET"]
-}));
 
+// 이미지 업로드
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -89,44 +87,65 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.use('/uploads', express.static('uploads'));
+// 디렉토리가 존재하지 않으면 생성
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log('업로드 디렉토리를 생성했습니다:', uploadDir);
+}
 
+app.use('/uploads', express.static('uploads'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 세션
+app.use(cookieParser("secretCuisine123"));
+app.use(express.urlencoded({ extended: true }));
 app.use(session({
-  secret: 'ggongggong_cat',
+  secret: 'secret',
   resave: false,
-  saveUninitialized: true,
-  store: new FileStore()
+  saveUninitialized: false,
+  store: new FileStore({ path: './sessions' })
 }));
+app.use(connectFlash());
+
+app.set('views', path.join(__dirname, 'views'));
+app.set("view engine", "ejs");
+app.use(express.static("public"));
+
+// passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
-  res.locals.session = req.session;
+  res.locals.currentUser = req.user || null; // 로그인된 사용자의 정보를 res.locals에 추가
   next();
 });
 
-// 로그인 페이지로 이동
-app.get("/", loginController.connect);
-
+// 라우트 설정
+app.use('/', mainhomeRoutes);
+app.use('/filter', filterRoutes);
 app.get("/login", loginController.login);
 app.post("/login", loginController.postLogin);
-
 app.get("/main", mainController.mainRender);
+app.get('/logout', loginController.logout);
+app.get("/Detail", detailedController.detail);
+app.use('/senior', seniorProfileRoutes); // 시니어 프로필 라우터 추가
+app.use('/Creation', require('./routes/creationRoutes.js'));
 
-app.use("/creation", creationRouter);
-
-app.use("/", mainhomeRoutes);
+app.use("/", categoryRoutes);
 app.use("/", loginRoutes);
+app.use("/", filterRoutes);
 app.use("/", uploadRoutes);
 app.use("/", matchingRoutes);
-app.use("/", categoryRoutes);
 app.use("/", keepRouter);
+app.use("/", chatRoutes);
+app.use("/", creationRoutes);
 
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 
-sequelize.sync().then(() => {
-  app.listen(app.get("port"), () => {
-    console.log(`Server running at http://localhost:${app.get("port")}`);
-  });
-}).catch(err => {
-  console.error('Unable to connect to the database:', err);
+const server = app.listen(app.get("port"), () => {
+  console.log(`Server running at http://localhost:${app.get("port")}`);
 });
+
+const io = socketIo(server); // 중복 선언 문제 해결
+const chatController = require("./controllers/chatController")(io);

@@ -1,12 +1,18 @@
-const { DataTypes } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const ChatRoom = sequelize.define("ChatRoom", {
+class ChatRoom extends Model {}
+
+ChatRoom.init({
   roomNum: {
-    type: DataTypes.BIGINT,  // 여기서 INTEGER를 BIGINT로 변경
+    type: DataTypes.BIGINT,
     primaryKey: true,
-    allowNull: false,
-    autoIncrement: true
+    autoIncrement: true,
+    allowNull: false
+  },
+  roomName: {
+    type: DataTypes.STRING(50),
+    allowNull: true
   },
   stdNum: {
     type: DataTypes.BIGINT,
@@ -21,6 +27,10 @@ const ChatRoom = sequelize.define("ChatRoom", {
     allowNull: false,
     defaultValue: DataTypes.NOW
   }
+}, {
+  sequelize,
+  modelName: 'ChatRoom',
+  timestamps: false
 });
 
 module.exports = ChatRoom;
