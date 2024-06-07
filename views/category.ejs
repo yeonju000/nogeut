@@ -56,33 +56,38 @@
   </div>
 
   <div class="profile" id="profile-container">
-    <% categories.forEach(function(category) { %>
-      <a href="#">
-        <div class="profile2">
-          <div class="profile6">
-            <div class="profile-left">
-              <img src="<%= category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg' %>" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
-              <div class="profile3">
-                <span class="profile4"><%= category.Member ? category.Member.name : '이름 없음' %></span>
-                <% if (isStudent) { %>
-                  <span class="profile5"><%= category.university %> <%= category.major %></span>
-                <% } else { %>
-                  <span class="profile5"><%= category.introduce %></span>
-                <% } %>
+    <% if (categories && categories.length > 0) { %>
+      <% categories.forEach(function(category) { %>
+        <a href="#">
+          <div class="profile2">
+            <div class="profile6">
+              <div class="profile-left">
+                <img src="<%= category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg' %>" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
+                <div class="profile3">
+                  <span class="profile4"><%= category.name %></span>
+                  <% if (isStudent) { %>
+                    <span class="profile5"><%= category.university %> <%= category.major %></span>
+                  <% } else { %>
+                    <span class="profile5"><%= category.introduce %></span>
+                  <% } %>
+                </div>
               </div>
+              <span class="profile7" id="detail-<%= category.stdNum || category.seniorNum %>">
+                <%= sortBy === 'rating' ? `별점: ${category.score}` : '' %>
+                <%= sortBy === 'matchingCount' ? `매칭 횟수: ${category.matchingCount}` : '' %>
+                <%= sortBy === 'recentMatching' ? `최근 성사 날짜: ${category.recentMatchingTime ? new Date(category.recentMatchingTime).toLocaleDateString() : '없음'}` : '' %>
+                <%= sortBy === 'recentJoin' ? `최근 가입 날짜: ${category.creationTime ? new Date(category.creationTime).toLocaleDateString() : '없음'}` : '' %>
+                <%= sortBy === 'lowPrice' || sortBy === 'highPrice' ? `희망 금액: ${category.desiredAmount}` : '' %>
+              </span>
             </div>
-            <span class="profile7" id="detail-<%= category.stdNum || category.seniorNum %>">
-              <%= sortBy === 'rating' ? `별점: ${category.score}` : '' %>
-              <%= sortBy === 'matchingCount' ? `매칭 횟수: ${category.matchingCount}` : '' %>
-              <%= sortBy === 'recentMatching' ? `최근 성사 날짜: ${new Date(category.recentMatchingTime).toLocaleDateString()}` : '' %>
-              <%= sortBy === 'recentJoin' ? `최근 가입 날짜: ${new Date(category.creationTime).toLocaleDateString()}` : '' %>
-              <%= sortBy === 'lowPrice' || sortBy === 'highPrice' ? `희망 금액: ${category.desiredAmount}` : '' %>
-            </span>
           </div>
-        </div>
-      </a>
-    <% }); %>
+        </a>
+      <% }); %>
+    <% } else { %>
+      <p>검색된 프로필이 없습니다.</p>
+    <% } %>
   </div>
+  
 
   <!-- Footer Section -->
   <footer class="footer__container">
@@ -96,47 +101,48 @@
 
   <script>
     function sortProfiles(criteria) {
-      const userType = "<%= isSenior ? 'senior' : 'student' %>";
-      $.ajax({
-        url: `/categories?userType=${userType}&sortBy=${criteria}`,
-        method: 'GET',
-        success: function(data) {
-          $('#profile-container').html('');
-          data.categories.forEach(function(category) {
-            $('#profile-container').append(`
-              <a href="#">
-                <div class="profile2">
-                  <div class="profile6">
-                    <div class="profile-left">
-                      <img src="${category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg'}" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
-                      <div class="profile3">
-                        <span class="profile4">${category.Member ? category.Member.name : '이름 없음'}</span>
-                        ${userType === 'student' ? `<span class="profile5">${category.university} ${category.major}</span>` : `<span class="profile5">${category.introduce}</span>`}
-                      </div>
-                    </div>
-                    <span class="profile7" id="detail-${category.stdNum || category.seniorNum}">
-                      ${criteria === 'rating' ? `별점: ${category.score}` : ''}
-                      ${criteria === 'matchingCount' ? `매칭 횟수: ${category.matchingCount}` : ''}
-                      ${criteria === 'recentMatching' ? `최근 성사 날짜: ${new Date(category.recentMatchingTime).toLocaleDateString()}` : ''}
-                      ${criteria === 'recentJoin' ? `최근 가입 날짜: ${new Date(category.creationTime).toLocaleDateString()}` : ''}
-                      ${criteria === 'lowPrice' || criteria === 'highPrice' ? `희망 금액: ${category.desiredAmount}` : ''}
-                    </span>
+  const userType = "<%= isSenior ? 'senior' : 'student' %>";
+  $.ajax({
+    url: `/categories?userType=${userType}&sortBy=${criteria}`,
+    method: 'GET',
+    success: function(data) {
+      $('#profile-container').html('');
+      data.categories.forEach(function(category) {
+        $('#profile-container').append(`
+          <a href="#">
+            <div class="profile2">
+              <div class="profile6">
+                <div class="profile-left">
+                  <img src="${category.profileImage ? 'data:image/jpeg;base64,' + category.profileImage.toString('base64') : '/path/to/default/image.jpg'}" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
+                  <div class="profile3">
+                    <span class="profile4">${category.name}</span>
+                    ${userType === 'student' ? `<span class="profile5">${category.university} ${category.major}</span>` : `<span class="profile5">${category.introduce}</span>`}
                   </div>
                 </div>
-              </a>
-            `);
-          });
-        },
-        error: function(error) {
-          console.error('Error:', error);
-        }
+                <span class="profile7" id="detail-${category.stdNum || category.seniorNum}">
+                  ${criteria === 'rating' ? `별점: ${category.score}` : ''}
+                  ${criteria === 'matchingCount' ? `매칭 횟수: ${category.matchingCount}` : ''}
+                  ${criteria === 'recentMatching' ? `최근 성사 날짜: ${category.recentMatchingTime ? new Date(category.recentMatchingTime).toLocaleDateString() : '없음'}` : ''}
+                  ${criteria === 'recentJoin' ? `최근 가입 날짜: ${category.creationTime ? new Date(category.creationTime).toLocaleDateString() : '없음'}` : ''}
+                  ${criteria === 'lowPrice' || criteria === 'highPrice' ? `희망 금액: ${category.desiredAmount}` : ''}
+                </span>
+              </div>
+            </div>
+          </a>
+        `);
       });
+    },
+    error: function(error) {
+      console.error('Error:', error);
     }
+  });
+}
 
-    // 페이지 로드 시 기본 정렬 기준으로 프로필을 정렬하여 표시
-    $(document).ready(function() {
-      sortProfiles('<%= sortBy %>');
-    });
+// 페이지 로드 시 기본 정렬 기준으로 프로필을 정렬하여 표시
+$(document).ready(function() {
+  sortProfiles('<%= sortBy %>');
+});
+
   </script>
 </body>
 </html>

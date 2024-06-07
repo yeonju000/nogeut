@@ -1,5 +1,4 @@
 const { Op } = require("sequelize");
-const Member = require("../models/member");
 const SeniorProfile = require("../models/seniorProfile");
 const StudentProfile = require("../models/studentProfile");
 
@@ -8,9 +7,10 @@ const sortOptions = {
   matchingCount: ["matchingCount", "DESC"],
   recentMatching: ["recentMatchingTime", "DESC"],
   recentJoin: ["creationTime", "DESC"],
-  lowPrice: ["desiredAmount", "ASC"],
-  highPrice: ["desiredAmount", "DESC"]
+  lowPrice: [["desiredAmount", "ASC"], ["desiredAmount", "0"]],
+  highPrice: [["desiredAmount", "DESC"], ["desiredAmount", "0"]]
 };
+
 
 module.exports = {
   renderFilter: async (req, res, next) => {
@@ -19,18 +19,11 @@ module.exports = {
         return res.redirect("/login");
       }
 
-      const user = await Member.findByPk(req.user.memberNum);
-
-      if (!user.profileCreationStatus) {
-        return res.redirect("/creation");
-      }
-
-      const seniorProfile = await SeniorProfile.findOne({ where: { seniorNum: user.memberNum } });
-      const studentProfile = await StudentProfile.findOne({ where: { stdNum: user.memberNum } });
+      const user = req.user; // 로그인된 사용자 정보를 세션에서 가져옴
+      const userType = user.userType;
 
       res.render("filter", {
-        isSenior: !!seniorProfile,
-        isStudent: !!studentProfile,
+        userType,
         currentUser: user
       });
     } catch (error) {
@@ -48,40 +41,35 @@ module.exports = {
       if (region) filterConditions.sido = region;
       if (city) filterConditions.gu = city;
       if (gender && gender !== "전체") filterConditions.gender = gender === "남성" ? "남성" : "여성";
-      if (amount) filterConditions.desiredAmount = amount;
+      if (amount) filterConditions.desiredAmount = { [Op.lte]: amount }; // 원하는 금액 이하로 필터링
       if (day) filterConditions.availableDay = day;
       if (time) filterConditions.availableTime = time;
 
-      const user = await Member.findByPk(req.user.memberNum);
-      const seniorProfile = await SeniorProfile.findOne({ where: { seniorNum: user.memberNum } });
-      const studentProfile = await StudentProfile.findOne({ where: { stdNum: user.memberNum } });
+      console.log('Filter conditions:', filterConditions); // 필터 조건 로그 출력
 
       let profiles = [];
-      let isSenior = false;
-      let isStudent = false;
+      const user = req.user; // 로그인된 사용자 정보를 세션에서 가져옴
 
-      if (seniorProfile) {
-        profiles = await StudentProfile.findAll({
-          where: filterConditions,
-          include: [{ model: Member, attributes: ["name"] }],
-          order: [order]
-        });
-        isSenior = true;
-      } else if (studentProfile) {
+      if (user.userType === 'student') {
         profiles = await SeniorProfile.findAll({
           where: filterConditions,
-          include: [{ model: Member, attributes: ["name"] }],
           order: [order]
         });
-        isStudent = true;
+      } else if (user.userType === 'senior') {
+        profiles = await StudentProfile.findAll({
+          where: filterConditions,
+          order: [order]
+        });
       } else {
         return res.redirect("/main");
       }
 
+      console.log('Profiles:', profiles); // 필터링된 프로필 로그 출력
+      console.log('Profiles to be sent to template:', profiles);
       res.render("category", {
         categories: profiles,
-        isSenior,
-        isStudent,
+        isSenior: user.userType === 'senior',
+        isStudent: user.userType === 'student',
         sortBy
       });
     } catch (error) {
