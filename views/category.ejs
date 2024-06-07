@@ -70,12 +70,12 @@
   </div>
   <div class="profile">
     <% categories.forEach(profile => { %>
-      <a href="#">
+      <a href="/Detail/<%= profile.seniorNum ? 'senior' : 'student' %>/<%= profile.seniorNum || profile.stdNum %>">
         <div class="profile2">
           <div class="profile6">
-            <img src="<%= profile.profileImage || './default-profile.png' %>" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
+            <img src="data:image/jpeg;base64,<%= profile.encodedImageBase64String %>" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">
             <div class="profile3">
-              <span class="profile4"><%= profile.Member.name %></span>
+              <span class="profile4"><%= profile.Member ? profile.Member.name : profile.seniorName %></span>
               <span class="profile5"><%= profile.university %> <%= profile.major %></span>
               <% if (sortBy === 'rating') { %>
                 <span class="profile7">별점: <%= profile.score %></span>

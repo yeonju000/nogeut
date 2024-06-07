@@ -35,26 +35,25 @@ module.exports = {
       const { region, city, gender, amount, day, time, sortBy } = req.query;
       const order = sortOptions[sortBy] || sortOptions.rating;
       const filterConditions = {};
-  
+
       if (region) filterConditions.sido = region;
       if (city) filterConditions.gu = city;
       if (gender && gender !== "전체") filterConditions.gender = gender === "남성" ? "남성" : "여성";
       if (amount) filterConditions.desiredAmount = { [Op.lte]: amount };
       if (day) filterConditions.availableDay = day;
       if (time) filterConditions.availableTime = time;
-  
+
       console.log('Filter conditions:', filterConditions);
-  
+
       let profiles = [];
       const user = req.user;
-  
+
       if (user.userType === 'student') {
         profiles = await SeniorProfile.findAll({
           where: filterConditions,
           include: [{
             model: Member,
             attributes: ['name'],
-            where: { memberNum: Sequelize.col('SeniorProfile.seniorNum') },
             required: false // left join
           }],
           order: [order]
@@ -65,7 +64,6 @@ module.exports = {
           include: [{
             model: Member,
             attributes: ['name'],
-            where: { memberNum: Sequelize.col('StudentProfile.stdNum') },
             required: false // left join
           }],
           order: [order]
@@ -73,17 +71,22 @@ module.exports = {
       } else {
         return res.redirect("/main");
       }
-  
-      // Calculate time differences
+
+      // Calculate time differences and encode image
       profiles = profiles.map(profile => {
         profile = profile.toJSON();
         profile.recentMatchingTimeDifference = getTimeDifference(profile.recentMatchingTime);
         profile.creationTimeDifference = getTimeDifference(profile.creationTime);
+        if (profile.profileImage) {
+          profile.encodedImageBase64String = Buffer.from(profile.profileImage).toString('base64');
+        } else {
+          profile.encodedImageBase64String = '';
+        }
         return profile;
       });
-  
+
       console.log('Profiles:', profiles);
-  
+
       res.render("category", {
         categories: profiles,
         isSenior: user.userType === 'senior',
@@ -92,6 +95,59 @@ module.exports = {
       });
     } catch (error) {
       console.log(`Error filtering profiles: ${error.message}`);
+      next(error);
+    }
+  },
+
+  show: async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const user = req.user;
+      let profile = null;
+      let isSenior = false;
+      let isStudent = false;
+
+      if (user.userType === 'student') {
+        profile = await SeniorProfile.findOne({
+          where: { seniorNum: id },
+          include: [{
+            model: Member,
+            attributes: ['name']
+          }]
+        });
+        isSenior = true;
+      } else if (user.userType === 'senior') {
+        profile = await StudentProfile.findOne({
+          where: { stdNum: id },
+          include: [{
+            model: Member,
+            attributes: ['name']
+          }]
+        });
+        isStudent = true;
+      } else {
+        return res.redirect("/main");
+      }
+
+      if (profile) {
+        profile = profile.toJSON();
+        profile.recentMatchingTimeDifference = getTimeDifference(profile.recentMatchingTime);
+        profile.creationTimeDifference = getTimeDifference(profile.creationTime);
+        if (profile.profileImage) {
+          profile.encodedImageBase64String = Buffer.from(profile.profileImage).toString('base64');
+        } else {
+          profile.encodedImageBase64String = '';
+        }
+      }
+
+      res.render("detailedProfile", {
+        profile: profile,
+        isSenior: isSenior,
+        isStudent: isStudent,
+        user: user
+      });
+    } catch (error) {
+      console.log(`Error fetching profile details: ${error.message}`);
       next(error);
     }
   },
@@ -107,16 +163,6 @@ module.exports = {
       next();
     } catch (error) {
       console.log(`Error creating category: ${error.message}`);
-      next(error);
-    }
-  },
-
-  show: async (req, res, next) => {
-    try {
-      const category = await Category.findByPk(req.params.id);
-      res.render('categories/show', { category });
-    } catch (error) {
-      console.log(`Error fetching category: ${error.message}`);
       next(error);
     }
   },
