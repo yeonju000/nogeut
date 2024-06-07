@@ -87,4 +87,5 @@ const StudentProfile = sequelize.define("StudentProfile", {
   }
 });
 
+
 module.exports = StudentProfile;

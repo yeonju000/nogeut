@@ -56,8 +56,13 @@ const models = [
 
 const [Member, StudentProfile, ChatRoom, Message, SeniorProfile, Matching, Promise, Review, InterestField, Report, Keep, MemberChatRoom] = models;
 
+// Member와 StudentProfile 간의 관계 설정
 Member.hasOne(StudentProfile, { foreignKey: "memberNum" });
 StudentProfile.belongsTo(Member, { foreignKey: "memberNum" });
+
+// Member와 SeniorProfile 간의 관계 설정 추가
+Member.hasOne(SeniorProfile, { foreignKey: "memberNum" });
+SeniorProfile.belongsTo(Member, { foreignKey: "memberNum" });;
 
 Member.hasMany(ChatRoom, { foreignKey: "stdNum" });
 Member.hasMany(ChatRoom, { foreignKey: "protectorNum" });

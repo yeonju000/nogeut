@@ -1,6 +1,7 @@
 const { Op, Sequelize } = require("sequelize");
 const SeniorProfile = require("../models/seniorProfile");
 const StudentProfile = require("../models/studentProfile");
+const Member = require("../models/member");
 
 const sortOptions = {
   rating: ["score", "DESC"],
@@ -50,11 +51,23 @@ module.exports = {
       if (user.userType === 'student') {
         profiles = await SeniorProfile.findAll({
           where: filterConditions,
+          include: [{
+            model: Member,
+            attributes: ['name'],
+            where: { memberNum: Sequelize.col('SeniorProfile.seniorNum') },
+            required: false // left join
+          }],
           order: [order]
         });
       } else if (user.userType === 'senior') {
         profiles = await StudentProfile.findAll({
           where: filterConditions,
+          include: [{
+            model: Member,
+            attributes: ['name'],
+            where: { memberNum: Sequelize.col('StudentProfile.stdNum') },
+            required: false // left join
+          }],
           order: [order]
         });
       } else {
