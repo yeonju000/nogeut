@@ -39,356 +39,65 @@
       <form id="filterForm" method="POST" action="/filter">
         <nav class="chart">
           <ul class="filter-list">
-            <li><a href="#" id="a">지역</a>
-              <ul class="dropdown" id="a-dropdown">
-                <li class="notA">시/도</li>
-                <li><a href="#" class="a-item a-seoul">서울특별시</a>
-                  <ul class="dropdown-child" id="seoul-dropdown">
-                    <li><a href="#" class="seoul-item">강남구</a></li>
-                    <li><a href="#" class="seoul-item">강동구</a></li>
-                    <li><a href="#" class="seoul-item">강북구</a></li>
-                    <li><a href="#" class="seoul-item">강서구</a></li>
-                    <li><a href="#" class="seoul-item">관악구</a></li>
-                    <li><a href="#" class="seoul-item">광진구</a></li>
-                    <li><a href="#" class="seoul-item">구로구</a></li>
-                    <li><a href="#" class="seoul-item">금천구</a></li>
-                    <li><a href="#" class="seoul-item">노원구</a></li>
-                    <li><a href="#" class="seoul-item">도봉구</a></li>
-                    <li><a href="#" class="seoul-item">동대문구</a></li>
-                    <li><a href="#" class="seoul-item">동작구</a></li>
-                    <li><a href="#" class="seoul-item">마포구</a></li>
-                    <li><a href="#" class="seoul-item">서대문구</a></li>
-                    <li><a href="#" class="seoul-item">서초구</a></li>
-                    <li><a href="#" class="seoul-item">성동구</a></li>
-                    <li><a href="#" class="seoul-item">성북구</a></li>
-                    <li><a href="#" class="seoul-item">송파구</a></li>
-                    <li><a href="#" class="seoul-item">양천구</a></li>
-                    <li><a href="#" class="seoul-item">영등포구</a></li>
-                    <li><a href="#" class="seoul-item">용산구</a></li>
-                    <li><a href="#" class="seoul-item">은평구</a></li>
-                    <li><a href="#" class="seoul-item">종로구</a></li>
-                    <li><a href="#" class="seoul-item">중구</a></li>
-                    <li><a href="#" class="seoul-item">중랑구</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-busan">부산광역시</a>
-                  <ul class="dropdown-child" id="busan-dropdown">
-                    <li><a href="#" class="busan-item">강서구</a></li>
-                    <li><a href="#" class="busan-item">금정구</a></li>
-                    <li><a href="#" class="busan-item">기장군</a></li>
-                    <li><a href="#" class="busan-item">남구</a></li>
-                    <li><a href="#" class="busan-item">동구</a></li>
-                    <li><a href="#" class="busan-item">동래구</a></li>
-                    <li><a href="#" class="busan-item">부산진구</a></li>
-                    <li><a href="#" class="busan-item">북구</a></li>
-                    <li><a href="#" class="busan-item">사상구</a></li>
-                    <li><a href="#" class="busan-item">사하구</a></li>
-                    <li><a href="#" class="busan-item">서구</a></li>
-                    <li><a href="#" class="busan-item">수영구</a></li>
-                    <li><a href="#" class="busan-item">연제구</a></li>
-                    <li><a href="#" class="busan-item">영도구</a></li>
-                    <li><a href="#" class="busan-item">중구</a></li>
-                    <li><a href="#" class="busan-item">해운대구</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-daegu">대구광역시</a>
-                  <ul class="dropdown-child" id="daegu-dropdown">
-                    <li><a href="#" class="daegu-item">남구</a></li>
-                    <li><a href="#" class="daegu-item">달서구</a></li>
-                    <li><a href="#" class="daegu-item">달성군</a></li>
-                    <li><a href="#" class="daegu-item">동구</a></li>
-                    <li><a href="#" class="daegu-item">북구</a></li>
-                    <li><a href="#" class="daegu-item">서구</a></li>
-                    <li><a href="#" class="daegu-item">수성구</a></li>
-                    <li><a href="#" class="daegu-item">중구</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-incheon">인천광역시</a>
-                  <ul class="dropdown-child" id="incheon-dropdown">
-                    <li><a href="#" class="incheon-item">강화군</a></li>
-                    <li><a href="#" class="incheon-item">계양구</a></li>
-                    <li><a href="#" class="incheon-item">남동구</a></li>
-                    <li><a href="#" class="incheon-item">동구</a></li>
-                    <li><a href="#" class="incheon-item">미추홀구</a></li>
-                    <li><a href="#" class="incheon-item">부평구</a></li>
-                    <li><a href="#" class="incheon-item">서구</a></li>
-                    <li><a href="#" class="incheon-item">연수구</a></li>
-                    <li><a href="#" class="incheon-item">옹진군</a></li>
-                    <li><a href="#" class="incheon-item">중구</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-gwangju">광주광역시</a>
-                  <ul class="dropdown-child" id="gwangju-dropdown">
-                    <li><a href="#" class="gwangju-item">광산구</a></li>
-                    <li><a href="#" class="gwangju-item">남구</a></li>
-                    <li><a href="#" class="gwangju-item">동구</a></li>
-                    <li><a href="#" class="gwangju-item">북구</a></li>
-                    <li><a href="#" class="gwangju-item">서구</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-daejeon">대전광역시</a>
-                  <ul class="dropdown-child" id="daejeon-dropdown">
-                    <li><a href="#" class="daejeon-item">대덕구</a></li>
-                    <li><a href="#" class="daejeon-item">동구</a></li>
-                    <li><a href="#" class="daejeon-item">서구</a></li>
-                    <li><a href="#" class="daejeon-item">유성구</a></li>
-                    <li><a href="#" class="daejeon-item">중구</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-ulsan">울산광역시</a>
-                  <ul class="dropdown-child" id="ulsan-dropdown">
-                    <li><a href="#" class="ulsan-item">남구</a></li>
-                    <li><a href="#" class="ulsan-item">동구</a></li>
-                    <li><a href="#" class="ulsan-item">북구</a></li>
-                    <li><a href="#" class="ulsan-item">울주군</a></li>
-                    <li><a href="#" class="ulsan-item">중구</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-sejong">세종특별자치시</a>
-                  <ul class="dropdown-child" id="sejong-dropdown">
-                    <li><a href="#" class="sejong-item">세종시</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-gyeonggi">경기도</a>
-                  <ul class="dropdown-child" id="gyeonggi-dropdown">
-                    <li><a href="#" class="gyeonggi-item">가평군</a></li>
-                    <li><a href="#" class="gyeonggi-item">고양시</a></li>
-                    <li><a href="#" class="gyeonggi-item">과천시</a></li>
-                    <li><a href="#" class="gyeonggi-item">광명시</a></li>
-                    <li><a href="#" class="gyeonggi-item">광주시</a></li>
-                    <li><a href="#" class="gyeonggi-item">구리시</a></li>
-                    <li><a href="#" class="gyeonggi-item">군포시</a></li>
-                    <li><a href="#" class="gyeonggi-item">김포시</a></li>
-                    <li><a href="#" class="gyeonggi-item">남양주시</a></li>
-                    <li><a href="#" class="gyeonggi-item">동두천시</a></li>
-                    <li><a href="#" class="gyeonggi-item">부천시</a></li>
-                    <li><a href="#" class="gyeonggi-item">성남시</a></li>
-                    <li><a href="#" class="gyeonggi-item">수원시</a></li>
-                    <li><a href="#" class="gyeonggi-item">시흥시</a></li>
-                    <li><a href="#" class="gyeonggi-item">안산시</a></li>
-                    <li><a href="#" class="gyeonggi-item">안성시</a></li>
-                    <li><a href="#" class="gyeonggi-item">안양시</a></li>
-                    <li><a href="#" class="gyeonggi-item">양주시</a></li>
-                    <li><a href="#" class="gyeonggi-item">양평군</a></li>
-                    <li><a href="#" class="gyeonggi-item">여주시</a></li>
-                    <li><a href="#" class="gyeonggi-item">연천군</a></li>
-                    <li><a href="#" class="gyeonggi-item">오산시</a></li>
-                    <li><a href="#" class="gyeonggi-item">용인시</a></li>
-                    <li><a href="#" class="gyeonggi-item">의왕시</a></li>
-                    <li><a href="#" class="gyeonggi-item">의정부시</a></li>
-                    <li><a href="#" class="gyeonggi-item">이천시</a></li>
-                    <li><a href="#" class="gyeonggi-item">파주시</a></li>
-                    <li><a href="#" class="gyeonggi-item">평택시</a></li>
-                    <li><a href="#" class="gyeonggi-item">포천시</a></li>
-                    <li><a href="#" class="gyeonggi-item">하남시</a></li>
-                    <li><a href="#" class="gyeonggi-item">화성시</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-gangwon">강원도</a>
-                  <ul class="dropdown-child" id="gangwon-dropdown">
-                    <li><a href="#" class="gangwon-item">강릉시</a></li>
-                    <li><a href="#" class="gangwon-item">고성군</a></li>
-                    <li><a href="#" class="gangwon-item">동해시</a></li>
-                    <li><a href="#" class="gangwon-item">삼척시</a></li>
-                    <li><a href="#" class="gangwon-item">속초시</a></li>
-                    <li><a href="#" class="gangwon-item">양구군</a></li>
-                    <li><a href="#" class="gangwon-item">양양군</a></li>
-                    <li><a href="#" class="gangwon-item">영월군</a></li>
-                    <li><a href="#" class="gangwon-item">원주시</a></li>
-                    <li><a href="#" class="gangwon-item">인제군</a></li>
-                    <li><a href="#" class="gangwon-item">정선군</a></li>
-                    <li><a href="#" class="gangwon-item">철원군</a></li>
-                    <li><a href="#" class="gangwon-item">춘천시</a></li>
-                    <li><a href="#" class="gangwon-item">태백시</a></li>
-                    <li><a href="#" class="gangwon-item">평창군</a></li>
-                    <li><a href="#" class="gangwon-item">홍천군</a></li>
-                    <li><a href="#" class="gangwon-item">화천군</a></li>
-                    <li><a href="#" class="gangwon-item">횡성군</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-chungbuk">충청북도</a>
-                  <ul class="dropdown-child" id="chungbuk-dropdown">
-                    <li><a href="#" class="chungbuk-item">괴산군</a></li>
-                    <li><a href="#" class="chungbuk-item">단양군</a></li>
-                    <li><a href="#" class="chungbuk-item">보은군</a></li>
-                    <li><a href="#" class="chungbuk-item">영동군</a></li>
-                    <li><a href="#" class="chungbuk-item">옥천군</a></li>
-                    <li><a href="#" class="chungbuk-item">음성군</a></li>
-                    <li><a href="#" class="chungbuk-item">제천시</a></li>
-                    <li><a href="#" class="chungbuk-item">진천군</a></li>
-                    <li><a href="#" class="chungbuk-item">청주시</a></li>
-                    <li><a href="#" class="chungbuk-item">충주시</a></li>
-                    <li><a href="#" class="chungbuk-item">증평군</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-chungnam">충청남도</a>
-                  <ul class="dropdown-child" id="chungnam-dropdown">
-                    <li><a href="#" class="chungnam-item">계룡시</a></li>
-                    <li><a href="#" class="chungnam-item">공주시</a></li>
-                    <li><a href="#" class="chungnam-item">금산군</a></li>
-                    <li><a href="#" class="chungnam-item">논산시</a></li>
-                    <li><a href="#" class="chungnam-item">당진시</a></li>
-                    <li><a href="#" class="chungnam-item">보령시</a></li>
-                    <li><a href="#" class="chungnam-item">부여군</a></li>
-                    <li><a href="#" class="chungnam-item">서산시</a></li>
-                    <li><a href="#" class="chungnam-item">서천군</a></li>
-                    <li><a href="#" class="chungnam-item">아산시</a></li>
-                    <li><a href="#" class="chungnam-item">연기군</a></li>
-                    <li><a href="#" class="chungnam-item">예산군</a></li>
-                    <li><a href="#" class="chungnam-item">천안시</a></li>
-                    <li><a href="#" class="chungnam-item">청양군</a></li>
-                    <li><a href="#" class="chungnam-item">태안군</a></li>
-                    <li><a href="#" class="chungnam-item">홍성군</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-jeonbuk">전라북도</a>
-                  <ul class="dropdown-child" id="jeonbuk-dropdown">
-                    <li><a href="#" class="jeonbuk-item">고창군</a></li>
-                    <li><a href="#" class="jeonbuk-item">군산시</a></li>
-                    <li><a href="#" class="jeonbuk-item">김제시</a></li>
-                    <li><a href="#" class="jeonbuk-item">남원시</a></li>
-                    <li><a href="#" class="jeonbuk-item">무주군</a></li>
-                    <li><a href="#" class="jeonbuk-item">부안군</a></li>
-                    <li><a href="#" class="jeonbuk-item">순창군</a></li>
-                    <li><a href="#" class="jeonbuk-item">완주군</a></li>
-                    <li><a href="#" class="jeonbuk-item">익산시</a></li>
-                    <li><a href="#" class="jeonbuk-item">임실군</a></li>
-                    <li><a href="#" class="jeonbuk-item">장수군</a></li>
-                    <li><a href="#" class="jeonbuk-item">전주시</a></li>
-                    <li><a href="#" class="jeonbuk-item">정읍시</a></li>
-                    <li><a href="#" class="jeonbuk-item">진안군</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-jeonnam">전라남도</a>
-                  <ul class="dropdown-child" id="jeonnam-dropdown">
-                    <li><a href="#" class="jeonnam-item">강진군</a></li>
-                    <li><a href="#" class="jeonnam-item">고흥군</a></li>
-                    <li><a href="#" class="jeonnam-item">곡성군</a></li>
-                    <li><a href="#" class="jeonnam-item">광양시</a></li>
-                    <li><a href="#" class="jeonnam-item">구례군</a></li>
-                    <li><a href="#" class="jeonnam-item">나주시</a></li>
-                    <li><a href="#" class="jeonnam-item">담양군</a></li>
-                    <li><a href="#" class="jeonnam-item">목포시</a></li>
-                    <li><a href="#" class="jeonnam-item">무안군</a></li>
-                    <li><a href="#" class="jeonnam-item">보성군</a></li>
-                    <li><a href="#" class="jeonnam-item">순천시</a></li>
-                    <li><a href="#" class="jeonnam-item">신안군</a></li>
-                    <li><a href="#" class="jeonnam-item">여수시</a></li>
-                    <li><a href="#" class="jeonnam-item">영광군</a></li>
-                    <li><a href="#" class="jeonnam-item">영암군</a></li>
-                    <li><a href="#" class="jeonnam-item">완도군</a></li>
-                    <li><a href="#" class="jeonnam-item">장성군</a></li>
-                    <li><a href="#" class="jeonnam-item">장흥군</a></li>
-                    <li><a href="#" class="jeonnam-item">진도군</a></li>
-                    <li><a href="#" class="jeonnam-item">함평군</a></li>
-                    <li><a href="#" class="jeonnam-item">해남군</a></li>
-                    <li><a href="#" class="jeonnam-item">화순군</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-gyeongbuk">경상북도</a>
-                  <ul class="dropdown-child" id="gyeongbuk-dropdown">
-                    <li><a href="#" class="gyeongbuk-item">강진군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">경산시</a></li>
-                    <li><a href="#" class="gyeongbuk-item">경주시</a></li>
-                    <li><a href="#" class="gyeongbuk-item">고령군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">구미시</a></li>
-                    <li><a href="#" class="gyeongbuk-item">군위군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">김천시</a></li>
-                    <li><a href="#" class="gyeongbuk-item">문경시</a></li>
-                    <li><a href="#" class="gyeongbuk-item">봉화군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">상주시</a></li>
-                    <li><a href="#" class="gyeongbuk-item">성주군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">안동시</a></li>
-                    <li><a href="#" class="gyeongbuk-item">영덕군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">영양군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">영주시</a></li>
-                    <li><a href="#" class="gyeongbuk-item">영천시</a></li>
-                    <li><a href="#" class="gyeongbuk-item">예천군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">울진군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">의성군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">청도군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">청송군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">칠곡군</a></li>
-                    <li><a href="#" class="gyeongbuk-item">포항시</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-gyeongnam">경상남도</a>
-                  <ul class="dropdown-child" id="gyeongnam-dropdown">
-                    <li><a href="#" class="gyeongnam-item">강진군</a></li>
-                    <li><a href="#" class="gyeongnam-item">거제시</a></li>
-                    <li><a href="#" class="gyeongnam-item">거창군</a></li>
-                    <li><a href="#" class="gyeongnam-item">고성군</a></li>
-                    <li><a href="#" class="gyeongnam-item">김해시</a></li>
-                    <li><a href="#" class="gyeongnam-item">남해군</a></li>
-                    <li><a href="#" class="gyeongnam-item">밀양시</a></li>
-                    <li><a href="#" class="gyeongnam-item">사천시</a></li>
-                    <li><a href="#" class="gyeongnam-item">산청군</a></li>
-                    <li><a href="#" class="gyeongnam-item">양산시</a></li>
-                    <li><a href="#" class="gyeongnam-item">의령군</a></li>
-                    <li><a href="#" class="gyeongnam-item">진주시</a></li>
-                    <li><a href="#" class="gyeongnam-item">창녕군</a></li>
-                    <li><a href="#" class="gyeongnam-item">창원시</a></li>
-                    <li><a href="#" class="gyeongnam-item">통영시</a></li>
-                    <li><a href="#" class="gyeongnam-item">하동군</a></li>
-                    <li><a href="#" class="gyeongnam-item">함안군</a></li>
-                    <li><a href="#" class="gyeongnam-item">함양군</a></li>
-                    <li><a href="#" class="gyeongnam-item">합천군</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="a-item a-jeju">제주특별자치도</a>
-                  <ul class="dropdown-child" id="jeju-dropdown">
-                    <li><a href="#" class="jeju-item">서귀포시</a></li>
-                    <li><a href="#" class="jeju-item">제주시</a></li>
-                  </ul>
-                </li>
-              </ul>
+            <li>
+              <label for="region">지역:</label>
+              <select id="region" name="region">
+                <option value="">선택하세요</option>
+                <option value="서울특별시">서울특별시</option>
+                <option value="부산광역시">부산광역시</option>
+                <option value="대구광역시">대구광역시</option>
+                <!-- Add more options here -->
+              </select>
             </li>
-            <li><a href="#" id="b">성별</a>
-              <ul class="dropdown" id="b-dropdown">
-                <li><a href="#" class="b-item">전체</a></li>
-                <li><a href="#" class="b-item">남</a></li>
-                <li><a href="#" class="b-item">여</a></li>
-              </ul>
+            <li>
+              <label for="city">구/군:</label>
+              <select id="city" name="city">
+                <option value="">선택하세요</option>
+              </select>
             </li>
-            <li><a href="#" id="c">금액</a>
-              <ul class="dropdown" id="c-dropdown">
-                <li><a href="#" class="c-item">전체</a></li>
-                <li><a href="#" class="c-item">무료</a></li>
-                <li><a href="#" class="c-item">1만원</a></li>
-                <li><a href="#" class="c-item">3만원</a></li>
-                <li><a href="#" class="c-item">5만원</a></li>
-                <li><a href="#" class="c-item">기타</a></li>
-                <li><a href="#" class="c-item">협의</a></li>
-              </ul>
+            <li>
+              <label for="gender">성별:</label>
+              <select id="gender" name="gender">
+                <option value="">전체</option>
+                <option value="남성">남성</option>
+                <option value="여성">여성</option>
+              </select>
             </li>
-            <li><a href="#" id="f">요일</a>
-              <ul class="dropdown" id="f-dropdown">
-                <li><a href="#" class="f-item">전체</a></li>
-                <li><a href="#" class="f-item">월</a></li>
-                <li><a href="#" class="f-item">화</a></li>
-                <li><a href="#" class="f-item">수</a></li>
-                <li><a href="#" class="f-item">목</a></li>
-                <li><a href="#" class="f-item">금</a></li>
-                <li><a href="#" class="f-item">토</a></li>
-                <li><a href="#" class="f-item">일</a></li>
-              </ul>
+            <li>
+              <label for="amount">금액:</label>
+              <select id="amount" name="amount">
+                <option value="">전체</option>
+                <option value="0">무료</option>
+                <option value="10000">1만원</option>
+                <option value="30000">3만원</option>
+                <option value="50000">5만원</option>
+              </select>
             </li>
-            <li><a href="#" id="g">시간대</a>
-              <ul class="dropdown" id="g-dropdown">
-                <li><a href="#" class="g-item">오전</a></li>
-                <li><a href="#" class="g-item">오후</a></li>
-                <li><a href="#" class="g-item">협의</a></li>
-              </ul>
+            <li>
+              <label for="day">요일:</label>
+              <select id="day" name="day">
+                <option value="">전체</option>
+                <option value="월">월</option>
+                <option value="화">화</option>
+                <option value="수">수</option>
+                <option value="목">목</option>
+                <option value="금">금</option>
+                <option value="토">토</option>
+                <option value="일">일</option>
+              </select>
+            </li>
+            <li>
+              <label for="time">시간대:</label>
+              <select id="time" name="time">
+                <option value="">전체</option>
+                <option value="오전">오전</option>
+                <option value="오후">오후</option>
+                <option value="협의">협의</option>
+              </select>
             </li>
             <li><button id="searchButton" type="submit">검색</button></li>
           </ul>
         </nav>
-        <input type="hidden" name="region" id="region">
-        <input type="hidden" name="city" id="city">
-        <input type="hidden" name="gender" id="gender">
-        <input type="hidden" name="amount" id="amount">
-        <input type="hidden" name="day" id="day">
-        <input type="hidden" name="time" id="time">
       </form>
     </div>
   </header>
@@ -405,156 +114,30 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const filterForm = document.getElementById('filterForm');
-    
-        // Helper function to set the value of a hidden input
-        function setHiddenValue(inputId, value) {
-            document.getElementById(inputId).value = value;
-        }
-    
-        // Event listener for main nav items
-        document.getElementById('a').addEventListener('click', function(event) {
-            event.preventDefault();
-            toggleDropdown('a-dropdown');
-        });
-    
-        // Generalized event listener for region and city dropdowns
-        function addRegionEventListeners(regionClass, dropdownId) {
-            document.querySelectorAll(`.${regionClass}`).forEach(item => {
-                item.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const region = item.getAttribute('data-region');
-                    setHiddenValue('region', region);
-                    ensureDropdownVisible(dropdownId);
-                });
-    
-                item.addEventListener('mouseover', function(event) {
-                    ensureDropdownVisible(dropdownId);
-                });
-    
-                item.addEventListener('mouseleave', function(event) {
-                    hideDropdownWithDelay(dropdownId, regionClass);
-                });
-            });
-    
-            document.querySelectorAll(`#${dropdownId} .dropdown-child li a`).forEach(item => {
-                item.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const city = item.textContent.trim();
-                    setHiddenValue('city', city);
-                    hideDropdown(dropdownId);
-                });
-            });
-        }
-    
-        // Add event listeners for all regions
-        addRegionEventListeners('a-item', 'seoul-dropdown');
-        addRegionEventListeners('a-item', 'busan-dropdown');
-        addRegionEventListeners('a-item', 'daegu-dropdown');
-        // Add other regions here...
-    
-        // Event listener for gender dropdown items
-        document.querySelectorAll('.b-item').forEach(item => {
-            item.addEventListener('click', function(event) {
-                event.preventDefault();
-                const gender = item.textContent === '전체' ? '' : item.textContent;
-                setHiddenValue('gender', gender);
-                toggleDropdown('b-dropdown');
-            });
-        });
-    
-        // Event listener for amount dropdown items
-        document.querySelectorAll('.c-item').forEach(item => {
-            item.addEventListener('click', function(event) {
-                event.preventDefault();
-                const amount = item.textContent === '전체' ? '' :
-                               item.textContent === '무료' ? '0' :
-                               item.textContent === '1만원' ? '10000' :
-                               item.textContent === '3만원' ? '30000' :
-                               item.textContent === '5만원' ? '50000' : '';
-                setHiddenValue('amount', amount);
-                toggleDropdown('c-dropdown');
-            });
-        });
-    
-        // Event listener for day dropdown items
-        document.querySelectorAll('.f-item').forEach(item => {
-            item.addEventListener('click', function(event) {
-                event.preventDefault();
-                const day = item.textContent === '전체' ? '' : item.textContent;
-                setHiddenValue('day', day);
-                toggleDropdown('f-dropdown');
-            });
-        });
-    
-        // Event listener for time dropdown items
-        document.querySelectorAll('.g-item').forEach(item => {
-            item.addEventListener('click', function(event) {
-                event.preventDefault();
-                const time = item.textContent;
-                setHiddenValue('time', time);
-                toggleDropdown('g-dropdown');
-            });
-        });
-    
-        // Function to toggle dropdown visibility
-        function toggleDropdown(id) {
-            const dropdown = document.getElementById(id);
-            if (dropdown) {
-                dropdown.classList.toggle('show');
-            }
-        }
-    
-        // Function to ensure dropdown is visible
-        function ensureDropdownVisible(id) {
-            const dropdown = document.getElementById(id);
-            if (dropdown) {
-                dropdown.classList.add('show');
-            }
-        }
-    
-        // Function to hide dropdown
-        function hideDropdown(id) {
-            const dropdown = document.getElementById(id);
-            if (dropdown) {
-                dropdown.classList.remove('show');
-            }
-        }
-    
-        // Function to hide dropdown with delay
-        function hideDropdownWithDelay(id, triggerClass) {
-            setTimeout(() => {
-                const dropdown = document.getElementById(id);
-                const triggerElement = document.querySelector(`.${triggerClass}`);
-                if (dropdown && triggerElement && !dropdown.matches(':hover') && !triggerElement.matches(':hover')) {
-                    dropdown.classList.remove('show');
-                }
-            }, 200);
-        }
-    
-        // Add event listener to search button
-        document.getElementById('searchButton').addEventListener('click', function() {
-            updateHiddenInputs();
-            filterForm.submit();
-        });
-    
-        // Function to update hidden inputs based on selected items
-        function updateHiddenInputs() {
-            document.getElementById('region').value = getSelectedText('a-item');
-            document.getElementById('city').value = getSelectedText('seoul-item') || getSelectedText('busan-item');
-            document.getElementById('gender').value = getSelectedText('b-item');
-            document.getElementById('amount').value = getSelectedText('c-item');
-            document.getElementById('day').value = getSelectedText('f-item');
-            document.getElementById('time').value = getSelectedText('g-item');
-        }
-    
-        // Function to get selected text from dropdown
-        function getSelectedText(className) {
-            const selectedItem = document.querySelector(`.${className}.nav-selected`);
-            return selectedItem ? selectedItem.textContent.trim() : '';
-        }
-    });
-    </script>
+      const regionSelect = document.getElementById('region');
+      const citySelect = document.getElementById('city');
 
+      const regionData = {
+        "서울특별시": ["강남구", "강동구", "강북구", "강서구", "성북구"],
+        "부산광역시": ["강서구", "금정구", "기장군", "남구"],
+        "대구광역시": ["남구", "달서구", "달성군", "동구"]
+        // Add more regions and cities
+      };
+
+      regionSelect.addEventListener('change', function() {
+        const selectedRegion = this.value;
+        citySelect.innerHTML = '<option value="">선택하세요</option>';
+
+        if (selectedRegion && regionData[selectedRegion]) {
+          regionData[selectedRegion].forEach(city => {
+            const option = document.createElement('option');
+            option.value = city;
+            option.text = city;
+            citySelect.appendChild(option);
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
