@@ -17,6 +17,7 @@ async function fetchData(userID) {
 }
 
 
+
 async function fetchData2(userID) {
     try {
         const senior = await SeniorProfile.findOne({ where: { seniorNum: userID } });
@@ -117,6 +118,26 @@ exports.detail = async (req, res) => {
         }
         if (senior && student) res.status(404).send('회원 정보를 찾을 수 없습니다.'); // Error: 양쪽 프로필 생성한 경우
 
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+exports.oldDetail = async (req, res) => {
+    try {
+
+        //const user = await fetchData(req.session.userID);
+        const user = req.session.user;
+        const senior = await fetchData2(req.session.userID);
+        //const senior = await fetchData2(req.session.user.memberNum);
+        if (senior) {
+            const year = await calculateKoreanAgeByYear(senior.yearOfBirth);
+            const interestField = await interestFieldData(senior.seniorNum);
+
+            const review = await reviewData(senior.seniorNum);
+            const encodedImageBase64String = Buffer.from(senior.profileImage).toString('base64');
+            res.render('MyDetailedProfile_old', { senior, age: year, encodedImageBase64String: encodedImageBase64String, interests: interestField, review: review, user: user });
+        }
     } catch (error) {
         res.status(500).send(error.message);
     }

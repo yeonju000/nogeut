@@ -29,6 +29,8 @@ exports.postLogin = async (req, res, next) => {
                     }
                     console.log('로그인 성공:', user);
                     req.session.user = user; // 세션에 사용자 정보 저장
+                    req.session.userID = user.memberNum;
+                    console.log("세션 아이디");
                     if (user.profileCreationStatus) {
                         console.log('프로필 생성 상태: true');
                         res.redirect('/main');
@@ -73,9 +75,9 @@ exports.renderSignup = (req, res) => {
 
 exports.signup = async (req, res) => {
     try {
-        const { email, password, name, age } = req.body;
+        const { email, password, name, age, userType } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        await Member.create({ email, memberPW: hashedPassword, name, age, profileCreationStatus: false });
+        await Member.create({ email, memberPW: hashedPassword, name, age, userType, profileCreationStatus: false });
         res.redirect('/login');
     } catch (err) {
         console.log(err);

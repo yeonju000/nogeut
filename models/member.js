@@ -18,15 +18,18 @@ const Member = sequelize.define('Member', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false
     },
     age: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: false
+    },
+    userType: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     profileCreationStatus: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
         defaultValue: false
     },
     createdAt: {
@@ -37,8 +40,6 @@ const Member = sequelize.define('Member', {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
     }
-}, {
-    tableName: 'Members'
 });
 
 module.exports = Member;
