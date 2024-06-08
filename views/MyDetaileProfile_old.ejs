@@ -26,13 +26,14 @@
     <!-- Site H1 / display: none -->
     <h1 class="main-title">노긋 노긋</h1>
     <div class="header__block">
-      <% if (typeof user !== 'undefined' && user) { %>
-        <h6 style="font-size: small; padding: 0; margin-top: 0; margin-bottom: 0; margin-right: 20px;">반갑습니다, <%= user.name %>님!</h6>
+      <% if (typeof user !=='undefined' && user) { %>
+        <h6 style="font-size: small; padding: 0; margin-top: 0; margin-bottom: 0; margin-right: 20px;">반갑습니다, <%=
+            user.name %>님!</h6>
         <a href="/Detail"> 마이페이지 </a>
         <a href="/logout"> 로그아웃 </a>
-      <% } else { %>
-        <a href="/login"> 로그인 </a>
-      <% } %>
+        <% } else { %>
+          <a href="/login"> 로그인 </a>
+          <% } %>
     </div>
 
     <div class="header_nav-main-block">
@@ -154,9 +155,8 @@
       </div>
       <br>
       <input type="button" value="수정하기"
-        style="font-size: 15px; color: white; border: 0; border-radius: 15px; background-color:#2D6210; padding: 10px; display: inline-block;" onclick="redirectToUpdate()">
-      <input type="button" value="채팅하기"
-        style="font-size: 15px; color: white; border: 0; border-radius: 15px; background-color:#2D6210; padding: 10px; display: inline-block;">
+        style="font-size: 15px; color: white; border: 0; border-radius: 15px; background-color:#2D6210; padding: 10px; display: inline-block;"
+        onclick="redirectToUpdate()">
     </div>
   </div>
   <script>

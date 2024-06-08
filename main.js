@@ -31,6 +31,7 @@ const errorController = require("./controllers/errorController");
 const loginController = require("./controllers/loginController");
 const mainController = require("./controllers/mainController");
 const detailedController = require("./controllers/detailedController");
+const oldProfileController = require("./controllers/oldProfileController");
 
 const app = express();
 app.set("port", process.env.PORT || 80);
@@ -62,7 +63,7 @@ StudentProfile.belongsTo(Member, { foreignKey: "memberNum" });
 
 // Member와 SeniorProfile 간의 관계 설정 추가
 Member.hasOne(SeniorProfile, { foreignKey: "memberNum" });
-SeniorProfile.belongsTo(Member, { foreignKey: "memberNum" });;
+SeniorProfile.belongsTo(Member, { foreignKey: "memberNum" });
 
 Member.hasMany(ChatRoom, { foreignKey: "stdNum" });
 Member.hasMany(ChatRoom, { foreignKey: "protectorNum" });
@@ -131,10 +132,14 @@ app.get("/login", loginController.login);
 app.post("/login", loginController.postLogin);
 app.get("/main", mainController.mainRender);
 app.get('/logout', loginController.logout);
-app.get("/Detail", detailedController.detail);
+app.get("/Detail", detailedController.myDetail);
+app.get("/Detail/profile", detailedController.detail);
+app.get("/Detail/Senior", detailedController.oldDetail);
 app.get("/chat", chatRoutes);
 app.use('/senior', seniorProfileRoutes); // 시니어 프로필 라우터 추가
 app.use('/Creation', creationRoutes);
+app.get("/Update/Senior", oldProfileController.modifiedSeniorProfile);
+app.post("/Update/Senior", upload.single('profileImage'), oldProfileController.updateSeniorProfile);
 
 app.use("/", categoryRoutes);
 app.use("/", loginRoutes);
