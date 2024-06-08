@@ -112,8 +112,7 @@ exports.createSeniorProfile = async (req, res) => {
             recentMatchingTime: null
         });
 
-        const favoFields = Array.isArray(favoField) ? favoField : [favoField];
-        
+
         const fieldMappings = {
             'FF_exercise': '운동',
             'FF_craft': '수공예',
@@ -122,7 +121,7 @@ exports.createSeniorProfile = async (req, res) => {
             'FF_art': '미술',
             'FF_companion': '말동무'
         };
-
+        const favoFields = Array.isArray(favoField) ? favoField : [favoField];
         for (const field of favoFields) {
             const mappedField = fieldMappings[field];
             if (mappedField) {
@@ -152,7 +151,6 @@ exports.createSeniorProfile = async (req, res) => {
         res.status(500).send("프로필을 생성하는 중에 오류가 발생했습니다.");
     }
 };
-
 async function fetchData2(userID) {
     try {
         const senior = await SeniorProfile.findOne({ where: { seniorNum: userID } });
@@ -232,6 +230,8 @@ exports.modifiedSeniorProfile = async (req, res) => {
     }
 }
 
+const sequelize = require('../config/database');
+
 exports.updateSeniorProfile = async (req, res) => {
     console.log(req.body);
     const {
@@ -265,14 +265,6 @@ exports.updateSeniorProfile = async (req, res) => {
         profileImage = await fs.readFile(profileImagePath);
     }
 
-    const seniorProfile = await SeniorProfile.findOne({
-        where: { seniorNum: req.session.userID } // 세션 또는 사용자 ID에 따라 적절하게 수정하세요.
-    });
-
-    if (!seniorProfile) {
-        return res.status(404).json({ error: "Senior profile not found" });
-    }
-    const [results, metadata] = await sequelize.query('UPDATE SeniorProfiles SET seniorName="홍길" where seniorName = "홍길동"');
     const ableDayMapping = {
         'ableDay_1': '월',
         'ableDay_2': '화',
@@ -297,62 +289,123 @@ exports.updateSeniorProfile = async (req, res) => {
     };
 
     try {
-        const seniorProfile = await SeniorProfile.findOne({
-            where: { seniorNum: req.session.userID }
+        const userId = req.session.userID;
+        await SeniorProfile.update(
+            { seniorName: name },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
+            { desiredAmount: DesireMapping[desiredAmount] },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
+            { precautions: formatCaution },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
+            { introduce: formatSelfIntro },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
+            { yearOfBirth: birthYear },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
+            { sido: sido },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
+            { gu: gugun },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
+            { availableDay: ableDayMapping[ableDay] },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
+            { availableTime: ableTimeMapping[ableTime] },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
+            { seniorPhoneNumber: phoneNumber },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
+            { gender: gender === 'male' ? '남성' : '여성' },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await InterestField.destroy({
+            where: {
+                memberNum: userId,
+            },
         });
-
-        if (!seniorProfile) {
-            return res.status(404).json({ error: "Senior profile not found" });
+        const fieldMappings = {
+            'FF_exercise': '운동',
+            'FF_craft': '수공예',
+            'FF_digital': '디지털',
+            'FF_music': '음악',
+            'FF_art': '미술',
+            'FF_companion': '말동무'
+        };
+        const favoFields = Array.isArray(favoField) ? favoField : [favoField];
+        for (const field of favoFields) {
+            const mappedField = fieldMappings[field];
+            if (mappedField) {
+                await InterestField.create({
+                    memberNum: userId,
+                    interestField: mappedField
+                });
+            }
         }
 
-        const userId = req.session.userID;
-
-        const updateQuery = `
-            UPDATE SeniorProfiles
-            SET
-                seniorName = :name,
-                yearOfBirth = :birthYear,
-                seniorPhoneNumber = :phoneNumber,
-                gender = :gender,
-                sido = :sido,
-                gu = :gugun,
-                desiredAmount = :desiredAmount,
-                availableDay = :availableDay,
-                availableTime = :availableTime,
-                introduce = :introduce,
-                precautions = :precautions,
-                profileImage = :profileImage
-            WHERE seniorNum = :userId
-        `;
-
-        const replacements = {
-            name: String(name),
-            birthYear: String(birthYear),
-            phoneNumber: String(phoneNumber),
-            gender: gender === 'male' ? '남성' : '여성',
-            sido: String(sido),
-            gugun: String(gugun),
-            desiredAmount: DesireMapping[String(desiredAmount)],
-            availableDay: ableDayMapping[String(ableDayString)],
-            availableTime: ableTimeMapping[String(ableTime)],
-            introduce: formatSelfIntro,
-            precautions: formatCaution,
-            profileImage: profileImage ? profileImage : null,
-            userId: userId
-        };
-
-        const [results, metadata] = await sequelize.query(updateQuery, {
-            replacements: replacements,
-            type: Sequelize.QueryTypes.UPDATE
-        });
-
-        res.redirect('/main');
+        res.redirect("/main");
 
     } catch (error) {
         console.error("Error updating profile:", error);
         res.status(500).json({ error: "An error occurred while updating the profile" });
     }
-
-    res.redirect('/main');
-
 };

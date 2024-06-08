@@ -3,6 +3,7 @@ const StudentProfile = require("../models/studentProfile");
 const InterestField = require("../models/interestField");
 const Member = require("../models/member");
 const Review = require("../models/review");
+const Keep = require("../models/keep");
 
 
 
@@ -127,7 +128,7 @@ exports.detail = async (req, res) => {
             const interestField = await interestFieldData(senior.seniorNum);
             const review = await reviewData(senior.seniorNum);
             const encodedImageBase64String = Buffer.from(senior.profileImage).toString('base64');
-            return res.render('DetailedProfile_old', { senior, age: year, encodedImageBase64String, interests: interestField, review, user });
+            return res.render('DetaileProfile_old', { senior, age: year, encodedImageBase64String, interests: interestField, review, user });
         }
 
         if (student) {
@@ -135,7 +136,7 @@ exports.detail = async (req, res) => {
             const interestField = await interestFieldData(student.stdNum);
             const review = await reviewData(student.stdNum);
             const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
-            return res.render('DetailedProfile_young', { student, user, age: year, encodedImageBase64String, interests: interestField, review, user });
+            return res.render('DetaileProfile_young', { student, user, age: year, encodedImageBase64String, interests: interestField, review, user });
         }
 
         // If neither senior nor student profile exists
@@ -182,7 +183,7 @@ exports.mypage = async (req, res) => {
 
             const review = await reviewData(senior.seniorNum);
             const encodedImageBase64String = Buffer.from(senior.profileImage).toString('base64');
-            res.render('DetailedProfile_old', { senior, age: year, encodedImageBase64String: encodedImageBase64String, interests: interestField, review: review, user: user });
+            res.render('DetaileProfile_old', { senior, age: year, encodedImageBase64String: encodedImageBase64String, interests: interestField, review: review, user: user });
         
         }
         if (student) {
@@ -215,7 +216,16 @@ exports.studentDetail = async (req, res) => {
             const review = await reviewData(student.stdNum);
             const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
             const member = await fetchData(student.stdNum);
-            const isKeep = true; // 필요에 따라 적절히 설정
+
+            // Check if the student is already in the keep list
+            const keep = await Keep.findOne({
+                where: {
+                    seniorNum: user.memberNum,
+                    stdNum: student.stdNum
+                }
+            });
+            const isKeep = !!keep;
+
             return res.render('stdDetailedProfile', { student, member, encodedImageBase64String, interests: interestField, review, isKeep, user, age: year });
         }
 
@@ -223,7 +233,7 @@ exports.studentDetail = async (req, res) => {
     } catch (error) {
         res.status(500).send(error.message);
     }
-}
+};
 //찜이랑 정렬에서 프로필 누르면 보여지는 거()
 exports.seniorDetail = async (req, res) => {
     try {

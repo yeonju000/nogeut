@@ -29,7 +29,7 @@
       <nav class="header__nav-block">
         <ul class="nav__list" role="navigation">
           <li class="nav__list-item">
-            <a href="/main" aria-label="노긋노긋 홈페이지">
+            <a href="/" aria-label="노긋노긋 홈페이지">
               <img src="/images/logo.png" width=50px alt="로고">
             </a>
           </li>
@@ -84,8 +84,7 @@
             <h4>지역</h4>
           </td>
           <td>
-            <%= student.sido %>
-              <%= student.gu %>
+            <%= student.sido %> <%= student.gu %>
           </td>
         </tr>
         <tr>
@@ -117,8 +116,7 @@
       <h4>희망 분야</h4>
       <div style="width: 100%; height: 60px;">
         <% interests.forEach(interest => { %>
-          <div
-            style="margin-bottom: 10px; margin-right: 15px; width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; text-align: center; float: left;">
+          <div style="margin-bottom: 10px; margin-right: 15px; width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; text-align: center; float: left;">
             <%= interest %>
           </div>
         <% }) %>
@@ -126,27 +124,24 @@
       <br>
       <h4 style="display: inline;">희망 금액</h4>
       <h6 style="display: inline;"> 1시간 기준</h6><br><br>
-      <div
-        style="width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; display: flex; justify-content: center; align-items: center;">
+      <div style="width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; display: flex; justify-content: center; align-items: center;">
         <%= student.desiredAmount %>
       </div>
       <br>
       <h4>가능 요일</h4>
-      <div
-        style="width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; display: flex; justify-content: center; align-items: center;">
+      <div style="width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; display: flex; justify-content: center; align-items: center;">
         <%= student.availableDay %>
       </div>
       <br>
       <h4>가능 시간</h4>
-      <div
-        style="width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; display: flex; justify-content: center; align-items: center;">
+      <div style="width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; display: flex; justify-content: center; align-items: center;">
         <%= student.availableTime %>
       </div>
       <br>
       <hr>
       <h4>자기소개</h4>
       <div class="self-intro" style="background-color: #F8F8F8; border-radius: 20px; padding: 10px;">
-        <%= student.introducd %>
+        <%= student.introduce %>
       </div>
       <br>
       <hr>
@@ -161,24 +156,37 @@
       <br>
       <input type="button" value="약속잡기"
         style="font-size: 15px; color: white; border: 0; border-radius: 15px; background-color: #2D6210; padding: 10px; display: inline-block;" onclick="redirectTORequest()">
-        <% if (isKeep) { %>
-        <input type="button" value="찜취소하기"
-        style="font-size: 15px; color: white; border: 0; border-radius: 15px; background-color: #2D6210; padding: 10px; display: inline-block;" onclick="redirectToKeepCancel()">
-        <% } else { %>
-        <input type="button" value="찜하기"
-        style="font-size: 15px; color: white; border: 0; border-radius: 15px; background-color: #2D6210; padding: 10px; display: inline-block;" onclick="redirectToKeep()">
-        <% } %>
-      </div>
+      <button id="keep-button" onclick="toggleKeep(<%= student.stdNum %>)"
+        style="font-size: 15px; color: white; border: 0; border-radius: 15px; background-color: #2D6210; padding: 10px; display: inline-block;">
+        <%= isKeep ? '찜 취소하기' : '찜하기' %>
+      </button>
+    </div>
   </div>
+
   <script>
+    const isKeep = <%= JSON.stringify(isKeep) %>;
+
     function redirectTORequest() {
       window.location.href = ''; // 원하는 경로로 변경
     }
-    function redirectToKeep() {
-      window.location.href = ''; // 원하는 경로로 변경
-    }
-    function redirectToKeepCancel() {
-      window.location.href = ''; // 원하는 경로로 변경
+
+    async function toggleKeep(stdNum) {
+      const url = isKeep ? '/keeps/remove' : '/keeps/add';
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ stdNum }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert(result.message);
+        location.reload();  // Reload the page to update the keep status
+      } else {
+        alert('Error: ' + result.message);
+      }
     }
   </script>
 </body>
