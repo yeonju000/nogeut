@@ -24,16 +24,17 @@ async function fetchData2(userID) {
     try {
         const senior = await SeniorProfile.findOne({ where: { seniorNum: userID } });
         if (senior) {
-            console.log("있다있어!!!!!!!!!!!!!!");
+            console.log("시니어 회원");
         } else {
-            console.log("없어!!!!!!!");
+            console.log("시니어 회원 아닙니다.");
         }
-        return senior;
+   return senior;
     } catch (error) {
         console.error(error);
         throw error;
     }
 }
+
 
 async function fetchData3(userID) {
     try {
@@ -50,7 +51,7 @@ async function fetchData3(userID) {
     }
 }
 
-
+/*
 // 같이 씀
 async function interestFieldData(seniorID) {
     try {
@@ -66,7 +67,20 @@ async function interestFieldData(seniorID) {
         throw error;
     }
 }
+*/
 
+async function interestFieldData(userID) {
+    try {
+        const interests = await InterestField.findAll({
+            where: { memberNum: userID },
+            attributes: ['interestField']
+        });
+        return interests.map(interest => interest.interestField);
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 
 
 async function reviewData(memberNum) {

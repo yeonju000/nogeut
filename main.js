@@ -24,6 +24,7 @@ const mainhomeRoutes = require("./routes/mainhomeRoutes");
 const filterRoutes = require("./routes/filterRoutes");
 const mainRoutes = require("./routes/mainRoutes");
 const seniorProfileRoutes = require("./routes/seniorProfileRoutes");
+const studentProfileRoutes = require("./routes/studentProfileRoutes"); //68 추가
 const reviewRoutes = require("./routes/reviewRoutes");
 const promiseRoutes = require("./routes/promiseRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
@@ -35,6 +36,7 @@ const loginController = require("./controllers/loginController");
 const mainController = require("./controllers/mainController");
 const detailedController = require("./controllers/detailedController");
 const oldProfileController = require("./controllers/oldProfileController");
+const youngProfileController = require('./controllers/youngProfileController'); // 68 추가
 
 const app = express();
 app.set("port", process.env.PORT || 80);
@@ -127,7 +129,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use((req, res, next) => {
-  res.locals.currentUser = req.user || null; // 로그인된 사용자의 정보를 res.locals에 추가
+  res.locals.currentUser = req.user || null;
   next();
 });
 
@@ -146,7 +148,9 @@ app.use('/senior', seniorProfileRoutes); // 시니어 프로필 라우터 추가
 app.use('/Creation', creationRoutes);
 app.get("/Update/Senior", oldProfileController.modifiedSeniorProfile);
 app.post("/Update/Senior", upload.single('profileImage'), oldProfileController.updateSeniorProfile);
-
+app.use("/student", studentProfileRoutes); // 68 수정
+app.use("/edit/student", youngProfileController.modifiedStudentProfile);
+app.use("/update/student", youngProfileController.updateStudentProfile);
 
 app.use("/", categoryRoutes);
 app.use("/", loginRoutes);
@@ -168,5 +172,5 @@ const server = app.listen(app.get("port"), () => {
   console.log(`Server running at http://localhost:${app.get("port")}`);
 });
 
-const io = socketIo(server); // 중복 선언 문제 해결
+const io = socketIo(server);
 const chatController = require("./controllers/chatController")(io);

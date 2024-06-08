@@ -1,4 +1,4 @@
-//CreateProfile_young.ejs
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,7 +21,7 @@
       <div class="header__block">
         <% if (typeof user !== 'undefined' && user) { %>
           <h6 style="font-size: small; padding: 0; margin-top: 0; margin-bottom: 0; margin-right: 20px;">반갑습니다, <%= user.name %>님!</h6>
-          <a href="/Detail"> 마이페이지 </a>
+          <a href="#"> 마이페이지 </a>
           <a href="/logout"> 로그아웃 </a>
         <% } else { %>
           <a href="/login"> 로그인 </a>
@@ -56,20 +56,21 @@
         </ul>
       </nav>
     </div>
-
-    <script>
-    </script>
-
   </header>
   
     <div class="container">
         <h2>대학생 프로필 등록하기</h2>
         <div class="form-container">
-            <form action="/Creation/University", method="post">
+          <!--수정-->
+            <form action="/student/create", method="post" enctype="multipart/form-data">
                 <h3>프로필 사진</h3>
-                <!--프로필 사진 수정-->
-                <img src="/images/logo.jpg" class="profile-image">
-                <input type="button" name="imageUpload" value="사진 업로드" class="upload-button">
+                <img id="profileImage" src="" onerror="this.src='https://i.ytimg.com/vi/as9gGq8itrk/maxresdefault.jpg'"
+                style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
+                <input type="file" id="chooseFile" name="profileImage" accept="image/*" onchange="loadFile(event)" 
+                style="display: none;">
+
+                <input type="button" value="사진 업로드" onclick="document.getElementById('chooseFile').click();"
+                style="background-color:#F8F8F8; border: 0; width: 90px; height: 30px; border-radius: 10px;">
                 <br><br> 
 
                 <h3>이름</h3> <h6> 이름을 입력해 주세요.</h6>
@@ -115,12 +116,12 @@
                 <br><br>
 
                 <h3>자신있는 분야</h3> <h6> 자신있는 분야를 선택해 주세요. (중복 선택 가능)</h6>
-                <input type="checkbox" name="favoField" id="FF_exercise">운동
-                <input type="checkbox" name="favoField" id="FF_craft">수공예
-                <input type="checkbox" name="favoField" id="FF_digital">디지털
-                <input type="checkbox" name="favoField" id="FF_music">음악
-                <input type="checkbox" name="favoField" id="FF_art">미술
-                <input type="checkbox" name="favoField" id="FF_companion">말동무
+                <input type="checkbox" name="favoField" value="FF_exercise">운동
+                <input type="checkbox" name="favoField" value="FF_craft">수공예
+                <input type="checkbox" name="favoField" value="FF_digital">디지털
+                <input type="checkbox" name="favoField" value="FF_music">음악
+                <input type="checkbox" name="favoField" value="FF_art">미술
+                <input type="checkbox" name="favoField" value="FF_companion">말동무
                 <br><br>
 
                 <h3>희망 금액</h3> <h6> 원하시는 금액대를 선택해 주세요.</h6>
@@ -131,7 +132,7 @@
                 <input type="radio" name="desiredAmount" value="DA_disscu">협의
                 <br><br>
 
-                <h3>가능 시간</h3> <h6> 가능한 시간대를 선택해 주세요.()</h6>
+                <h3>가능 시간</h3> <h6> 가능한 시간대를 선택해 주세요.(중복 선택 불가능, 구체적인 내용은 자기소개에 작성해주세요.)</h6>
                 <h4>요일</h4>
                 <input type="radio" name="ableDay" value="ableDay_1">월
                 <input type="radio" name="ableDay" value="ableDay_2">화
@@ -241,8 +242,8 @@
                   URL.revokeObjectURL(output.src) // free memory
                 }
               }
-            
             </script>
+            
         </div>
     </div>
 
