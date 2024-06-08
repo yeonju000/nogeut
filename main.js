@@ -25,6 +25,9 @@ const mainhomeRoutes = require("./routes/mainhomeRoutes");
 const filterRoutes = require("./routes/filterRoutes");
 const mainRoutes = require("./routes/mainRoutes");
 const seniorProfileRoutes = require("./routes/seniorProfileRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+const promiseRoutes = require("./routes/promiseRoutes");
+const appointmentRoutes = require("./routes/appointmentRoutes");
 
 // 컨트롤러
 const errorController = require("./controllers/errorController");
@@ -38,6 +41,7 @@ app.set("port", process.env.PORT || 80);
 
 // EJS 설정 추가
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, 'views'));
 
 // 모델 관계 설정
 const models = [
@@ -57,11 +61,10 @@ const models = [
 
 const [Member, StudentProfile, ChatRoom, Message, SeniorProfile, Matching, Promise, Review, InterestField, Report, Keep, MemberChatRoom] = models;
 
-// Member와 StudentProfile 간의 관계 설정
+// 모델 관계 설정
 Member.hasOne(StudentProfile, { foreignKey: "memberNum" });
 StudentProfile.belongsTo(Member, { foreignKey: "memberNum" });
 
-// Member와 SeniorProfile 간의 관계 설정 추가
 Member.hasOne(SeniorProfile, { foreignKey: "memberNum" });
 SeniorProfile.belongsTo(Member, { foreignKey: "memberNum" });
 
@@ -76,7 +79,15 @@ Message.belongsTo(ChatRoom, { foreignKey: "roomNum" });
 Message.belongsTo(Member, { as: 'Sender', foreignKey: 'senderNum' });
 Message.belongsTo(Member, { as: 'Receiver', foreignKey: 'receiverNum' });
 
-StudentProfile.belongsTo(Member, { foreignKey: "memberNum" });
+// 학생 - 약속 - 노인 (N:M)
+StudentProfile.belongsToMany(SeniorProfile, { through: Promise, foreignKey: "stdNum" });
+SeniorProfile.belongsToMany(StudentProfile, { through: Promise, foreignKey: "seniorNum" });
+// 매칭 - 약속 관계 (1:1)
+Promise.hasOne(Matching, { foreignKey: 'promiseNum' });
+Matching.belongsTo(Promise, { foreignKey: 'promiseNum' });
+// 매칭 - 후기 관계 (1:N)
+Matching.hasMany(Review, { foreignKey: 'matchingNum' });
+Review.belongsTo(Matching, { foreignKey: 'matchingNum' });
 
 app.use(methodOverride("_method", { methods: ["POST", "GET"] }));
 app.use(express.json());
@@ -112,11 +123,6 @@ app.use(session({
 }));
 app.use(connectFlash());
 
-app.set('views', path.join(__dirname, 'views'));
-app.set("view engine", "ejs");
-app.use(express.static("public"));
-
-// passport
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -141,6 +147,7 @@ app.use('/Creation', creationRoutes);
 app.get("/Update/Senior", oldProfileController.modifiedSeniorProfile);
 app.post("/Update/Senior", upload.single('profileImage'), oldProfileController.updateSeniorProfile);
 
+
 app.use("/", categoryRoutes);
 app.use("/", loginRoutes);
 app.use("/", filterRoutes);
@@ -149,10 +156,14 @@ app.use("/", matchingRoutes);
 app.use("/", keepRouter);
 app.use("/", chatRoutes);
 app.use("/", creationRoutes);
+app.use('/review', reviewRoutes);
+app.use('/promise', promiseRoutes);
+app.use('/appointment', appointmentRoutes);
 
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 
+// 데이터베이스 동기화 및 서버 시작
 const server = app.listen(app.get("port"), () => {
   console.log(`Server running at http://localhost:${app.get("port")}`);
 });
