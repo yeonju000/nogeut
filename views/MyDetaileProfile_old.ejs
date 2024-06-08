@@ -23,7 +23,7 @@
 
 <body style="background-color: #E1EFD7;">
   <header class="header__container">
-    <!-- Site H1 / display: none -->
+    <!— Site H1 / display: none —>
     <h1 class="main-title">노긋 노긋</h1>
     <div class="header__block">
       <% if (typeof user !=='undefined' && user) { %>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="header_nav-main-block">
-      <!-- 네비게이션에 해당하는 부분 -->
+      <!— 네비게이션에 해당하는 부분 —>
       <nav class="header__nav-block">
         <ul class="nav__list" role="navigation">
 
@@ -109,6 +109,14 @@
             <%= senior.matchingCount %>
           </td>
         </tr>
+        <tr>
+          <td>
+            <h4>전화번호</h6>
+          </td>
+          <td>
+            <%= senior.seniorPhoneNumber %>
+          </td>
+        </tr>
       </table>
       <hr>
       <h4>희망 분야</h4>
@@ -126,6 +134,12 @@
       <div
         style="width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; display: flex; justify-content: center; align-items: center;">
         <%= senior.desiredAmount %>
+      </div>
+      <br>
+      <h4>가능 요일</h4>
+      <div
+        style="width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; display: flex; justify-content: center; align-items: center;">
+        <%= senior.availableDay %>
       </div>
       <br>
       <h4>가능 시간</h4>
