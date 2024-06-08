@@ -112,7 +112,8 @@ exports.createSeniorProfile = async (req, res) => {
             recentMatchingTime: null
         });
 
-
+        const favoFields = Array.isArray(favoField) ? favoField : [favoField];
+        
         const fieldMappings = {
             'FF_exercise': '운동',
             'FF_craft': '수공예',
@@ -122,7 +123,7 @@ exports.createSeniorProfile = async (req, res) => {
             'FF_companion': '말동무'
         };
 
-        for (const field of favoField) {
+        for (const field of favoFields) {
             const mappedField = fieldMappings[field];
             if (mappedField) {
                 await InterestField.create({
@@ -151,6 +152,7 @@ exports.createSeniorProfile = async (req, res) => {
         res.status(500).send("프로필을 생성하는 중에 오류가 발생했습니다.");
     }
 };
+
 async function fetchData2(userID) {
     try {
         const senior = await SeniorProfile.findOne({ where: { seniorNum: userID } });
