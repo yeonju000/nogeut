@@ -68,7 +68,7 @@
 
   <div class="profile">
     <% categories.forEach(profile => { %>
-      <a href="/Detail/<%= profile.seniorNum ? 'senior' : 'student' %>/<%= profile.seniorNum || profile.stdNum %>">
+      <a href="/Detail/student/<%= profile.stdNum %>">
         <div class="profile2">
           <div class="profile6">
             <img src="data:image/jpeg;base64,<%= profile.encodedImageBase64String %>" style="width: 8%; height: 20%; border-radius: 50%; padding-left: 1px;">

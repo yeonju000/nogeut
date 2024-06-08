@@ -201,3 +201,47 @@ exports.mypage = async (req, res) => {
         res.status(500).send(error.message);
     }
 }
+
+//찜이랑 정렬에서 프로필 누르면 보여지는 거(학생)
+exports.studentDetail = async (req, res) => {
+    try {
+        const studentNum = req.params.stdNum;
+        const student = await fetchData3(studentNum);
+        const user = req.user;  // 로그인한 사용자 정보
+
+        if (student) {
+            const year = calculateKoreanAgeByYear(student.yearOfBirth);
+            const interestField = await interestFieldData(student.stdNum);
+            const review = await reviewData(student.stdNum);
+            const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
+            const member = await fetchData(student.stdNum);
+            const isKeep = true; // 필요에 따라 적절히 설정
+            return res.render('stdDetailedProfile', { student, member, encodedImageBase64String, interests: interestField, review, isKeep, user });
+        }
+
+        return res.status(404).send('회원 정보를 찾을 수 없습니다.');
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+//찜이랑 정렬에서 프로필 누르면 보여지는 거()
+exports.seniorDetail = async (req, res) => {
+    try {
+        const seniorNum = req.params.seniorNum;
+        const senior = await fetchData2(seniorNum);
+        const user = req.user;
+
+        if (senior) {
+            const year = calculateKoreanAgeByYear(senior.yearOfBirth);
+            const interestField = await interestFieldData(senior.seniorNum);
+            const review = await reviewData(senior.seniorNum);
+            const encodedImageBase64String = senior.profileImage ? Buffer.from(senior.profileImage).toString('base64') : '';
+            const member = await fetchData(senior.seniorNum);
+            return res.render('seniorDetailedProfile', { senior, member, encodedImageBase64String, interests: interestField, review, user, age: year });
+        }
+
+        return res.status(404).send('회원 정보를 찾을 수 없습니다.');
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
