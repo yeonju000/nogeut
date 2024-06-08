@@ -20,7 +20,6 @@ const loginRoutes = require("./routes/loginRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const matchingRoutes = require("./routes/matchingRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
-const keepRouter = require("./routes/keepRouter");
 const mainhomeRoutes = require("./routes/mainhomeRoutes");
 const filterRoutes = require("./routes/filterRoutes");
 const mainRoutes = require("./routes/mainRoutes");
@@ -28,6 +27,7 @@ const seniorProfileRoutes = require("./routes/seniorProfileRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const promiseRoutes = require("./routes/promiseRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
+const keepRoutes = require("./routes/keepRoutes");
 
 // 컨트롤러
 const errorController = require("./controllers/errorController");
@@ -153,7 +153,7 @@ app.use("/", loginRoutes);
 app.use("/", filterRoutes);
 app.use("/", uploadRoutes);
 app.use("/", matchingRoutes);
-app.use("/", keepRouter);
+app.use("/", keepRoutes);
 app.use("/", chatRoutes);
 app.use("/", creationRoutes);
 app.use('/review', reviewRoutes);

@@ -47,7 +47,7 @@ const Member = sequelize.define('Member', {
 
 Member.hasOne(SeniorProfile, { foreignKey: 'seniorNum', sourceKey: 'memberNum' });
 Member.hasOne(StudentProfile, { foreignKey: 'stdNum', sourceKey: 'memberNum' });
-
+s
 SeniorProfile.belongsTo(Member, { foreignKey: 'seniorNum', targetKey: 'memberNum' });
 StudentProfile.belongsTo(Member, { foreignKey: 'stdNum', targetKey: 'memberNum' });
 
