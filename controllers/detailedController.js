@@ -216,7 +216,7 @@ exports.studentDetail = async (req, res) => {
             const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
             const member = await fetchData(student.stdNum);
             const isKeep = true; // 필요에 따라 적절히 설정
-            return res.render('stdDetailedProfile', { student, member, encodedImageBase64String, interests: interestField, review, isKeep, user });
+            return res.render('stdDetailedProfile', { student, member, encodedImageBase64String, interests: interestField, review, isKeep, user, age: year });
         }
 
         return res.status(404).send('회원 정보를 찾을 수 없습니다.');
