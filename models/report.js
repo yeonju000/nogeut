@@ -37,7 +37,10 @@ const Report = sequelize.define("Report", {
 });
 
 Report.belongsTo(Member, { as: 'student', foreignKey: 'stdNum' });
+Report.belongsTo(Member, { as: 'seniorMember', foreignKey: 'seniorNum' });
 Report.belongsTo(SeniorProfile, { as: 'senior', foreignKey: 'seniorNum' });
+Report.belongsTo(StudentProfile, { as: 'studentProfile', foreignKey: 'stdNum' });
+Report.belongsTo(SeniorProfile, { as: 'seniorProfile', foreignKey: 'seniorNum' });
 
 Member.hasMany(Report, { foreignKey: 'stdNum' });
 SeniorProfile.hasMany(Report, { foreignKey: 'seniorNum' });

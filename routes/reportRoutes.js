@@ -8,7 +8,6 @@ const upload = multer({ storage: storage });
 
 router.get('/reportForm', reportController.showReportForm);
 router.post('/submitReport', upload.single('reportMedia'), reportController.submitReport);
-router.get('/reports', reportController.listReports);
 router.get('/reportList', reportController.renderReportListPage);
 router.get('/report/:reportNum', reportController.viewReport);
 router.get('/pendingReports', reportController.pendingReports);
