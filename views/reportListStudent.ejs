@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>보고서 목록</title>
+    <title>내가 쓴 보고서 목록</title>
     <link href="/css/reportList.css?v=1.0" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -24,7 +24,7 @@
         <div class="side__nav-container">
             <ul class="nav__list" role="navigation">
                 <li class="nav__review__list-item"><a href="/reportList">내가 쓴 보고서</a></li>
-                <li class="nav__review__list-item"><a href=""> 내가 써야하는 보고서 </a></li>
+                <li class="nav__review__list-item"><a href="/pendingReports">내가 써야하는 보고서</a></li>
             </ul>
         </div>
     </header>
@@ -34,7 +34,7 @@
                 <div class="report-item">
                     <div class="report-details">
                         <span>보고서 번호: <%= report.reportNum %></span>
-                        <span>학생이름: <%= report.studentName %></span>
+                        <span>노인 이름: <%= report.seniorName %></span>
                     </div>
                 </div>
             </a>

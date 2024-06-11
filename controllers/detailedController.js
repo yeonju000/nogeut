@@ -234,6 +234,7 @@ exports.studentDetail = async (req, res) => {
         res.status(500).send(error.message);
     }
 };
+
 //찜이랑 정렬에서 프로필 누르면 보여지는 거()
 exports.seniorDetail = async (req, res) => {
     try {

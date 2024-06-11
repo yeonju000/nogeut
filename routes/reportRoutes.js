@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const reportController = require('../controllers/reportController');
+const multer = require('multer');
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 router.get('/reportForm', reportController.showReportForm);
-router.post('/submitReport', reportController.submitReport);
+router.post('/submitReport', upload.single('reportMedia'), reportController.submitReport);
 router.get('/reports', reportController.listReports);
 router.get('/reportList', reportController.renderReportListPage);
-//router.get('/reportList/:reportNum',reportController.getReportDetail);
 router.get('/report/:reportNum', reportController.viewReport);
-router.get('/reportList', (req, res) => {
-    res.render('reportList'); // reportConfirmation.ejs 파일을 렌더링합니다.
-});
+router.get('/pendingReports', reportController.pendingReports);
+router.post('/confirmReport/:reportNum', reportController.confirmReport);
 
 module.exports = router;

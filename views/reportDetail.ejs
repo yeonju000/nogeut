@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
-    <title>보고서 작성</title>
-    <link href="/css/report.css?v=1.0" rel="stylesheet" type="text/css">
+    <title>보고서 상세</title>
+    <link href="/css/reportDetail.css?v=1.0" rel="stylesheet" type="text/css">
 </head>
 <body>
     <header class="header__container">
@@ -15,11 +14,6 @@
         </div>
         <nav class="header__nav-block">
             <ul class="nav__list" role="navigation">
-                <li class="nav__list-item">
-                    <a href="#" aria-label="노긋노긋 홈페이지">
-                        <img src="/images/logo.png" width="50px" alt="로고">
-                    </a>
-                </li>
                 <li class="nav__list-item"><a href="#"> 매칭하기 </a></li>
                 <li class="nav__list-item"><a href="#"> 채팅 </a></li>
                 <li class="nav__list-item"><a href="#"> 보고서작성 </a></li>
@@ -27,34 +21,45 @@
                 <li class="nav__list-item"><a href="#"> 보고서확인 </a></li>
             </ul>
         </nav>
-        <div class="side__nav-container">
-            <ul class="nav__list" role="navigation">
-                <li class="nav__review__list-item">
-                    <a href="#"> 예시 </a>
-                </li>
-                <li class="nav__review__list-item">
-                    <a href="#">보고서 목록</a>
-                </li>
-            </ul>
-        </div>
     </header>
-    <h1>Report Detail</h1>
-        <div id="container" style="width: 900px; margin: auto;">
-        <div id="container1" style="background-color: white; width: 900px;">
-            <p><strong>Report Number:</strong> <%= report.promiseDate %></p>
-            <p><strong>Report Number:</strong> <%= report.startTime %></p>
-    
-        <p><strong>Senior Name:</strong> <%= senior.seniorName %></p>
-        <p><strong>Student Name:</strong> <%= student.name %></p>
+    <div class="report-detail-container">
+        <h2>보고서 상세</h2>
+        <div>
+            <span>보고서 번호: <%= report.reportNum %></span>
+            <span>학생 이름: <%= student.name %></span>
+            <span>노인 이름: <%= senior.seniorName %></span>
+            <span>내용: <%= report.reportContent %></span>
+            <img src="data:image/png;base64,<%= base64Image %>" alt="Report Image">
+            <span>보고서 작성 날짜: <%= report.createdAt.toLocaleString() %></span>
+            <span>약속 날짜: <%= promiseDay.toLocaleDateString() %> <%= startTime %> - <%= finishTime %></span>
+            <span>확인 날짜: <% if (report.reportStatus) { %><%= report.updatedAt.toLocaleString() %><% } else { %>아직 확인하지 않았습니다.<% } %></span>
+        </div>
+        <% if (user.userType === 'senior') { %>
+            <% if (!report.reportStatus) { %>
+                <button onclick="confirmReport(<%= report.reportNum %>)">확인</button>
+            <% } else { %>
+                <span>이미 확인이 완료되었습니다.</span>
+            <% } %>
+        <% } else if (user.userType === 'student') { %>
+            <% if (report.reportStatus) { %>
+                <span>확인이 완료된 보고서입니다.</span>
+            <% } %>
+        <% } %>
     </div>
-    
-    <p><strong>Content:</strong> <%= report.reportContent %></p>
-   <!-- reportDetail.ejs -->
-
-<p><strong>Media:</strong> <img src="data:image/png;base64,<%= base64Image %>" alt="Report Media" /></p>
-<%=report.reportMedia %>
-
-
-</body> 
-
+    <script>
+        function confirmReport(reportNum) {
+            fetch(`/confirmReport/${reportNum}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('확인 중 오류가 발생했습니다.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
 </html>

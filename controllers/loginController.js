@@ -30,6 +30,7 @@ exports.postLogin = async (req, res, next) => {
                     console.log('로그인 성공:', user);
                     req.session.user = user; // 세션에 사용자 정보 저장
                     req.session.userID = user.memberNum;
+                    req.session.userType = user.userType;
                     console.log("세션 아이디");
                     if (user.profileCreationStatus) {
                         console.log('프로필 생성 상태: true');

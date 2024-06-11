@@ -6,140 +6,163 @@ const Matching = require('../models/matching');
 const StudentProfile = require("../models/studentProfile");
 const { Op } = require('sequelize');
 const multer = require('multer');
+const sequelize = require('../config/database');
+
+async function fetchData(reportNum) {
+    try {
+        const report = await Report.findOne({ where: { reportNum } });
+        return report;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 
 exports.showReportForm = async (req, res) => {
     try {
-        console.log("Report render process started.");
-
+        const promiseNum = req.query.promiseNum;
         const userID = req.session.userID;
-        const user = await Member.findOne({ where: { memberNum: userID } });
 
-        if (!user) {
-            return res.status(400).json({ error: '사용자를 찾을 수 없습니다.' });
+        if (!promiseNum) {
+            return res.status(400).json({ error: 'Invalid request' });
         }
 
-        // 사용자의 회원 번호에 해당하는 약속을 찾습니다.
         const promise = await Promise.findOne({
             where: {
-                [Op.or]: [
-                    { stdNum: userID },
-                    { protectorNum: userID }
-                ]
+                promiseNum: promiseNum,
+                stdNum: userID
             }
         });
 
         if (!promise) {
-            return res.status(400).json({ error: '약속을 찾을 수 없습니다.' });
+            return res.status(400).json({ error: 'Promise not found' });
         }
 
-        console.log("Promise found:", promise);
-
-        // 약속에 연결된 회원들의 이름을 가져옵니다.
         const student = await Member.findOne({ where: { memberNum: promise.stdNum } });
-        const protector = await Member.findOne({ where: { memberNum: promise.protectorNum } });
-        const senior = await SeniorProfile.findOne({ where: { seniorNum: promise.seniorNum } });
+        const senior = await SeniorProfile.findOne({ where: { seniorNum: promise.protectorNum } });
 
-        if (!student || !protector || !senior) {
-            return res.status(400).json({ error: '회원 정보를 찾을 수 없습니다.' });
+        if (!student || !senior) {
+            return res.status(400).json({ error: 'Related members not found' });
         }
 
-        // 보고서 작성 폼에 전달할 데이터를 구성합니다.
-        const reportFormData = {
+        const promiseDetails = {
             promiseNum: promise.promiseNum,
             studentNum: promise.stdNum,
             protectorNum: promise.protectorNum,
-            seniorNum: promise.seniorNum,
+            seniorNum: promise.protectorNum,
             studentName: student.name,
-            protectorName: protector.name,
             seniorName: senior.seniorName,
             promiseDate: promise.promiseCreationDate,
             startTime: promise.startTime
         };
 
-        res.render('report', { reportFormData });
+        res.render('reportForm', { promiseDetails });
     } catch (error) {
-        console.error('Error fetching promise with member name:', error);
-        res.status(500).json({ error: '약속과 회원 이름을 가져오는 중 오류가 발생했습니다.' });
+        console.error('Error fetching promise details:', error);
+        res.status(500).json({ error: 'Error fetching promise details' });
     }
 };
+
+
 exports.submitReport = async (req, res) => {
     try {
-        const { reportContent, seniorNum, stdNum } = req.body;
+        const { reportContent, seniorNum, stdNum, promiseNum } = req.body;
         const reportMedia = req.file;
 
         const newReport = await Report.create({
             reportContent: reportContent,
-            reportMedia: reportMedia,
+            reportMedia: reportMedia.buffer,
             seniorNum: seniorNum,
             stdNum: stdNum
         });
 
-        // 매칭 테이블에 보고서 번호 업데이트
         await Matching.update(
-            { reportNum: newReport.reportNum },
-            { where: { seniorNum: seniorNum, stdNum: stdNum } }
+            { reportNum: newReport.reportNum, reportStatus: true },
+            { where: { promiseNum: promiseNum } }
         );
 
-        
         res.redirect('/reportList');
     } catch (error) {
         console.error('Error submitting report:', error);
         res.status(500).json({ error: 'Report submission failed' });
     }
 };
+
+
+
+
 exports.listReports = async (req, res) => {
     try {
-        const userID = req.session.userID; // 세션에서 사용자 ID를 가져옴
+        const userID = req.session.userID;
 
         if (!userID) {
             return res.status(401).json({ error: '사용자가 로그인하지 않았습니다.' });
         }
 
-        // 사용자가 학생이거나 노인인 보고서를 가져옴
-        const reports = await Report.findAll({
-            where: {
-                [Op.or]: [
-                    { stdNum: userID },
-                    { seniorNum: userID }
-                ]
-            }
-        });
+        const userType = req.session.userType;
 
-        res.render('reportList', { reports: reports });
+        if (userType === 'student') {
+            const reports = await Report.findAll({
+                where: {
+                    stdNum: userID
+                }
+            });
+
+            res.render('reportListStudent', { reports });
+        } else if (userType === 'senior') {
+            const reports = await Report.findAll({
+                where: {
+                    seniorNum: userID
+                }
+            });
+
+            res.render('reportListSenior', { reports });
+        } else {
+            return res.status(400).json({ error: '알 수 없는 사용자 유형입니다.' });
+        }
     } catch (error) {
         console.error('Error fetching reports:', error);
         res.status(500).json({ error: 'Failed to fetch reports' });
     }
 };
+
 exports.viewReport = async (req, res) => {
     try {
-        // 보고서 ID를 가져옵니다.
         const reportNum = req.params.reportNum;
-
-        // 보고서 테이블에서 해당 ID의 보고서를 조회합니다.
-        const report = await Report.findOne({ where: { reportNum: reportNum } });
+        const report = await Report.findOne({ where: { reportNum } });
 
         if (!report) {
             return res.status(404).json({ error: 'Report not found' });
         }
 
-      
         const base64Image = Buffer.from(report.reportMedia, 'binary').toString('base64');
 
-        // 학생 정보를 조회
         const student = await Member.findOne({ where: { memberNum: report.stdNum } });
         if (!student) {
             return res.status(404).json({ error: 'Student not found' });
         }
 
-        // 노인 정보를 조회
         const senior = await SeniorProfile.findOne({ where: { seniorNum: report.seniorNum } });
         if (!senior) {
             return res.status(404).json({ error: 'Senior not found' });
         }
 
-        // HTML 템플릿을 렌더링할 때, 인코딩된 이미지 데이터를 전달합니다.
-        res.render('reportDetail', { report: report, student: student, senior: senior, base64Image: base64Image });
+        const promise = await Promise.findOne({ where: { stdNum: report.stdNum, protectorNum: report.seniorNum } });
+        if (!promise) {
+            return res.status(404).json({ error: 'Promise not found' });
+        }
+
+        res.render('reportDetail', {
+            report: report,
+            student: student,
+            senior: senior,
+            base64Image: base64Image,
+            user: req.session.user,
+            promiseDay: promise.promiseDay,
+            startTime: promise.startTime,
+            finishTime: promise.finishTime
+        });
     } catch (error) {
         console.error('Error fetching report:', error);
         res.status(500).json({ error: 'Failed to fetch report' });
@@ -147,203 +170,95 @@ exports.viewReport = async (req, res) => {
 };
 
 
+exports.pendingReports = async (req, res) => {
+    try {
+        const userID = req.session.userID;
+
+        const pendingReports = await Matching.findAll({
+            where: {
+                reportStatus: false,
+                '$Promise.stdNum$': userID
+            },
+            include: [
+                {
+                    model: Promise,
+                    required: true
+                }
+            ]
+        });
+
+        const reports = [];
+        for (const pendingReport of pendingReports) {
+            const student = await StudentProfile.findOne({ where: { stdNum: pendingReport.Promise.stdNum } });
+            const senior = await SeniorProfile.findOne({ where: { seniorNum: pendingReport.Promise.protectorNum } });
+
+            reports.push({
+                matchingNum: pendingReport.matchingNum,
+                promiseNum: pendingReport.promiseNum,
+                studentName: student ? student.name : 'Unknown',
+                seniorName: senior ? senior.seniorName : 'Unknown'
+            });
+        }
+
+        res.render('pendingReports', { reports });
+    } catch (error) {
+        console.error('Error fetching pending reports:', error);
+        res.status(500).json({ error: 'Pending reports could not be fetched.' });
+    }
+};
+
+
 
 exports.renderReportListPage = async (req, res) => {
     try {
-        // 보고서 목록을 가져오는 로직
-        const reports = await Report.findAll();
-        // 보고서 목록 페이지를 렌더링하고 데이터를 전달
-        res.render('reportList', { reports: reports });
+        const userID = req.session.userID;
+        const userType = req.session.userType;
+
+        if (userType === 'student') {
+            const reports = await Report.findAll({ where: { stdNum: userID } });
+            res.render('reportListStudent', { reports });
+        } else if (userType === 'senior') {
+            const reports = await Report.findAll({ where: { seniorNum: userID } });
+            res.render('reportListSenior', { reports });
+        } else {
+            res.status(400).json({ error: '알 수 없는 사용자 유형입니다.' });
+        }
     } catch (error) {
         console.error('Error fetching reports:', error);
         res.status(500).json({ error: 'Failed to fetch reports' });
     }
 };
-/*
-exports.showReportForm = async (req, res) => {
-    try {
-        console.log("Report render process started.");
 
-        const userID = req.session.userID;
-        const user = await Member.findOne({ where: { memberNum: userID } });
-
-        if (!user) {
-            return res.status(400).json({ error: '사용자를 찾을 수 없습니다.' });
-        }
-
-        // 사용자의 회원 번호에 해당하는 약속을 찾습니다.
-        const promise = await Promise.findOne({
-            where: {
-                [Op.or]: [
-                    { stdNum: userID },
-                    { protectorNum: userID }
-                ]
-            }
-        });
-
-        if (!promise) {
-            return res.status(400).json({ error: '약속을 찾을 수 없습니다.' });
-        }
-
-        console.log("Promise found:", promise);
-
-        // 약속에 연결된 회원들의 이름을 가져옵니다.
-        const student = await Member.findOne({ where: { memberNum: promise.stdNum } });
-        const protector = await Member.findOne({ where: { memberNum: promise.protectorNum } });
-        const senior = await SeniorProfile.findOne({ where: { seniorNum: promise.seniorNum } });
-
-        if (!student || !protector || !senior) {
-            return res.status(400).json({ error: '회원 정보를 찾을 수 없습니다.' });
-        }
-
-        // 보고서 작성 폼에 전달할 데이터를 구성합니다.
-        const reportFormData = {
-            promiseNum: promise.promiseNum,
-            studentNum: promise.stdNum,
-            protectorNum: promise.protectorNum,
-            seniorNum: promise.seniorNum,
-            studentName: student.name,
-            protectorName: protector.name,
-            seniorName: senior.seniorName,
-            promiseDate: promise.promiseCreationDate,
-            startTime: promise.startTime
-        };
-
-        res.render('report', { reportFormData });
-    } catch (error) {
-        console.error('Error fetching promise with member name:', error);
-        res.status(500).json({ error: '약속과 회원 이름을 가져오는 중 오류가 발생했습니다.' });
-    }
-};
-/*
-exports.submitReport = async (req, res) => {
-    try {
-        console.log("Report creation process started.");
-
-        const { stdNum, seniorNum, reportContent } = req.body;
-        const reportMedia = req.file; // 파일 업로드를 통해 받은 이미지 데이터
-
-        // 보고서 데이터를 저장합니다.
-        const report = await Report.create({
-            reportContent: reportContent,
-            reportMedia: reportMedia,
-            seniorNum: seniorNum,
-            stdNum: stdNum
-        });
-
-        console.log("Report submitted:", report);
-        
-
-        res.status(200).json({ message: '보고서가 성공적으로 제출되었습니다.' });
-    } catch (error) {
-        console.error('Error submitting report:', error);
-        res.status(500).json({ error: '보고서를 제출하는 중 오류가 발생했습니다.' });
-    }
-};
-
-exports.submitReport = async (req, res) => {
-    try {
-        console.log("Report creation process started.");
-
-        const { stdNum, seniorNum, reportContent } = req.body;
-        const reportMedia = req.file; // 파일 업로드를 통해 받은 이미지 데이터
-
-        // 보고서 데이터를 저장합니다.
-        const report = await Report.create({
-            reportContent: reportContent,
-            reportMedia: reportMedia,
-            seniorNum: seniorNum,
-            stdNum: stdNum
-        });
-
-        console.log("Report submitted:", report);
-        // 매칭 테이블에 보고서 번호 업데이트
-        await Matching.update(
-            { reportNum: newReport.reportNum },
-            { where: { seniorNum: seniorNum, stdNum: stdNum } }
-        );
-        // 보고서가 성공적으로 제출되었음을 JSON 응답으로 알린 후에 보고서 목록 페이지로 넘어갑니다.
-        res.redirect(`/reportDetail/${report.reportNum}`);
-
-    } catch (error) {
-        console.error('Error submitting report:', error);
-        res.status(500).json({ error: '보고서를 제출하는 중 오류가 발생했습니다.' });
-    }
-};
-
-exports.renderReportListPage = async (req, res) => {
-    try {
-        // 데이터베이스에서 보고서 목록을 가져오는 로직
-        const fetchedReports = await Report.findAll();
-        
-        // 보고서 목록을 렌더링할 때 사용할 데이터
-        const reportListData = fetchedReports.map(report => {
-            return {
-                reportNum: report.reportNum,
-                reportContent: report.reportContent,
-                reportMedia: report.reportMedia,
-                seniorNum: report.seniorNum,
-                stdNum: report.stdNum
-                // 필요한 경우 더 많은 데이터 추가
-            };
-        });
-
-        // 보고서 목록 페이지를 렌더링하고 데이터를 전달
-        res.render('reportList', { reports: reportListData }); // 보고서 목록 페이지 렌더링 확인
-    } catch (error) {
-        console.error('보고서 목록 페이지 렌더링 중 오류:', error);
-        res.status(500).send('보고서 목록을 가져오는 중 오류가 발생했습니다.');
-    }
-};
-exports.getReportDetail = async (req, res) => {
+exports.confirmReport = async (req, res) => {
     try {
         const reportNum = req.params.reportNum;
-        console.log('보고서 번호:', reportNum);
+        const report = await Report.findOne({ where: { reportNum } });
 
-        // 보고서 번호에 해당하는 보고서 정보를 조회
-        const report = await Report.findOne({ where: { reportNum: reportNum } });
         if (!report) {
-            console.log('보고서를 찾을 수 없습니다.');
-            return res.status(404).send('보고서를 찾을 수 없습니다.');
+            return res.status(404).json({ error: 'Report not found' });
         }
 
-        // 보고서에 연결된 약속 번호를 가져옵니다.
-        const promiseNum = report.promiseNum;
-        console.log('보고서에 연결된 약속 번호:', promiseNum);
+        const studentProfile = await StudentProfile.findOne({ where: { stdNum: report.stdNum } });
+        const seniorProfile = await SeniorProfile.findOne({ where: { seniorNum: report.seniorNum } });
 
-        // 약속 정보를 조회
-        const promise = await Promise.findOne({ where: { promiseNum: promiseNum } });
-        if (!promise) {
-            console.log('약속 정보를 찾을 수 없습니다.');
-            return res.status(404).send('약속 정보를 찾을 수 없습니다.');
+        if (!studentProfile || !seniorProfile) {
+            return res.status(404).json({ error: 'Profile not found' });
         }
 
-        // 보호자 정보를 조회
-        const protector = await Member.findOne({ where: { memberNum: report.protectorNum } });
-        if (!protector) {
-            console.log('보호자 정보를 찾을 수 없습니다.');
-            return res.status(404).send('보호자 정보를 찾을 수 없습니다.');
-        }
+        console.log('Incrementing matching count for student and senior');
 
-        // 학생 정보를 조회
-        const student = await Member.findOne({ where: { memberNum: report.stdNum } });
-        if (!student) {
-            console.log('학생 정보를 찾을 수 없습니다.');
-            return res.status(404).send('학생 정보를 찾을 수 없습니다.');
-        }
+        // 학생과 노인의 매칭 카운트 증가
+        await studentProfile.increment('matchingCount');
+        await seniorProfile.increment('matchingCount');
 
-        // 보고서 상세 페이지에 필요한 정보를 전달하여 렌더링
-        res.render('reportDetail', { 
-            report: report,
-            promise: promise,
-            protector: protector,
-            student: student
-        });
+        // 보고서 상태 업데이트 및 updatedAt 필드 갱신
+        report.reportStatus = true;
+        report.updatedAt = new Date(); // 현재 시간을 updatedAt 필드에 설정
+        await report.save();
+
+        res.json({ message: 'Report confirmed and matching count updated.' });
     } catch (error) {
-        console.error('보고서 상세 페이지 렌더링 중 오류:', error);
-        res.status(500).send('보고서 상세 페이지 렌더링 중 오류가 발생했습니다.');
-
-
+        console.error('Error confirming report:', error);
+        res.status(500).json({ error: 'Failed to confirm report' });
     }
 };
- */

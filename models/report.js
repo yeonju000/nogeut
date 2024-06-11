@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const SeniorProfile = require("./seniorProfile"); // SeniorProfile 모델 불러오기
+const SeniorProfile = require("./seniorProfile");
 const StudentProfile = require("./studentProfile");
-const Member=require("./member");
+const Member = require("./member");
 
 const Report = sequelize.define("Report", {
   reportNum: {
@@ -26,13 +26,20 @@ const Report = sequelize.define("Report", {
   stdNum: {
     type: DataTypes.BIGINT,
     allowNull: false
+  },
+  reportStatus: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   }
 }, {
-  timestamps: true
+  timestamps: true //createdAt、 updatedAt 자동으로 추가하고 관리하는 거
 });
+
 Report.belongsTo(Member, { as: 'student', foreignKey: 'stdNum' });
 Report.belongsTo(SeniorProfile, { as: 'senior', foreignKey: 'seniorNum' });
 
 Member.hasMany(Report, { foreignKey: 'stdNum' });
 SeniorProfile.hasMany(Report, { foreignKey: 'seniorNum' });
+
 module.exports = Report;

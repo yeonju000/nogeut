@@ -171,14 +171,8 @@ app.use('/promiseList', promiseListRoutes);
 app.use('/', appointmentRoutes);
 
 // 라우트 설정
-app.get('/submit-report', reportController.showReportForm); // 보고서 작성 페이지 표시
-// 보고서 제출 처리
-app.post('/submit-report', upload.single('reportMedia'), reportController.submitReport);
+app.use('/', reportRoutes); // reportRoutes 추가
 
-// 보고서 제출 완료 페이지 표시
-app.get('/reportList', reportController.renderReportListPage); // 보고서 목록 페이지 표시
-//app.get('/reportList/:reportNum', reportController.getReportDetail);
-app.get('/report/:reportNum', reportController.viewReport);
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 

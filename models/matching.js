@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
+const Promise = require('./promise');
 
 const Matching = sequelize.define("Matching", {
   matchingNum: {
@@ -28,5 +29,8 @@ const Matching = sequelize.define("Matching", {
     defaultValue: false
   }
 });
+
+Promise.hasMany(Matching, { foreignKey: 'promiseNum' });
+Matching.belongsTo(Promise, { foreignKey: 'promiseNum' });
 
 module.exports = Matching;
