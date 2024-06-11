@@ -1,51 +1,319 @@
 const Promise = require('../models/promise');
+const Matching = require('../models/matching');
 const SeniorProfile = require('../models/seniorProfile');
 const StudentProfile = require('../models/studentProfile');
+const { Op } = require('sequelize');
+const { format } = require('date-fns');
 const Member = require('../models/member');
-
-// 특정 학생의 약속 목록 조회 컨트롤러 함수
-exports.getStudentPromises = async (req, res) => {
+// 약속 목록 페이지로 이동
+exports.showPromisesList = async (req, res) => {
     try {
-        const { stdNum } = req.params;
+        console.log('list page');
+        res.render('promiseList');
+    } catch (error) {
+        console.error('Error redirecting to promises list:', error);
+        res.status(500).json({ error: '약속 목록 페이지로 이동하는 동안 오류가 발생했습니다.' });
+    }
+};
 
-        // 학생 번호로 약속 목록을 조회하면서 학생과 노인의 이름을 조인합니다.
+exports.getNotMatchingPromises = async (req, res) => {
+    try {
+        const user = req.session.userID; // 세션 아이디를 가져옵니다.
+        console.log("user: ", user);
+
+        // 모든 약속 조회
         const promises = await Promise.findAll({
-            where: { stdNum },
-            include: [
-                {
-                    model: StudentProfile,
-                    as: 'studentProfile',
-                    include: [
-                        {
-                            model: Member,
-                            as: 'member',
-                            attributes: ['name'] // 학생의 이름 속성을 가져옵니다.
-                        }
-                    ]
-                },
-                {
-                    model: SeniorProfile,
-                    as: 'seniorProfile',
-                    include: [
-                        {
-                            model: Member,
-                            as: 'member',
-                            attributes: ['name'] // 노인의 이름 속성을 가져옵니다.
-                        }
-                    ]
-                }
-            ]
+            where: {
+                [Op.or]: [
+                    { stdNum: user },
+                    { protectorNum: user }
+                ]
+            }
         });
 
-        // 약속 목록이 비어있는지 확인합니다.
-        if (!promises.length) {
-            return res.status(404).json({ error: '해당 학생의 약속이 없습니다.' });
+        if (!promises || promises.length === 0) {
+            return res.render('notMatchingPromiseList', { promises: [] });
         }
 
-        // 조회한 약속 목록을 EJS 템플릿으로 전달합니다.
-        res.render('studentPromises', { promises });
+        // 매칭이 없는 약속 필터링 및 학생과 노인 정보 추가
+        const notMatchingPromises = [];
+
+        for (const promise of promises) {
+            const matching = await Matching.findOne({ where: { promiseNum: promise.promiseNum } });
+
+            if (!matching) {
+                const student = await StudentProfile.findOne({ where: { stdNum: promise.stdNum } });
+                const senior = await SeniorProfile.findOne({ where: { seniorNum: promise.protectorNum } });
+
+                //npm install date-fns
+                // 날짜 형식을 'yyyy.MM.dd (E)' 형식으로 변환
+                const formattedDate = format(new Date(promise.promiseDay), 'yyyy.MM.dd (E)');
+
+                notMatchingPromises.push({
+                    promiseNum: promise.promiseNum,
+                    date: formattedDate,
+                    startTime: promise.startTime,
+                    finishTime: promise.finishTime
+                });
+            }
+        }
+
+        return res.render('notMatchingPromiseList', { promises: notMatchingPromises });
+
     } catch (error) {
-        console.error('Error fetching student promises:', error);
-        res.status(500).json({ error: '학생의 약속 목록을 가져오는 동안 오류가 발생했습니다.' });
+        console.error('Error fetching not matching promises:', error);
+        res.status(500).json({ error: '매칭되지 않은 약속 목록을 가져오는 동안 오류가 발생했습니다.' });
+    }
+};
+
+//약속이 성사된 경우
+exports.getMatchingPromises = async (req, res) => {
+    try {
+        console.log("list matchingComplete page");
+        const user = req.session.userID; // 세션 아이디를 가져옵니다.
+        console.log("user: ", user);
+
+        // 모든 약속 조회
+        const promises = await Promise.findAll({
+            where: {
+                [Op.or]: [
+                    { stdNum: user },
+                    { protectorNum: user }
+                ]
+            }
+        });
+
+        if (!promises || promises.length === 0) {
+            return res.render('matchingPromiseList', { promises: [] });
+        }
+
+        // 매칭이 있는 약속 필터링 및 학생과 노인 정보 추가
+        const matchingPromises = [];
+
+        for (const promise of promises) {
+            const matching = await Matching.findOne({ where: { promiseNum: promise.promiseNum } });
+
+            if (matching) {
+
+                const student = await StudentProfile.findOne({ where: { stdNum: promise.stdNum } });
+
+                const senior = await SeniorProfile.findOne({ where: { seniorNum: promise.protectorNum } });
+
+                const studentMember = await Member.findOne({ memberNum: promise.stdNum });
+
+                const protectorMember = await Member.findOne({ memberNum: promise.protectorNum });
+
+                //npm install date-fns
+                // 날짜 형식을 'yyyy.MM.dd (E)' 형식으로 변환
+                const formattedDate = format(new Date(promise.promiseDay), 'yyyy.MM.dd (E)');
+
+                matchingPromises.push({
+                    promiseNum: promise.promiseNum,
+                    date: formattedDate,
+                    startTime: promise.startTime,
+                    finishTime: promise.finishTime
+                });
+            }
+        }
+
+        return res.render('matchingPromiseList', { promises: matchingPromises });
+
+    } catch (error) {
+        console.error('Error fetching matching promises:', error);
+        res.status(500).json({ error: '매칭된 약속 목록을 가져오는 동안 오류가 발생했습니다.' });
+    }
+};
+
+
+// 약속 확인 페이지를 보여주는 컨트롤러 함수(거절 수락 선택 페이지)
+exports.showPromiseConfirmation = async (req, res) => {
+    try {
+        const { promiseNum } = req.params;
+        const user=req.session.userID;
+
+        // 요청이 도착했는지 확인
+        console.log(`Received request to show promise complete page for promiseNum: ${promiseNum}`);
+
+        const promise = await Promise.findOne({ where: { promiseNum: promiseNum } });
+
+        if (!promise) {
+            console.log(`Promise with ID ${promiseNum} not found.`);
+            return res.status(404).json({ error: '약속을 찾을 수 없습니다.' });
+        }
+
+        console.log("Promise found:", promise);
+
+        console.log("user: ", user);
+        //npm install date-fns
+        // 날짜 형식을 'yyyy.MM.dd (E)' 형식으로 변환
+        const formattedDate = format(new Date(promise.promiseDay), 'yyyy.MM.dd (E)');
+
+        // 변환된 날짜를 promise 객체에 추가
+        promise.formattedPromiseDay = formattedDate;
+        //약속 요청자인지 구분
+        let sender;
+        if (user === promise.promiseSender){
+            sender=user;
+        }
+        console.log("user: ", user);
+        console.log("promise.promiseSender: ", promise.promiseSender);
+
+        // 약속 정보를 템플릿에 전달합니다.
+        res.render('promiseRequest', { promise: promise, sender });
+    } catch (error) {
+        console.error('Error showing promise confirmation page:', error);
+        res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });
+    }
+};
+
+// 약속 거절
+exports.rejectProfilePromise = async (req, res) => {
+    try {
+        const { promiseNum } = req.params;
+
+        // 약속을 찾고 삭제합니다.
+        const deletedPromise = await Promise.destroy({ where: { promiseNum: promiseNum } });
+
+        if (!deletedPromise) {
+            return res.status(404).json({ error: '삭제할 약속을 찾을 수 없습니다.' });
+        }
+
+        //res.status(200).json({ message: '약속이 성공적으로 거절되었습니다.' }); // 약속 목록 페이지로 리다이렉션
+        res.redirect('/promiseList');
+    } catch (error) {
+        console.error('Error rejecting promise:', error);
+        res.status(500).json({ error: '약속을 거절하는 동안 오류가 발생하였습니다.' });
+    }
+}
+
+// 약속 수락 후 입금 확인 페이지로 이동
+exports.acceptPromise = async (req, res) => {
+    try {
+        const { promiseNum } = req.params;
+
+        // 입금 확인 페이지로 넘어가도록 리다이렉트합니다.
+        //res.redirect(`/${stdNum}/${promiseNum}/deposit`); // 경로 수정
+        const promise = await Promise.findOne({ where: { promiseNum: promiseNum } });
+
+        const newMatching = await Matching.create({
+            promiseNum: promise.promiseNum,  // 생성된 약속의 promiseNum 사용
+            reportNum: null,
+            depositStatus: false,
+            reportStatus: false
+        });
+
+        console.log("Matching created:", newMatching);
+
+        res.status(200).json({ redirectUrl: `/promiseList` });
+    } catch (error) {
+        console.error('Error accepting promise:', error);
+        res.status(500).json({ error: '약속을 수락하는 동안 오류가 발생하였습니다.' });
+    }
+}
+/*
+//입금확인창
+exports.showPromiseDeposit = async (req, res) => {
+    try {
+        console.log("render deposit page");
+        const { promiseNum } = req.params;
+
+        // 요청이 도착했는지 확인
+        console.log(`Received request to show promise complete page for promiseNum: ${promiseNum}`);
+
+        const promise = await Promise.findOne({ where: { promiseNum: promiseNum } });
+
+        if (!promise) {
+            console.log(`Promise with ID ${promiseNum} not found.`);
+            return res.status(404).json({ error: '약속을 찾을 수 없습니다.' });
+        }
+
+        console.log("Promise found:", promise);
+
+        //npm install date-fns
+        // 날짜 형식을 'yyyy.MM.dd (E)' 형식으로 변환
+        const formattedDate = format(new Date(promise.promiseDay), 'yyyy.MM.dd (E)');
+
+        // 변환된 날짜를 promise 객체에 추가
+        promise.formattedPromiseDay = formattedDate;
+        //목록페이지로 리다이렉트
+        res.render('promiseDeposit', { promise: promise });
+    } catch (error) {
+        console.error('Error showing promise page:', error);
+        res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });
+    }
+};
+*/
+exports.showPromiseDeposit = async (req, res) => {
+    try {
+        console.log("render deposit page");
+        const { promiseNum } = req.params;
+        const user = req.session.userID; // 세션에서 현재 사용자 정보 가져오기
+
+        console.log(`Received request to show promise complete page for promiseNum: ${promiseNum}`);
+
+        const promise = await Promise.findOne({ where: { promiseNum: promiseNum } });
+
+        if (!promise) {
+            console.log(`Promise with ID ${promiseNum} not found.`);
+            return res.status(404).json({ error: '약속을 찾을 수 없습니다.' });
+        }
+
+        console.log("Promise found:", promise);
+        // 매칭(Matching) 데이터베이스에서 해당 약속(promiseNum)을 찾습니다.
+        const matching = await Matching.findOne({ where: { promiseNum: promiseNum } });
+        const depositStatus = matching ? matching.depositStatus : false;
+
+        const formattedDate = format(new Date(promise.promiseDay), 'yyyy.MM.dd (E)');
+
+        promise.formattedPromiseDay = formattedDate;
+
+        console.log("user: ", user);
+        console.log("promise stdNum: ", promise.stdNum);
+        console.log("promise seniorNum: ", promise.protectorNum);
+
+        if (user === promise.stdNum) {
+            res.render('stdPromiseDeposit', { stdNum:promise.stdNum, promise: promise, depositStatus: depositStatus });
+        } else if (user === promise.protectorNum) {
+            res.render('seniorPromiseDeposit', { seniorNum: promise.protectorNum, promise: promise, depositStatus: depositStatus });
+        } else {
+            console.log("Invalid userProfile.");
+            return res.status(400).json({ error: '올바르지 않은 사용자 프로필입니다.' });
+        }    
+
+        console.log("압금 여부", depositStatus);
+    } catch (error) {
+        console.error('Error showing promise page:', error);
+        res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });
+    }
+};
+
+// 입금 확인 처리를 위한 컨트롤러 함수
+exports.confirmDeposit = async (req, res) => {
+    try {
+        const { promiseNum } = req.params;
+
+        // 요청이 도착했는지 확인
+        console.log(`Received request to show promise complete page for promiseNum: ${promiseNum}`);
+
+        // 매칭(Matching) 데이터베이스에서 해당 약속(promiseNum)을 찾습니다.
+        const matching = await Matching.findOne({ where: { promiseNum: promiseNum } });
+
+        if (!matching) {
+            console.log(`Matching record for promise number ${promiseNum} not found.`);
+            return res.status(404).json({ error: '매칭 레코드를 찾을 수 없습니다.' });
+        }
+
+        // 입금 확인을 true로 업데이트합니다.
+        matching.depositStatus = true;
+        await matching.save();
+
+        console.log(`Deposit confirmation for promise number ${promiseNum} updated successfully.`);
+
+        // 성공적으로 업데이트되었음을 응답합니다.
+        //res.status(200).json({ message: '입금 확인이 정상적으로 완료되었습니다.' });
+        res.redirect('/promiseList');
+    } catch (error) {
+        console.error('Error confirming deposit:', error);
+        res.status(500).json({ error: '입금 확인 중 오류가 발생했습니다.' });
     }
 };

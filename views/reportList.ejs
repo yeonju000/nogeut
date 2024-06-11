@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>보고서 작성</title>
-    <link href="/css/report1.css?v=1.0" rel="stylesheet" type="text/css">
+    <link href="/css/reportList.css?v=1.0" rel="stylesheet" type="text/css">
 
     <script>
         function openFileUploader() {
@@ -44,9 +44,9 @@
                 </li>
                 <li class="nav__list-item"><a href="#"> 매칭하기 </a></li>
                 <li class="nav__list-item"><a href="#"> 채팅 </a></li>
-                <li class="nav__list-item"><a href="#"> 보고서작성 </a></li>
+                <li class="nav__list-item"><a href="/submit-report"> 보고서작성 </a></li>
                 <li class="nav__list-item"><a href="#"> 후기작성 </a></li>
-                <li class="nav__list-item"><a href="#"> 보고서확인 </a></li>
+                <li class="nav__list-item"><a href="/reportConfirmation"> 보고서확인 </a></li>
             </ul>
         </nav>
         <div class="side__nav-container">
@@ -65,12 +65,14 @@
 
         <div class="list-container">
             <% reports.forEach(report=> { %>
-                <a href="/reportDetail/<%= report.reportNum %>">
+                 <a href="/report/<%= report.reportNum %>">
                     <div class="report-item">
                         <div class="report-details">
+                            
                             <span>보고서 번호: <%= report.reportNum %></span>
-                            <span>보고서 내용: <%= report.reportContent %></span>
-                            <span>작성일시: <%= report.createdAt %></span>
+                             <span>학생이름:<%= report.studentName %><span>
+                            
+
                         </div>
                     </div>
                 </a>

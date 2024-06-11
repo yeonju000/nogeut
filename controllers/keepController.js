@@ -74,38 +74,38 @@ module.exports = {
 
   removeKeep: async (req, res) => {
     try {
-        const seniorNum = req.user.memberNum;
-        const { stdNum } = req.body;
+      const seniorNum = req.user.memberNum;
+      const { stdNum } = req.body;
 
-        await Keep.destroy({
-            where: {
-                seniorNum,
-                stdNum
-            }
-        });
+      await Keep.destroy({
+        where: {
+          seniorNum,
+          stdNum
+        }
+      });
 
-        res.status(200).json({ message: '찜 취소하기 성공' });
+      res.status(200).json({ message: '찜 취소하기 성공' });
     } catch (error) {
-        console.error(`Error removing from keep list: ${error.message}`);
-        res.status(500).json({ message: '서버 오류' });
+      console.error(`Error removing from keep list: ${error.message}`);
+      res.status(500).json({ message: '서버 오류' });
     }
   },
 
   addKeep: async (req, res) => {
     try {
-        const seniorNum = req.user.memberNum;
-        const { stdNum } = req.body;
+      const seniorNum = req.user.memberNum;
+      const { stdNum } = req.body;
 
-        const newKeep = await Keep.create({
-            seniorNum,
-            stdNum,
-            keepTime: new Date()
-        });
+      const newKeep = await Keep.create({
+        seniorNum,
+        stdNum,
+        keepTime: new Date()
+      });
 
-        res.status(200).json({ message: '찜하기 성공', keep: newKeep });
+      res.status(200).json({ message: '찜하기 성공', keep: newKeep });
     } catch (error) {
-        console.error(`Error adding to keep list: ${error.message}`);
-        res.status(500).json({ message: '서버 오류' });
+      console.error(`Error adding to keep list: ${error.message}`);
+      res.status(500).json({ message: '서버 오류' });
     }
   }
 };

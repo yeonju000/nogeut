@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const reportController = require('../controllers/reportController');
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 
-// 보고서 작성 페이지를 렌더링하는 라우트
-router.get('/', reportController.getPromiseWithMemberName);
+router.get('/reportForm', reportController.showReportForm);
+router.post('/submitReport', reportController.submitReport);
+router.get('/reports', reportController.listReports);
+router.get('/reportList', reportController.renderReportListPage);
+//router.get('/reportList/:reportNum',reportController.getReportDetail);
+router.get('/report/:reportNum', reportController.viewReport);
+router.get('/reportList', (req, res) => {
+    res.render('reportList'); // reportConfirmation.ejs 파일을 렌더링합니다.
+});
 
 module.exports = router;

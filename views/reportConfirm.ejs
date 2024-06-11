@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>보고서 작성</title>
+    <link href="/css/report.css?v=1.0" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <header class="header__container">
+        <h1 class="main-title">노긋메인홈</h1>
+        <div class="header__block">
+            <a href="#"> 마이페이지 </a>
+            <a href="#"> 로그인 </a>
+        </div>
+        <nav class="header__nav-block">
+            <ul class="nav__list" role="navigation">
+                <li class="nav__list-item">
+                    <a href="#" aria-label="노긋노긋 홈페이지">
+                        <img src="/images/logo.png" width="50px" alt="로고">
+                    </a>
+                </li>
+                <li class="nav__list-item"><a href="#"> 매칭하기 </a></li>
+                <li class="nav__list-item"><a href="#"> 채팅 </a></li>
+                <li class="nav__list-item"><a href="#"> 보고서작성 </a></li>
+                <li class="nav__list-item"><a href="#"> 후기작성 </a></li>
+                <li class="nav__list-item"><a href="#"> 보고서확인 </a></li>
+            </ul>
+        </nav>
+        <div class="side__nav-container">
+            <ul class="nav__list" role="navigation">
+                <li class="nav__review__list-item">
+                    <a href="#"> 예시 </a>
+                </li>
+                <li class="nav__review__list-item">
+                    <a href="#">보고서 목록</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <h1>Report Detail</h1>
+    <div id="container" style="width: 900px; margin: auto;">
+        <div id="container1" style="background-color: white; width: 900px;">
+            <p><strong>Report Number:</strong> <%= report.promiseDate %></p>
+            <p><strong>Report Number:</strong> <%= report.startTime %></p>
+
+            <p><strong>Senior Name:</strong> <%= senior.seniorName %></p>
+            <p><strong>Student Name:</strong> <%= student.name %></p>
+        </div>
+
+        <p><strong>Content:</strong> <%= report.reportContent %></p>
+        <p><strong>Media:</strong> <img src="/uploads/<%= report.reportMedia %>" alt="Report Media" /></p>
+    </div>
+    <!-- 확인 버튼 추가 -->
+    <button onclick="submitReport()">확인</button>
+    <!-- 알림창 스크립트 -->
+    
+</body>
+
+</html>

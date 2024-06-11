@@ -56,9 +56,14 @@
         <div class="side__nav-container">
         </div>
     </header>
-
-    <h2>약속이 성사되었습니다</h2>
-    <h2>입금을 완료해주세요</h2>
+    <% if (!depositStatus) { %>
+        <h2>약속이 성사되었습니다</h2>
+        <h4>입금을 완료해주세요</h4>
+        <p>입금 확인 대기</p>
+    <% } else { %>
+        <h4>일정을 확인하세요!</h4>
+        <p>입금확인</p>
+    <% } %>
 
     <!-- 약속 정보 표시 -->
     <!--<p>약속 일자: <%= promise.promiseDay %></p>-->
@@ -68,7 +73,7 @@
     </p>
     <p>종료 시간: <%= promise.finishTime %>
     </p>
-    <form action="/promise/<%=seniorNum%>/<%= promise.promiseNum%>" id="confirmButton" method="POST">
+    <form action="/promiseList/<%=promise.promiseNum%>/deposit>" id="confirmButton" method="POST">
         <button type="button" class="btn btn-success">확인</button>
     </form>
     <script>

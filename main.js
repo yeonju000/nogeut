@@ -26,10 +26,12 @@ const mainRoutes = require("./routes/mainRoutes");
 const seniorProfileRoutes = require("./routes/seniorProfileRoutes");
 const studentProfileRoutes = require("./routes/studentProfileRoutes"); //68 추가
 const reviewRoutes = require("./routes/reviewRoutes");
-const promiseRoutes = require("./routes/promiseRoutes");
-const appointmentRoutes = require("./routes/appointmentRoutes");
 const keepRoutes = require("./routes/keepRoutes");
-
+const promiseToStdRoutes = require("./routes/promiseToStdRoutes.js");
+const promiseToSnRoutese = require("./routes/promiseToSnRoutes.js")
+const promiseListRoutes = require("./routes/promiseListRoutes.js")
+const reportRoutes = require("./routes/reportRoutes.js");
+const appointmentRoutes = require('./routes/appointmentRoutes.js');
 // 컨트롤러
 const errorController = require("./controllers/errorController");
 const loginController = require("./controllers/loginController");
@@ -37,9 +39,9 @@ const mainController = require("./controllers/mainController");
 const detailedController = require("./controllers/detailedController");
 const oldProfileController = require("./controllers/oldProfileController");
 const youngProfileController = require('./controllers/youngProfileController'); // 68 추가
-
+const reportController=require("./controllers/reportController.js");
 const app = express();
-app.set("port", process.env.PORT || 80);
+app.set("port", process.env.PORT || 8080);
 
 // EJS 설정 추가
 app.set("view engine", "ejs");
@@ -151,7 +153,9 @@ app.post("/Update/Senior", upload.single('profileImage'), oldProfileController.u
 app.use("/student", studentProfileRoutes); // 68 수정
 app.use("/edit/student", youngProfileController.modifiedStudentProfile);
 app.use("/update/student", youngProfileController.updateStudentProfile);
-
+app.get("/reportexample", (req, res) => {
+    res.render("reportexample");
+});
 app.use("/", categoryRoutes);
 app.use("/", loginRoutes);
 app.use("/", filterRoutes);
@@ -161,9 +165,20 @@ app.use("/", keepRoutes);
 app.use("/", chatRoutes);
 app.use("/", creationRoutes);
 app.use('/review', reviewRoutes);
-app.use('/promise', promiseRoutes);
-app.use('/appointment', appointmentRoutes);
+app.use('/promiseToStd', promiseToStdRoutes);
+app.use('/promiseTosn', promiseToSnRoutese)
+app.use('/promiseList', promiseListRoutes);
+app.use('/', appointmentRoutes);
 
+// 라우트 설정
+app.get('/submit-report', reportController.showReportForm); // 보고서 작성 페이지 표시
+// 보고서 제출 처리
+app.post('/submit-report', upload.single('reportMedia'), reportController.submitReport);
+
+// 보고서 제출 완료 페이지 표시
+app.get('/reportList', reportController.renderReportListPage); // 보고서 목록 페이지 표시
+//app.get('/reportList/:reportNum', reportController.getReportDetail);
+app.get('/report/:reportNum', reportController.viewReport);
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 

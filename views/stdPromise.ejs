@@ -60,7 +60,7 @@
     <div class="prmoise-container" style="margin: auto;">
         <h1 class="prmoise-title">약속잡기</h1>
         <!-- 상대방 이름 불러오기 -->
-        <form action="/promise/<%=stdNum%>" id="promiseForm" method="POST">
+        <form action="/promiseToStd/<%=stdNum%>" id="promiseForm" method="POST">
             <div class="form-group">
                 <label for="promiseDay">약속 날짜</label>
                 <input type="date" class="form-control" id="promiseDay" name="promiseDay" required>
@@ -74,7 +74,7 @@
                 <input type="time" class="form-control" id="finishTime" name="finishTime">
             </div>
             <button type="submit" class="btn btn-primary" style="background-color: white; border: 1px solid #2D6210; color: #2D6210;     display: flex;
-    justify-content: center;" >약속 신청</button>
+    justify-content: center;">약속 신청</button>
         </form>
     </div>
     <!-- Footer Section -->

@@ -41,6 +41,10 @@ const Promise = sequelize.define("Promise", {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
+  },
+  promiseSender: {
+    type: DataTypes.BIGINT,
+    allowNull: true
   }
 });
 

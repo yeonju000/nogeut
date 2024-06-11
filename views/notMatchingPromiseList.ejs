@@ -3,9 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>약속 목록</title>
+    <title>Not Matching Promises</title>
     <link href="/css/header.css?v=1.0" rel="stylesheet" type="text/css">
-
 </head>
 
 <body>
@@ -35,14 +34,47 @@
                     <a href="/promiseList/notmatchingPromiseList"> 수락 전 </a>
                 </li>
                 <li class="nav__review__list-item">
-                    <a href="/promiseList/matchingPromiseList"> 수락 후</a>
+                    <a href="/promiseList/matchingPromiseList"> 수락 후 </a>
                 </li>
             </ul>
         </div>
     </header>
-    <div style="background-color: white; width: 1000px; height: 1000px; margin: auto;"></div>
 
+    <main>
+        <h1>Matching Promises</h1>
+        <% if (promises.length===0) { %>
+            <p>아직 잡은 약속이 없습니다.</p>
+            <% } else { %>
+                <ul class="promise-list">
+                    <% promises.forEach(promise=> { %>
+                        <li class="promise-item"
+                            style="background-color: white; border: 1px solid #E1EFD7; height: 70px; margin-top: 20px;">
+                            <div>
+                                <span>약속번호: <%= promise.promiseNum %></span>
+                            </div>
+                            <div>
+                                <span>약속 날짜: <%= promise.date %></span>
+                                <span>시작 시간: <%= promise.startTime %></span>
+                                <span>종료 시간: <%= promise.finishTime %></span>
+                            </div>
+                            <button class="btn btn-primary"
+                                onclick="redirectToPromiseDetailPage('<%= promise.promiseNum %>')">상세보기</button>
+                        </li>
 
+                        <% }); %>
+                </ul>
+                <% } %>
+    </main>
+    <!-- 자바스크립트 코드 추가 -->
+    <script>
+            function redirectToPromiseDetailPage(promiseNum) {
+                // 약속 상세페이지의 URL을 생성합니다.
+                const promiseDetailUrl = `/promiseList/${promiseNum}/request`;
+
+                // 약속 상세페이지로 이동합니다.
+                window.location.href = promiseDetailUrl;
+            }
+    </script>
     <!-- Footer Section -->
     <footer class="footer__container">
         <section class="pages__container">

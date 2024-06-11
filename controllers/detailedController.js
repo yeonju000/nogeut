@@ -29,7 +29,7 @@ async function fetchData2(userID) {
         } else {
             console.log("시니어 회원 아닙니다.");
         }
-   return senior;
+        return senior;
     } catch (error) {
         console.error(error);
         throw error;
@@ -45,7 +45,7 @@ async function fetchData3(userID) {
         } else {
             console.log("주니어 회원이 아닙니다.");
         }
-   return student;
+        return student;
     } catch (error) {
         console.error(error);
         throw error;
@@ -110,7 +110,7 @@ function calculateKoreanAgeByYear(birthYear) {
 exports.myDetail = async (req, res) => {
     try {
         const member = await fetchData(req.session.userID);
-        res.render("myPage.ejs", {member: member});
+        res.render("myPage.ejs", { member: member });
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -184,14 +184,14 @@ exports.mypage = async (req, res) => {
             const review = await reviewData(senior.seniorNum);
             const encodedImageBase64String = Buffer.from(senior.profileImage).toString('base64');
             res.render('DetaileProfile_old', { senior, age: year, encodedImageBase64String: encodedImageBase64String, interests: interestField, review: review, user: user });
-        
+
         }
         if (student) {
             const year = await calculateKoreanAgeByYear(student.yearOfBirth);
             const interestField = await interestFieldData(student.stdNum);
 
             //const formatSelfIntro = student.introduce.replace("<br>", "\n");
-            
+
             const review = await reviewData(student.stdNum);
             const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
             res.render('myPage_young', { student, user, age: year, encodedImageBase64String: encodedImageBase64String, interests: interestField, review: review, user: user });

@@ -57,8 +57,13 @@
         </div>
     </header>
     <!--학생에게 보여주는 화면-->
-    <h2>약속이 성사되었습니다</h2>
-    <h4>입금 확인이 되었다면 아래의 확인버튼을 눌러주세요.</h4>
+        <% if (!depositStatus) { %>
+            <h2>약속이 성사되었습니다</h2>
+            <h4>입금 확인이 되었다면 아래의 확인버튼을 눌러주세요.</h4>
+
+        <% } else { %>
+                <h4>일정을 확인하세요!</h4>
+        <% } %>
     
     <!-- 약속 정보 표시 -->
     <!--<p>약속 일자: <%= promise.promiseDay %></p>-->
@@ -70,12 +75,22 @@
     </p>
 
     <!-- 입금 확인 버튼 -->
-    <% if (!promise.depositStatus) { %>
-        <form action="/promise/<%=stdNum%>/<%=promise.promiseNum%>/deposit" method="POST">
+    <% if (!depositStatus) { %>
+        <form action="/promiseList/<%=promise.promiseNum%>/deposit" method="POST">
             <button type="submit" style="color: #2D6210;">입금 확인</button>
         </form>
         <% } else { %>
-            <p>입금 확인: 이미 확인되었습니다.</p>
+                <form  id="confirmButton" method="POST">
+                    <button type="button" class="btn btn-success">확인</button>
+                </form>
+                <!-- JavaScript 코드 -->
+                <script>
+                    // 확인 버튼에 클릭 이벤트 리스너 추가
+                    document.getElementById("confirmButton").addEventListener("click", function () {
+                        // 메인 페이지로 이동
+                        window.location.href = "/promiseList";
+                    });
+                </script>
             <% } %>
 
                 <!-- Footer Section -->

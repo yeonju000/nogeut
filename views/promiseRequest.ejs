@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link href="/css/header.css?v=1.0" rel="stylesheet" type="text/css">
     <link href="/css/promise.css?v=1.0" rel="stylesheet" type="text/css">
+    <script src="/js/stdPromise.js"></script>
 </head>
 
 <body>
@@ -56,27 +57,46 @@
         <div class="side__nav-container">
         </div>
     </header>
-    <!--요청 보내는 쪽-->
-    <h2>요청이 완료되었습니다.</h2>
-
-    <!-- 약속 정보 표시 -->
-    <p>약속 일자: <%= promise.formattedPromiseDay %>
-    </p>
-    <p>시작 시간: <%= promise.startTime %>
-    </p>
-    <p>종료 시간: <%= promise.finishTime %>
-    </p>
-    <form action="/promiseToStd/<%=seniorNum%>/<%= promise.promiseNum%>" id="confirmButton" method="POST">
-        <button type="button" class="btn btn-success">확인</button>
-    </form>
-    <!-- JavaScript 코드 -->
-    <script>
-        // 확인 버튼에 클릭 이벤트 리스너 추가
-        document.getElementById("confirmButton").addEventListener("click", function () {
-            // 메인 페이지로 이동
-            window.location.href = "/promiseList";
-        });
-    </script>
+    <% if (sender===promise.promiseSender) { %>
+        <!--요청 받는 쪽-->
+        <h1>약속 확인 페이지</h1>
+        <h3>약속 요청을 보냈어요!</h3>
+        
+        <!-- 약속 정보 표시 -->
+        <p>약속 일자: <%= promise.formattedPromiseDay %>
+        </p>
+        <p>시작 시간: <%= promise.startTime %>
+        </p>
+        <p>종료 시간: <%= promise.finishTime %>
+        </p>
+        <button type="button" class="btn btn-success" id="confirmButton">확인</button>
+        <script>
+            // 확인 버튼에 클릭 이벤트 리스너 추가
+            document.getElementById("confirmButton").addEventListener("click", function () {
+                // 메인 페이지로 이동
+                window.location.href = "/promiseList";
+            });
+        </script>
+    <% } else { %>
+            <!--요청 보내는 쪽-->
+            <h1>약속 확인 페이지</h1>
+            <h3>약속 요청이 들어왔어요!</h3>
+            <h3>아래의 내용을 잘 읽고 수락 여부를 결정하세요.</h3>
+            <h3>약속이 한 번 성사된 후에는 취소하실 수 없습니다. 신중하게 결정해주세요</h3>
+            
+            <!-- 약속 정보 표시 -->
+            <p>약속 일자: <%= promise.formattedPromiseDay %>
+            </p>
+            <p>시작 시간: <%= promise.startTime %>
+            </p>
+            <p>종료 시간: <%= promise.finishTime %>
+            </p>
+            <!--아래 경로 수정-->
+            <form action="/promiseList/<%=promise.promiseNum%>/request" id="promiseForm" method="POST">
+                <button type="button" class="btn btn-success" onclick="acceptPromise('<%= promise.promiseNum %>')">수락</button>
+                <button type="button" class="btn btn-danger" onclick="rejectPromise('<%= promise.promiseNum %>')">거절</button>
+            </form>
+    <% } %>
     <!-- Footer Section -->
     <footer class="footer__container">
         <section class="pages__container">
