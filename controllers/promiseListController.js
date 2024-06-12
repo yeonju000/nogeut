@@ -135,7 +135,7 @@ exports.getNotMatchingPromises = async (req, res) => {
             }
         }
 
-        return res.render('notMatchingPromiseList', { promises: notMatchingPromises });
+        return res.render('notMatchingPromiseList', { promises: notMatchingPromises, user:user });
 
     } catch (error) {
         console.error('Error fetching not matching promises:', error);
@@ -161,7 +161,7 @@ exports.getMatchingPromises = async (req, res) => {
         });
 
         if (!promises || promises.length === 0) {
-            return res.render('matchingPromiseList', { promises: [] });
+            return res.render('matchingPromiseList', { promises: [], user: user });
         }
 
         // 매칭이 있는 약속 필터링 및 학생과 노인 정보 추가
@@ -197,7 +197,7 @@ exports.getMatchingPromises = async (req, res) => {
             }
         }
 
-        return res.render('matchingPromiseList', { matchingPromises });
+        return res.render('matchingPromiseList', { matchingPromises, user: user });
 
     } catch (error) {
         console.error('Error fetching matching promises:', error);
@@ -240,7 +240,7 @@ exports.showPromiseConfirmation = async (req, res) => {
         console.log("promise.promiseSender: ", promise.promiseSender);
 
         // 약속 정보를 템플릿에 전달합니다.
-        res.render('promiseRequest', { promise: promise, sender });
+        res.render('promiseRequest', { promise: promise, sender, user:user });
     } catch (error) {
         console.error('Error showing promise confirmation page:', error);
         res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });
@@ -289,7 +289,7 @@ exports.showProfileDetail = async (req, res) => {
             });
             const isKeep = !!keep;
 */
-            return res.render('stdDetailedPromise', { student, member, encodedImageBase64String, interests: interestField, review, user, age: year, promise });
+            return res.render('stdDetailedPromise', { student, member, encodedImageBase64String, interests: interestField, review, user:user, age: year, promise });
         } else if (parseInt(promiseSender) === promise.protectorNum) {
             //senior = await SeniorProfile.findOne({ where: { seniorNum: promise.protectorNum } });;
             senior = await fetchData2(promise.protectorNum);
@@ -299,7 +299,7 @@ exports.showProfileDetail = async (req, res) => {
             const review = await reviewData(senior.seniorNum);
             const encodedImageBase64String = senior.profileImage ? Buffer.from(senior.profileImage).toString('base64') : '';
             const member = await fetchData(senior.seniorNum);
-            return res.render('seniorDetailedPromise', { senior, member, encodedImageBase64String, interests: interestField, review, user, age: year, promise });
+            return res.render('seniorDetailedPromise', { senior, member, encodedImageBase64String, interests: interestField, review, user:user, age: year, promise });
         } else {
             console.log("Invalid userProfile.");
             return res.status(400).json({ error: '올바르지 않은 사용자 프로필입니다.' });
@@ -446,7 +446,7 @@ exports.showProfileDepoistDetail = async (req, res) => {
             //const member = await fetchData(student.stdNum);
             const member = await fetchData(student.stdNum);
 
-            return res.render('stdPromiseDepositDetail', { student, member, encodedImageBase64String, interests: interestField, review, user, age: year, promise });
+            return res.render('stdPromiseDepositDetail', { student, member, encodedImageBase64String, interests: interestField, review, user:user, age: year, promise });
         }else {
             console.log("Invalid userProfile.");
             return res.status(400).json({ error: '올바르지 않은 사용자 프로필입니다.' });
@@ -516,10 +516,10 @@ exports.showPromiseDeposit = async (req, res) => {
         if (user === promise.stdNum) {
             //res.render('stdPromiseDeposit', { stdNum:promise.stdNum, promise: promise, depositStatus: depositStatus });
             //res.render('stdPromiseDeposit', { stdNum: promise.stdNum, promise: promise, matching: matching });
-            res.render('stdPromiseDeposit', { stdNum: promise.stdNum, promise: promise, matching: matching, promiseDetail, depositStatus: depositStatus, reportStatus: reportStatus });
+            res.render('stdPromiseDeposit', { user:user, stdNum: promise.stdNum, promise: promise, matching: matching, promiseDetail, depositStatus: depositStatus, reportStatus: reportStatus });
         } else if (user === promise.protectorNum) {
             //res.render('seniorPromiseDeposit', { seniorNum: promise.protectorNum, promise: promise, depositStatus: depositStatus });
-            res.render('seniorPromiseDeposit', { seniorNum: promise.protectorNum, promise: promise, matching: matching, promiseDetail, depositStatus: depositStatus, reportStatus: reportStatus });
+            res.render('seniorPromiseDeposit', { user:user, seniorNum: promise.protectorNum, promise: promise, matching: matching, promiseDetail, depositStatus: depositStatus, reportStatus: reportStatus });
         } else {
             console.log("Invalid userProfile.");
             return res.status(400).json({ error: '올바르지 않은 사용자 프로필입니다.' });

@@ -21,7 +21,7 @@ exports.showSnProfilePromisePage = async (req, res) => {
         console.log(`seniorNum: ${seniorNum}`)
 
         console.log("start promise page");
-        res.render('seniorPromise', { seniorNum: seniorNum });
+        res.render('seniorPromise', { seniorNum: seniorNum, user: user });
     } catch (error) {
         console.error('Error showing promise page:', error);
         res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });
@@ -78,6 +78,7 @@ exports.createSnProfilePromise = async (req, res) => {
 exports.showPromiseRequest = async (req, res) => {
     try {
         const { seniorNum, promiseNum } = req.params;
+        const user = req.session.userID;
 
         // 요청이 도착했는지 확인
         console.log(`Received request to show promise complete page for seniorNum: ${seniorNum},promiseNum: ${promiseNum}`);
@@ -98,7 +99,7 @@ exports.showPromiseRequest = async (req, res) => {
         // 변환된 날짜를 promise 객체에 추가
         promise.formattedPromiseDay = formattedDate;
 
-        res.render('seniorPromiseSender', { seniorNum: seniorNum, promise: promise });
+        res.render('seniorPromiseSender', { seniorNum: seniorNum, promise: promise, user: user });
     } catch (error) {
         console.error('Error showing promise page:', error);
         res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });

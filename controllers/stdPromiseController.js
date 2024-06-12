@@ -21,7 +21,7 @@ exports.showStdProfilePromisePage = async (req, res) => {
         console.log(`stdNum: ${stdNum}`)
 
         console.log("start promise page");
-        res.render('stdPromise', { stdNum: stdNum });
+        res.render('stdPromise', { stdNum: stdNum, user:user });
     } catch (error) {
         console.error('Error showing promise page:', error);
         res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });
@@ -78,6 +78,7 @@ exports.createStdProfilePromise = async (req, res) => {
 exports.showPromiseRequest = async (req, res) => {
     try {
         const { stdNum, promiseNum } = req.params;
+        const user = req.session.userID;
 
         // 요청이 도착했는지 확인
         console.log(`Received request to show promise complete page for stdNum: ${stdNum},promiseNum: ${promiseNum}`);
@@ -98,7 +99,7 @@ exports.showPromiseRequest = async (req, res) => {
         // 변환된 날짜를 promise 객체에 추가
         promise.formattedPromiseDay = formattedDate;
 
-        res.render('stdPromiseSender', { stdNum: stdNum, promise: promise });
+        res.render('stdPromiseSender', { stdNum: stdNum, promise: promise, user:user });
     } catch (error) {
         console.error('Error showing promise page:', error);
         res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });
