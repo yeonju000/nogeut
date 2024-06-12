@@ -77,6 +77,10 @@
                 <input type="text" name="name" class="input-text">
                 <br><br>
 
+                <h3>계좌번호</h3> <h6> 한국 123456789 (숫자만 입력해주세요.)</h6>
+                <input type="text" name="account" class="input-text">
+                <br><br>
+
                 <h3>나이</h3> <h6> 본인의 출생연도를 선택해 주세요.</h6>
                 <div class="form-group">
                   <select id="birthYear" name="birthYear" class="age-box">
@@ -160,6 +164,36 @@
             </form>
 
             <script>
+              // 폼 제출 전 확인 스크립트
+              document.querySelector('form').addEventListener('submit', function(event) {
+                const requiredFields = [
+                  'name',
+                  'birthYear',
+                  'phoneNumber',
+                  'gender',
+                  'sido',
+                  'gugun',
+                  'favoField',
+                  'desiredAmount',
+                  'ableDay',
+                  'ableTime',
+                  'selfIntro',
+                  'university',
+                  'major',
+                  'account'
+                ];
+                let valid = true;
+                requiredFields.forEach(field => {
+                  if (!document.querySelector(`[name="${field}"]`).value) {
+                    valid = false;
+                  }
+                });
+                if (!valid) {
+                event.preventDefault();
+                alert('필수 입력 필드를 모두 입력하세요.');
+                }
+              });
+
               // 시작 연도와 종료 연도를 설정합니다.
               const startYear = 1940;
               const endYear = 2024;

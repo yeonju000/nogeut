@@ -3,22 +3,22 @@
 <html>
     <head>
         <meta charset="UTF-8">
-	<link  rel="stylesheet" href="/css/header.css" type="text/css"/>
+   <link  rel="stylesheet" href="/css/header.css" type="text/css"/>
   <link  rel="stylesheet" href="/css/youngProfile.css" type="text/css"/>
   
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="start-date" content="2024-05-10">
-	<title>노긋노긋</title>
-	<script defer src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f" crossorigin="anonymous"></script>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="start-date" content="2024-05-10">
+   <title>노긋노긋</title>
+   <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f" crossorigin="anonymous"></script>
     </head>
     <body style="background-color: #E1EFD7;">
-	    <header class="header__container">
+       <header class="header__container">
     <!-- Site H1 / display: none -->
     <h1 class="main-title">노긋 노긋</h1>
       <div class="header__block">
         <a href="/Detail"> 마이페이지 </a>
-        <a href="/login"> 로그인 </a>
+        <a href="/logout"> 로그아웃 </a>
       </div>
 
     <div class="header_nav-main-block">
@@ -75,14 +75,18 @@
                 <h3>나이</h3> <h6> 출생연도는 변경할 수 없습니다.</h6>
                 <div class="form-group">
                   <select id="birthYear" name="birthYear" class="age-box" disabled>
-                    <option><%= student.yearOfBirth %></option>
+                    <option value="<%= student.yearOfBirth %>"><%= student.yearOfBirth %></option>
                    </select>
                 </div>
                 <br><br>
 
+                <h3>계좌번호</h3> <h6> 한국 123456789 (숫자만 입력해주세요.)</h6>
+                <input type="text" name="acoount" class="input-text" value="<%= student.account %>">
+                <br><br>
+
                 <h3>전화번호</h3>
                 <h6> 매칭 약속이 잡혔을 때 일정 문자발송을 위해 필요한 정보입니다. 다른 사람에겐 보이지 않는 정보입니다.</h6>
-                <input type="text" name="phoneNumber" placeholder="<%= student.phoneNumber  %>" class="input-text">
+                <input type="text" name="phoneNumber" value="<%= student.phoneNumber %>" class="input-text">
                 <br><br>
 
                 <h3>성별</h3> <h6> 성별은 변경할 수 없습니다.</h6>
@@ -91,33 +95,33 @@
                 <br><br>
 
                 <h3>대학명</h3> <h6> 재학 혹은 졸업한 대학 이름을 입력해 주세요.</h6>
-                <input type="text" name="university" class="input-text" placeholder="<%= student.university %>">
+                <input type="text" name="university" class="input-text" value="<%= student.university %>">
                 <br><br>
 
                 <h3>전공</h3> <h6> 전공을 입력해 주세요.</h6>
-                <input type="text" name="major" class="input-text" placeholder="<%= student.major %>">
+                <input type="text" name="major" class="input-text" value="<%= student.major %>">
                 <br><br>
 
                 <h3>지역</h3> <h6> 활동 가능한 지역을 선택해 주세요.</h6>
                 <div class="form-group">
                     <select name="sido" id="sido" class="select-box">
-                        <option>--<%= student.sido %>--</option>
+                        <option value="<%= student.sido %>">--<%= student.sido %>--</option>
                     </select>
 
                     <select name="gugun" id="gugun" class="select-box">
-                        <option>--<%= student.gu %>--</option>
+                        <option value="<%= student.gu %>">--<%= student.gu %>--</option>
                     </select>
                 </div>
                 <br><br>
 
                 
                 <h3>자신있는 분야</h3> <h6> 자신있는 분야를 선택해 주세요. (중복 선택 가능)</h6>
-                <input type="checkbox" name="favoField" value="FF_exercise" <%=interests.includes('운동') ? 'checked' : '' %>>운동
-                <input type="checkbox" name="favoField" value="FF_craft" <%=interests.includes('수공예') ? 'checked' : '' %>>수공예
-                <input type="checkbox" name="favoField" value="FF_digital" <%=interests.includes('디지털') ? 'checked' : '' %>>디지털
-                <input type="checkbox" name="favoField" value="FF_music" <%=interests.includes('음악') ? 'checked' : '' %>>음악
-                <input type="checkbox" name="favoField" value="FF_art" <%=interests.includes('미술') ? 'checked' : '' %>>미술
-                <input type="checkbox" name="favoField" value="FF_companion" <%=interests.includes('말동무') ? 'checked' : ''%>>말동무
+                <input type="checkbox" name="favoField" value="FF_exercise" <%-interests.includes('운동') ? 'checked' : '' %>>운동
+                <input type="checkbox" name="favoField" value="FF_craft" <%-interests.includes('수공예') ? 'checked' : '' %>>수공예
+                <input type="checkbox" name="favoField" value="FF_digital" <%-interests.includes('디지털') ? 'checked' : '' %>>디지털
+                <input type="checkbox" name="favoField" value="FF_music" <%-interests.includes('음악') ? 'checked' : '' %>>음악
+                <input type="checkbox" name="favoField" value="FF_art" <%-interests.includes('미술') ? 'checked' : '' %>>미술
+                <input type="checkbox" name="favoField" value="FF_companion" <%-interests.includes('말동무') ? 'checked' : '' %>>말동무
                 <br><br>
 
                 <h3>희망 금액</h3> <h6> 원하시는 금액대를 선택해 주세요.</h6>
@@ -146,14 +150,16 @@
                 <br><br>
 
                 <h3>자기 소개</h3>
-                <textarea name="introduce" class="textarea" placeholder="<%= student.introduce %>"></textarea>
+                <textarea name="selfIntro" id="selfIntro" class="textarea" value="<%= student.introduce %>"><%= student.introduce %></textarea>
                 <br><br>
 
+                <!--
                 <h4>매칭 활성화 여부</h4>
-                <input type="checkbox" name="enableMatching" <%- student.enableMatching ? 'checked' : '' %>>활성화
-                <br><br><br>
+                <input type="checkbox" name="enableMatching" value= <%=student.enableMatching ? 'checked' : '' %>>활성화
+              -->
+                <br><br>
 
-                <input type="submit" class="submit-button" value="완료" onclick="redirectToUpdate()">
+                <input type="submit" class="submit-button" value="완료">
             </form>
 
             <script>

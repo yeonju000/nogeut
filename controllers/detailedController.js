@@ -132,11 +132,12 @@ exports.detail = async (req, res) => {
         }
 
         if (student) {
+            console.log("학생존재");
             const year = calculateKoreanAgeByYear(student.yearOfBirth);
             const interestField = await interestFieldData(student.stdNum);
             const review = await reviewData(student.stdNum);
             const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
-            return res.render('DetailedProfile_young', { student, user, age: year, encodedImageBase64String, interests: interestField, review, user });
+            return res.render('MyDetaileProfile_young', { student, user, age: year, encodedImageBase64String, interests: interestField, review, user });
         }
 
         // If neither senior nor student profile exists

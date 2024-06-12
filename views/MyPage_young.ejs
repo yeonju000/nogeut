@@ -3,13 +3,13 @@
 <html>
     <head>
         <meta charset="UTF-8">
-	<link  rel="stylesheet" href="/css/header.css" type="text/css"/>
+   <link  rel="stylesheet" href="/css/header.css" type="text/css"/>
 
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="start-date" content="2024-05-10">
-	<title>노긋노긋</title>
-	<script defer src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f" crossorigin="anonymous"></script>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="start-date" content="2024-05-10">
+   <title>노긋노긋</title>
+   <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f" crossorigin="anonymous"></script>
 
     <style>
         .main-button {
@@ -36,13 +36,13 @@
 
     </head>
     <body style="background-color: #E1EFD7;">
-	    <header class="header__container">
+       <header class="header__container">
     <!-- Site H1 / display: none -->
     <h1 class="main-title">노긋 노긋</h1>
     <div class="header__block">
         <% if (typeof user !== 'undefined' && user) { %>
           <h6 style="font-size: small; padding: 0; margin-top: 0; margin-bottom: 0; margin-right: 20px;">반갑습니다, <%= user.name %>님!</h6>
-          <a href="/Detail"> 마이페이지 </a>
+          <a href="#"> 마이페이지 </a>
           <a href="/logout"> 로그아웃 </a>
         <% } else { %>
           <a href="/login"> 로그인 </a>
@@ -84,7 +84,7 @@
             <h2>마이페이지</h2>
             <div style="width: 700px; background-color: white; margin: auto; padding: 50px;">
                 <img src="data:image/jpeg;base64,<%= encodedImageBase64String %>" 
-                style="width: 20%; height: 20%; border-radius: 50%;">
+                style="width: 200px; height: 200px; border-radius: 50%;">
 
                 <table>
                     <tr>
@@ -122,13 +122,15 @@
                 <h4>나의 매칭 프로필</h4>
 
                 <div class="button-container">
-                    <a href="#" class="main-button">
+                    <a href="/detail/student" class="main-button">
                       <span>나의 매칭 프로필 보기</span>
                     </a>
-                    <br>
-                    <a href="#" class="main-button">
+                    
+                    <!--
+                    <a href="/edit/student" class="main-button">
                       <span>매칭 프로필 수정하기</span>
                     </a>
+                  -->
                 </div>
 
             </div>

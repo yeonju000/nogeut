@@ -60,7 +60,7 @@
   </header>
 
   <div style="width: 710px; margin: auto;">
-    <h2>프로필</h2>
+    <h2>나의 매칭 프로필</h2>
     <div style="width: 700px; background-color: white; margin: auto; padding: 50px;">
       <img src="data:image/jpeg;base64,<%= encodedImageBase64String %>"
         style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
@@ -80,6 +80,24 @@
           </td>
           <td>
             <%= age %>세
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <h4>계좌번호</h6>
+          </td>
+          <td>
+            <%= student.account %>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <h4>전화번호</h6>
+          </td>
+          <td>
+            <%= student.phoneNumber %>
           </td>
         </tr>
 
@@ -180,13 +198,13 @@
       </div>
       <br>
       <input type="button" value="수정하기"
-        style="font-size: 15px; color: white; border: 0; border-radius: 15px; background-color:#2D6210; padding: 10px; display: inline-block;" 
+        style="width: 80px; color: white; border: 0; border-radius: 15px; background-color:#2D6210; padding: 10px; display: inline-block;" 
         onclick="redirectToUpdate()">
     </div>
   </div>
   <script>
     function redirectToUpdate() {
-      window.location.href = '/edit/student'; // senior와 다름 // 프로필 수정 페이지 불러오기
+      window.location.href = '/edit/student'; // myPage에도 프로필 수정하기 기능이 있어서 둘 중 하나는 삭제 예정.
     }
   </script>
 </body>
