@@ -21,13 +21,15 @@ async function fetchData(userID) {
 exports.create = async (req, res) => {
     try {
         if (req.session.user) {
+            const userType = req.session.userType; // Assume you have this stored in the session
             console.log('Creation page accessed by user:', req.session.user);
-            res.render('nonProfile', { user: req.session.user });
+            res.render('nonProfile', { user: req.session.user, userType: userType });
         } else {
-            res.redirect('/login'); // 세션에 사용자가 없으면 로그인 페이지로 리디렉션
+            res.redirect('/login'); // Redirect to login page if the user is not logged in
         }
     } catch (error) {
         console.error('Internal Server Error:', error);
         res.status(500).send('Internal Server Error');
     }
 };
+

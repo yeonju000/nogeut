@@ -84,6 +84,14 @@ const StudentProfile = sequelize.define("StudentProfile", {
   availableTime: {
     type: DataTypes.STRING(20),
     allowNull: false
+  },
+  account: {
+    type: DataTypes.STRING(50),
+    allowNull: false
+  },
+  scoreCount: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   }
 });
 

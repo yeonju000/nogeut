@@ -19,14 +19,12 @@ const { Op, Sequelize } = require('sequelize');
 const multer = require('multer');
 const sequelize = require('../config/database');
 
-/*
-//정렬하려고 했는데,,, 안되네욤
-이상하게 정렬을 하면 다른게 문제가 생기구...
+
 const sortOptions = {
   latest: ['createdAt', 'DESC'],
   oldest: ['createdAt', 'ASC']
 };
-*/
+
 
 async function fetchData(reportNum) {
     try {
