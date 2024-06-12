@@ -16,45 +16,33 @@
   <!-- Header Section -->
   <header class="header__container">
     <!-- Site H1 / display: none -->
-    <h1 class="main-title">노긋노긋</h1>
-    <div class="header__block">
-      <a href="#"> 마이페이지 </a>
-      <a href="#"> 로그인 </a>
-    </div>
-
+    <h1 class="main-title">노긋노긋메인홈</h1>
+      <div class="header__block">
+        <a href="/Detail"> 마이페이지 </a>
+        <a href="/logout"> 로그아웃 </a>
+      </div>
     <div class="header_nav-main-block">
-      <!-- 네비게이션에 해당하는 부분 -->
+        <!-- 네비게이션에 해당하는 부분 -->
       <nav class="header__nav-block">
         <ul class="nav__list" role="navigation">
-
           <li class="nav__list-item">
             <a href="/main" aria-label="노긋노긋 홈페이지">
-              <img src="/images/logo.png" width=50px alt="로고">
-            </a>
+              <img src="/images/logo.png" width="50" alt="로고">
+              </a>
           </li>
           <li class="nav__list-item">
-            <a href="#"> 매칭하기 </a>
+            <a href="/filter"> 매칭 </a>
           </li>
           <li class="nav__list-item">
-            <a href="#"> 채팅 </a>
+            <a href="/promiseList"> 약속 </a>
           </li>
           <li class="nav__list-item">
-            <a href="#"> 보고서작성 </a>
-          </li>
-          <li class="nav__list-item">
-            <!--<a href="#"> 후기작성 </a>-->
-            <a href="#" onclick="checkReportBeforeReview(event, '/review-page-url')">후기 작성</a>
-          </li>
-          <li class="nav__list-item">
-            <a href="#"> 보고서확인 </a>
+            <a href="/reportList"> 보고서 </a>
           </li>
         </ul>
       </nav>
     </div>
-
-
-    <div class="side__nav-container">
-    </div>
+    
   </header>
 
   <div class="prmoise-container">

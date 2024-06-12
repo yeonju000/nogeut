@@ -15,48 +15,6 @@
    <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f" crossorigin="anonymous"></script>
     </head>
     <body style="background-color: #E1EFD7;">
-       <header class="header__container">
-    <!-- Site H1 / display: none -->
-    <h1 class="main-title">노긋 노긋</h1>
-      <div class="header__block">
-        <% if (typeof user !== 'undefined' && user) { %>
-          <h6 style="font-size: small; padding: 0; margin-top: 0; margin-bottom: 0; margin-right: 20px;">반갑습니다, <%= user.name %>님!</h6>
-          <a href="#"> 마이페이지 </a>
-          <a href="/logout"> 로그아웃 </a>
-        <% } else { %>
-          <a href="/login"> 로그인 </a>
-        <% } %>
-      </div>
-
-    <div class="header_nav-main-block">
-        <!-- 네비게이션에 해당하는 부분 -->
-      <nav class="header__nav-block">
-        <ul class="nav__list" role="navigation">
-
-          <li class="nav__list-item">
-            <a href="/main" aria-label="노긋노긋 홈페이지">
-                <img src="/images/logo.png" width=50px alt="로고">
-              </a>
-          </li>
-          <li class="nav__list-item">
-            <a href="#"> 매칭하기 </a>
-          </li>
-          <li class="nav__list-item">
-            <a href="#"> 채팅 </a>
-          </li>
-          <li class="nav__list-item">
-            <a href="#"> 보고서작성 </a>
-          </li>
-          <li class="nav__list-item">
-            <a href="#"> 후기작성 </a>
-          </li>
-          <li class="nav__list-item">
-            <a href="#"> 보고서확인 </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
   
     <div class="container">
         <h2>대학생 프로필 등록하기</h2>
