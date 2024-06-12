@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Not Matching Promises</title>
     <link href="/css/header.css?v=1.0" rel="stylesheet" type="text/css">
+    <link href="/css/promiseList.css?v=1.0" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -22,7 +23,7 @@
                     </a>
                 </li>
                 <li class="nav__list-item"><a href="#"> 매칭하기 </a></li>
-                <li class="nav__list-item"><a href="#"> 약속 </a></li>
+                <li class="nav__list-item"><a href="/promiseList"> 약속 </a></li>
                 <li class="nav__list-item"><a href="#"> 보고서작성 </a></li>
                 <li class="nav__list-item"><a href="#"> 후기작성 </a></li>
                 <li class="nav__list-item"><a href="#"> 보고서확인 </a></li>
@@ -30,50 +31,51 @@
         </nav>
         <div class="side__nav-container">
             <ul class="nav__list" role="navigation">
-                <li class="nav__review__list-item">
+                <li class="side__nav__list-item">
                     <a href="/promiseList/notmatchingPromiseList"> 수락 전 </a>
                 </li>
-                <li class="nav__review__list-item">
-                    <a href="/promiseList/matchingPromiseList"> 수락 후 </a>
+                <li class="side__nav__list-item">
+                    <a href="/promiseList/matchingPromiseList"> 수락 후</a>
                 </li>
             </ul>
         </div>
     </header>
 
     <main>
-        <h1>Matching Promises</h1>
-        <% if (promises.length===0) { %>
-            <p>아직 잡은 약속이 없습니다.</p>
-            <% } else { %>
-                <ul class="promise-list">
+        <div class="promise__list-container">
+            <h2 class="prmoise-title"> 성사 전 약속 </h2>
+                <% if (promises.length===0) { %>
+                <h3 class="heading"> 아직 잡은 약속이 없습니다. </h3>
+                <% } else { %>
+                    <ul class="promise-list">
                     <% promises.forEach(promise=> { %>
-                        <li class="promise-item"
-                            style="background-color: white; border: 1px solid #E1EFD7; height: 70px; margin-top: 20px;">
-                            <div>
+                        <li class="promise-item" onclick="redirectToPromiseDetailPage('<%= promise.promiseNum %>')">
+                            <div div class="div1">
                                 <span>약속번호: <%= promise.promiseNum %></span>
                             </div>
-                            <div>
+                            <div class="div2">
                                 <span>약속 날짜: <%= promise.date %></span>
-                                <span>시작 시간: <%= promise.startTime %></span>
-                                <span>종료 시간: <%= promise.finishTime %></span>
                             </div>
-                            <button class="btn btn-primary"
-                                onclick="redirectToPromiseDetailPage('<%= promise.promiseNum %>')">상세보기</button>
+                            <div class="names-container">
+                                <span class="student-name">시작 시간: <%= promise.startTime %></span>
+                                <span class="student-name">종료 시간: <%= promise.finishTime %></span>
+                            </div>
                         </li>
-
-                        <% }); %>
-                </ul>
+                     <% }); %>
+                    </ul>
                 <% } %>
+            </div>
     </main>
     <!-- 자바스크립트 코드 추가 -->
+    <!-- 자바스크립트 코드 추가 -->
     <script>
-            function redirectToPromiseDetailPage(promiseNum) {
-                // 약속 상세페이지의 URL을 생성합니다.
-                const promiseDetailUrl = `/promiseList/${promiseNum}/request`;
+        function redirectToPromiseDetailPage(promiseNum) {
+            // 약속 상세페이지의 URL을 생성합니다.
+            const promiseDetailUrl = `/promiseList/${promiseNum}/request`;
 
-                // 약속 상세페이지로 이동합니다.
-                window.location.href = promiseDetailUrl;
-            }
+            // 약속 상세페이지로 이동합니다.
+            window.location.href = promiseDetailUrl;
+        }
     </script>
     <!-- Footer Section -->
     <footer class="footer__container">

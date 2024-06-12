@@ -56,34 +56,96 @@
         <div class="side__nav-container">
         </div>
     </header>
+    <div class="prmoise-container">
     <% if (!depositStatus) { %>
-        <h2>약속이 성사되었습니다</h2>
+        <h2 class="prmoise-title">약속이 성사되었습니다</h2>
         <h4>입금을 완료해주세요</h4>
-        <p>입금 확인 대기</p>
+        <p class="promise__deposit-status" >입금 확인 대기</p>
+        <div class="promise__detail-profile">
+            <a href="/promiseList/<%=promise.promiseNum%>/deposit/<%=promise.stdNum%>">상대방 프로필에서 계좌번호 보기</a>
+        </div>
+                <div class="promise__deposit-item">학생 이름: <%= promiseDetail.studentName %>
+                </div>
+                <div class="promise__deposit-item">약속 일자: <%= promise.formattedPromiseDay %>
+                </div>
+                <div class="promise__deposit-item">시작 시간: <%= promise.startTime %>
+                </div>
+                <div class="promise__deposit-item">종료 시간: <%= promise.finishTime %>
+                </div>
+                <div>
+                    <form id="confirmButton" method="POST">
+                        <button type="button" class="promise__submit-button">확인</button>
+                    </form>
+                </div>
+                                <script>
+                                    // 확인 버튼에 클릭 이벤트 리스너 추가
+                                    document.getElementById("confirmButton").addEventListener("click", function () {
+                                        // 메인 페이지로 이동
+                                        //window.location.href = "/main";
+                                        window.location.href = "/promiseList/matchingPromiseList";
+                                    });
+                                </script>
+
+                
     <% } else { %>
-        <h4>일정을 확인하세요!</h4>
-        <p>입금확인</p>
+        <h3 class="prmoise-title">일정을 확인하세요!</h3>
+        <p class="promise__deposit-status" >입금확인</p>
+                <div class="promise__deposit-item">학생 이름: <%= promiseDetail.studentName %>
+                </div>
+                <div class="promise__deposit-item">약속 일자: <%= promise.formattedPromiseDay %>
+                </div>
+                <div class="promise__deposit-item">시작 시간: <%= promise.startTime %>
+                </div>
+                <div class="promise__deposit-item">종료 시간: <%= promise.finishTime %>
+                </div>
+                            <% if (!reportStatus) { %>
+                                <div class="promise__deposit-button-container">
+            <div>
+                <sapn>보고서를 확인하지 않았습니다. 보고서를 먼저 확인해주세요.</sapn>
+            
+            </div>
+            <div style="margin-left: 20px;">
+                <form id="reportButton" method="POST">
+                    <button type="button" class="promise__submit-button">보고서</button>
+                </form>
+            </div>
+        </div>
+            <script>
+                document.getElementById("reportButton").addEventListener("click", function () {
+                    window.location.href = "/reportList"; //보고서 작성 경로로 수정!
+                });
+            </script>
+
+                                <% } else { %>
+                                    <div style="display: flex;">
+                                        <div>
+                                            <form id="confirmButton" method="POST">
+                                                <button type="button" class="promise__submit-button">확인</button>
+                                            </form>
+                                        </div>
+                                        <div style="margin-left: 20px;">
+                                            <form id="reivewButton" method="POST">
+                                                <button type="button" class="promise__submit-button">후기</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        // 확인 버튼에 클릭 이벤트 리스너 추가
+                                        document.getElementById("confirmButton").addEventListener("click", function () {
+                                            // 메인 페이지로 이동
+                                            //window.location.href = "/main";
+                                            window.location.href = "/promiseList/matchingPromiseList";
+                                        });
+
+                                        document.getElementById("reivewButton").addEventListener("click", function () {
+                                            window.location.href = "/review/<%=promise.promiseNum%>/<%=matching.matchingNum%>";
+                                        });
+                                    </script>
+                                    <% } %>
     <% } %>
 
-    <!-- 약속 정보 표시 -->
-    <!--<p>약속 일자: <%= promise.promiseDay %></p>-->
-    <p>약속 일자: <%= promise.formattedPromiseDay %>
-    </p>
-    <p>시작 시간: <%= promise.startTime %>
-    </p>
-    <p>종료 시간: <%= promise.finishTime %>
-    </p>
-    <form action="/promiseList/<%=promise.promiseNum%>/deposit>" id="confirmButton" method="POST">
-        <button type="button" class="btn btn-success">확인</button>
-    </form>
-    <script>
-        // 확인 버튼에 클릭 이벤트 리스너 추가
-        document.getElementById("confirmButton").addEventListener("click", function () {
-            // 메인 페이지로 이동
-            window.location.href = "/main";
-        });
-    </script>
-
+    </div>
+</div>
                 <!-- Footer Section -->
     <footer class="footer__container">
         <section class="pages__container">

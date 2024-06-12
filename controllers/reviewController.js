@@ -32,10 +32,12 @@ exports.createReview = async (req, res) => {
     
         const userID = req.session.userID; // 세션 아이디를 가져옵니다.
         const { reviewContent, rating } = req.body;
+        const { promiseNum, matchingNum } = req.params;
         const score = parseInt(rating, 10);
 
         console.log("userId: ", userID)
         console.log("Request body: ", req.body);
+        console.log("req.params: ", req.params)
         // 사용자 정보를 조회합니다.
         const user = await fetchData(userID);
 
@@ -45,34 +47,18 @@ exports.createReview = async (req, res) => {
 
         console.log("find promise...");
 
-        // userID와 일치하는 stdNum 또는 protectorNum이 있는지 조회
-        const promise = await Promise.findOne({
-            where: {
-                [Op.or]: [
-                    { stdNum: userID },
-                    { protectorNum: userID }
-                ]
-            }
-        });
+        const promise = await Promise.findOne({ where: { promiseNum: parseInt(promiseNum) } });
 
         if (!promise) {
             return res.status(400).json({ error: '약속을 찾을 수 없습니다.' });
         }
 
-        console.log("Promise found:", promise);
-        console.log("PromiseNum: ", promise.promiseNum);
         // 약속 정보를 기반으로 매칭 정보를 조회합니다.
-        const matching = await Matching.findOne({ where: { promiseNum: promise.promiseNum } });
+        const matching = await Matching.findOne({ where: { matchingNum: parseInt(matchingNum) } });
 
         if (!matching) {
             return res.status(400).json({ error: '해당 약속에 대한 매칭을 찾을 수 없습니다.' });
         }
-
-
-        // 매칭 정보에서 매칭 번호를 가져옵니다.
-        const matchingNum = matching.matchingNum;
-
-        console.log("matchingNum: ", matchingNum);
 
         let reviewSender, reviewReceiver;
         if (userID === promise.stdNum) {
@@ -124,7 +110,7 @@ exports.createReview = async (req, res) => {
 exports.renderReviewPage = (req, res) => {
     console.log("Review render process started.");
     //const { matchingNum, userProfile } = req.params; 
-    const { matchingNum } = req.params; // URL에서 matchingNum 가져오기
+    const { promiseNum, matchingNum } = req.params; // URL에서 matchingNum 가져오기
     const user = req.session.userID; // 세션에서 userProfile 가져오기
     const stickerValues = [1, 2, 3, 4, 5];
     const reviewContent = ""; // 초기화할 값 또는 데이터베이스에서 가져온 값
@@ -134,8 +120,9 @@ exports.renderReviewPage = (req, res) => {
         stickerValues: stickerValues,
         reviewContent: reviewContent,
         score: score,
-        formAction: `/review/write`,
+        formAction: `/review/<%=promiseNum%>/<%=matchingNum%>`,
         matchingNum: matchingNum, // matchingNum 전달
+        promiseNum: promiseNum,
         user: user
     });
 };

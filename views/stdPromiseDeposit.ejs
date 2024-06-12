@@ -56,23 +56,29 @@
         <div class="side__nav-container">
         </div>
     </header>
+    <div class="prmoise-container">
     <!--학생에게 보여주는 화면-->
         <% if (!depositStatus) { %>
-            <h2>약속이 성사되었습니다</h2>
+            <h2 class="prmoise-title">약속이 성사되었습니다</h2>
             <h4>입금 확인이 되었다면 아래의 확인버튼을 눌러주세요.</h4>
 
         <% } else { %>
-                <h4>일정을 확인하세요!</h4>
+                <h3 class="prmoise-title">일정을 확인하세요!</h3>
         <% } %>
     
     <!-- 약속 정보 표시 -->
     <!--<p>약속 일자: <%= promise.promiseDay %></p>-->
-    <p>약속 일자: <%= promise.formattedPromiseDay %>
-    </p>
-    <p>시작 시간: <%= promise.startTime %>
-    </p>
-    <p>종료 시간: <%= promise.finishTime %>
-    </p>
+
+    <div class="promise__deposit-item">보호자 성함: <%= promiseDetail.protectorName %>
+    </div>
+    <div class="promise__deposit-item">노인 성함: <%= promiseDetail.seniorName %>
+    </div>
+    <div class="promise__deposit-item">약속 일자: <%= promise.formattedPromiseDay %>
+    </div>
+    <div class="promise__deposit-item">시작 시간: <%= promise.startTime %>
+    </div>
+    <div class="promise__deposit-item">종료 시간: <%= promise.finishTime %>
+    </div>
 
     <!-- 입금 확인 버튼 -->
     <% if (!depositStatus) { %>
@@ -80,19 +86,51 @@
             <button type="submit" style="color: #2D6210;">입금 확인</button>
         </form>
         <% } else { %>
-                <form  id="confirmButton" method="POST">
-                    <button type="button" class="btn btn-success">확인</button>
+    <div class="promise__deposit-button-container">
+        <% if (!matching.reportNum) { %>
+            <div>
+                <sapn>보고서를 작성하지 않았습니다. 보고서를 먼저 작성해주세요.</sapn>
+            </div>
+            <div style="margin-left: 20px;">
+                <form id="reportButton" method="POST">
+                    <button type="button" class="promise__submit-button">보고서</button>
                 </form>
-                <!-- JavaScript 코드 -->
+            </div>
+            <script>
+                document.getElementById("reportButton").addEventListener("click", function () {
+                    window.location.href = "/pendingReports"; //보고서 작성 경로로 수정!
+                });
+            </script>
+            <% } else { %>
+                <div style="display: flex;">
+                    <div>
+                        <form id="confirmButton" method="POST">
+                            <button type="button" class="promise__submit-button">확인</button>
+                        </form>
+                    </div>
+                    <div style="margin-left: 20px;">
+                        <form id="reivewButton" method="POST">
+                            <button type="button" class="promise__submit-button">후기</button>
+                        </form>
+                    </div>
+                </div>
                 <script>
                     // 확인 버튼에 클릭 이벤트 리스너 추가
                     document.getElementById("confirmButton").addEventListener("click", function () {
                         // 메인 페이지로 이동
-                        window.location.href = "/promiseList";
+                        //window.location.href = "/main";
+                        window.location.href = "/promiseList/matchingPromiseList";
+                    });
+
+                    document.getElementById("reivewButton").addEventListener("click", function () {
+                        window.location.href = "/review/<%=promise.promiseNum%>/<%=matching.matchingNum%>";
                     });
                 </script>
+                <% } %>
+    
+    </div>
             <% } %>
-
+</div>
                 <!-- Footer Section -->
                 <footer class="footer__container">
                     <section class="pages__container">

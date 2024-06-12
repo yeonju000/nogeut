@@ -144,3 +144,20 @@ body{
   font-size: var(--font-xsmall);
 }
 
+.side__nav-container {
+  background-color: #E1EFD7;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0;
+  height: 30px;
+}
+
+.side__nav__list-item {
+  margin: 0 20px;
+  font-size: var(--font-small);
+  font-weight: var(--weight-bold);
+}
+
+.side__nav__list-item a:hover {
+  color: #2D6210;
+}

@@ -15,7 +15,6 @@ const uploadDir = path.join(__dirname, 'uploads');
 
 // 라우트
 const creationRoutes = require('./routes/creationRoutes');
-const chatRoutes = require('./routes/chatRoutes');
 const loginRoutes = require("./routes/loginRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const matchingRoutes = require("./routes/matchingRoutes");
@@ -23,13 +22,13 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const mainhomeRoutes = require("./routes/mainhomeRoutes");
 const filterRoutes = require("./routes/filterRoutes");
 const mainRoutes = require("./routes/mainRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 const seniorProfileRoutes = require("./routes/seniorProfileRoutes");
 const studentProfileRoutes = require("./routes/studentProfileRoutes"); //68 추가
-const reviewRoutes = require("./routes/reviewRoutes");
 const keepRoutes = require("./routes/keepRoutes");
 const promiseToStdRoutes = require("./routes/promiseToStdRoutes.js");
-const promiseToSnRoutese = require("./routes/promiseToSnRoutes.js")
-const promiseListRoutes = require("./routes/promiseListRoutes.js")
+const promiseToSnRoutese = require("./routes/promiseToSnRoutes.js");
+const promiseListRoutes = require("./routes/promiseListRoutes.js");
 const reportRoutes = require("./routes/reportRoutes.js");
 const appointmentRoutes = require('./routes/appointmentRoutes.js');
 // 컨트롤러
@@ -145,7 +144,6 @@ app.get('/logout', loginController.logout);
 app.get("/Detail", detailedController.myDetail);
 app.get("/Detail/profile", detailedController.detail);
 app.get("/Detail/Senior", detailedController.oldDetail);
-app.get("/chat", chatRoutes);
 app.use('/senior', seniorProfileRoutes); // 시니어 프로필 라우터 추가
 app.use('/Creation', creationRoutes);
 app.get("/Update/Senior", oldProfileController.modifiedSeniorProfile);
@@ -162,8 +160,8 @@ app.use("/", filterRoutes);
 app.use("/", uploadRoutes);
 app.use("/", matchingRoutes);
 app.use("/", keepRoutes);
-app.use("/", chatRoutes);
 app.use("/", creationRoutes);
+app.use('/review', reviewRoutes);
 app.use('/review', reviewRoutes);
 app.use('/promiseToStd', promiseToStdRoutes);
 app.use('/promiseTosn', promiseToSnRoutese)
@@ -180,6 +178,3 @@ app.use(errorController.internalServerError);
 const server = app.listen(app.get("port"), () => {
   console.log(`Server running at http://localhost:${app.get("port")}`);
 });
-
-const io = socketIo(server);
-const chatController = require("./controllers/chatController")(io);

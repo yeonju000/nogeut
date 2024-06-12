@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const appointmentController = require('../controllers/appointmentController');
 
-router.get('/test', appointmentController.showPage);
-router.get('/appointment/test', appointmentController.showPage);
+const appointmentController = require("../controllers/appointmentController");
+
+router.get("/test", appointmentController.showPage);
 
 module.exports = router;

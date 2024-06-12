@@ -56,19 +56,28 @@
         <div class="side__nav-container">
         </div>
     </header>
-    <!--요청 보내는 쪽-->
-    <h2>요청이 완료되었습니다.</h2>
+     <!--요청 보내는 쪽-->
+    <div class="prmoise-container">
+        <h2 class="prmoise-title">요청이 완료되었습니다.</h2>
+        <div>
+            <!-- 약속 정보 표시 -->
+            <div class="div__promise-sender">
+                <span>약속 일자: <%= promise.formattedPromiseDay %></span>
+            </div>
+            <div class="div__promise-sender">
+                <span>시작 시간: <%= promise.startTime %></span>
+            </div>
+            <div class="div__promise-sender"> 
+                <span>종료 시간: <%= promise.finishTime %></span>
+            </div>
+            <div>
+                <form action="/promiseToStd/<%=seniorNum%>/<%= promise.promiseNum%>" id="confirmButton" method="POST">
+                    <button type="button" class="promise__submit-button">확인</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    <!-- 약속 정보 표시 -->
-    <p>약속 일자: <%= promise.formattedPromiseDay %>
-    </p>
-    <p>시작 시간: <%= promise.startTime %>
-    </p>
-    <p>종료 시간: <%= promise.finishTime %>
-    </p>
-    <form action="/promiseToStd/<%=seniorNum%>/<%= promise.promiseNum%>" id="confirmButton" method="POST">
-        <button type="button" class="btn btn-success">확인</button>
-    </form>
     <!-- JavaScript 코드 -->
     <script>
         // 확인 버튼에 클릭 이벤트 리스너 추가

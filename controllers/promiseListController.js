@@ -5,6 +5,83 @@ const StudentProfile = require('../models/studentProfile');
 const { Op } = require('sequelize');
 const { format } = require('date-fns');
 const Member = require('../models/member');
+const InterestField = require("../models/interestField");
+const Review = require("../models/review");
+const Keep = require("../models/keep");
+
+async function fetchData(userID) {
+    try {
+        const users = await Member.findOne({ where: { memberNum: userID } });
+        console.log("users");
+        return users; // fetchData 함수가 Promise를 반환하도록 수정
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+async function fetchData2(userID) {
+    try {
+        const senior = await SeniorProfile.findOne({ where: { seniorNum: userID } });
+        if (senior) {
+            console.log("시니어 회원");
+        } else {
+            console.log("시니어 회원 아닙니다.");
+        }
+        return senior;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+async function fetchData3(userID) {
+    try {
+        const student = await StudentProfile.findOne({ where: { stdNum: userID } });
+        if (student) {
+            console.log("주니어 회원");
+        } else {
+            console.log("주니어 회원이 아닙니다.");
+        }
+        return student;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+async function interestFieldData(userID) {
+    try {
+        const interests = await InterestField.findAll({
+            where: { memberNum: userID },
+            attributes: ['interestField']
+        });
+        return interests.map(interest => interest.interestField);
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+async function reviewData(memberNum) {
+    try {
+        const review = await Review.findAll({ where: { reviewReceiver: memberNum } });
+        if (review.length > 0) {
+            console.log("있다있어!!!!!!!!!!!!!!");
+        } else {
+            console.log("없어!!!!!!!");
+        }
+        return review;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+function calculateKoreanAgeByYear(birthYear) {
+    const currentYear = new Date().getFullYear();
+    return currentYear - birthYear;
+}
 // 약속 목록 페이지로 이동
 exports.showPromisesList = async (req, res) => {
     try {
@@ -92,23 +169,27 @@ exports.getMatchingPromises = async (req, res) => {
 
         for (const promise of promises) {
             const matching = await Matching.findOne({ where: { promiseNum: promise.promiseNum } });
-
+            
             if (matching) {
-
-                const student = await StudentProfile.findOne({ where: { stdNum: promise.stdNum } });
-
-                const senior = await SeniorProfile.findOne({ where: { seniorNum: promise.protectorNum } });
-
-                const studentMember = await Member.findOne({ memberNum: promise.stdNum });
-
-                const protectorMember = await Member.findOne({ memberNum: promise.protectorNum });
-
+                const student = await fetchData(promise.stdNum);
+                const senior = await fetchData2(promise.protectorNum);
+                const protector = await fetchData(promise.protectorNum);
                 //npm install date-fns
                 // 날짜 형식을 'yyyy.MM.dd (E)' 형식으로 변환
                 const formattedDate = format(new Date(promise.promiseDay), 'yyyy.MM.dd (E)');
-
+/*
+                console.log("promise.stdNum: ", promise.stdNum);
+                console.log("promise.protectorNum: ", promise.protectorNum);
+                console.log("studentName: ", student.name);
+                console.log("seniorName: ", senior.seniorName);
+                console.log("protectorName: ", protector.name);
+                console.log("senior: ", senior);
+*/
                 matchingPromises.push({
                     promiseNum: promise.promiseNum,
+                    studentName: student.name,
+                    seniorName: senior.seniorName,
+                    protectorName: protector.name,
                     date: formattedDate,
                     startTime: promise.startTime,
                     finishTime: promise.finishTime
@@ -116,7 +197,7 @@ exports.getMatchingPromises = async (req, res) => {
             }
         }
 
-        return res.render('matchingPromiseList', { promises: matchingPromises });
+        return res.render('matchingPromiseList', { matchingPromises });
 
     } catch (error) {
         console.error('Error fetching matching promises:', error);
@@ -165,6 +246,99 @@ exports.showPromiseConfirmation = async (req, res) => {
         res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });
     }
 };
+
+exports.showProfileDetail = async (req, res) => {
+    try {
+        console.log("show promiseSender detail...");
+        const { promiseNum, promiseSender } = req.params;
+        const user = req.session.userID;
+
+        console.log("promiseNum: ", promiseNum);
+        console.log("promiseSender: ", promiseSender);
+        console.log("user: ", user);
+
+        const promise = await Promise.findOne({ where: { promiseNum: promiseNum } });
+        
+        if (!promise) {
+            console.log(`Promise with ID ${promiseNum} not found.`);
+            return res.status(404).json({ error: '약속을 찾을 수 없습니다.' });
+        }
+        
+        // 로그 추가: promise 객체의 stdNum과 protectorNum 출력
+        //console.log("promise.stdNum: ", promise.stdNum);
+        //console.log("promise.protectorNum: ", promise.protectorNum);
+
+        let student, senior;
+        if (parseInt(promiseSender) === promise.stdNum) {
+            //student = await StudentProfile.findOne({ where: { stdNum: promise.stdNum } });
+            student = await fetchData3(promise.stdNum);
+
+            const year = calculateKoreanAgeByYear(student.yearOfBirth);
+            const interestField = await interestFieldData(student.stdNum);
+            const review = await reviewData(student.stdNum);
+            const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
+            //const member = await fetchData(student.stdNum);
+            const member = await fetchData(student.stdNum);
+/*
+            // Check if the student is already in the keep list
+            const keep = await Keep.findOne({
+                where: {
+                    seniorNum: user.memberNum,
+                    stdNum: student.stdNum
+                }
+            });
+            const isKeep = !!keep;
+*/
+            return res.render('stdDetailedPromise', { student, member, encodedImageBase64String, interests: interestField, review, user, age: year, promise });
+        } else if (parseInt(promiseSender) === promise.protectorNum) {
+            //senior = await SeniorProfile.findOne({ where: { seniorNum: promise.protectorNum } });;
+            senior = await fetchData2(promise.protectorNum);
+
+            const year = calculateKoreanAgeByYear(senior.yearOfBirth);
+            const interestField = await interestFieldData(senior.seniorNum);
+            const review = await reviewData(senior.seniorNum);
+            const encodedImageBase64String = senior.profileImage ? Buffer.from(senior.profileImage).toString('base64') : '';
+            const member = await fetchData(senior.seniorNum);
+            return res.render('seniorDetailedPromise', { senior, member, encodedImageBase64String, interests: interestField, review, user, age: year, promise });
+        } else {
+            console.log("Invalid userProfile.");
+            return res.status(400).json({ error: '올바르지 않은 사용자 프로필입니다.' });
+        }
+/*
+        if (student) {
+            const year = calculateKoreanAgeByYear(student.yearOfBirth);
+            const interestField = await interestFieldData(student.stdNum);
+            const review = await reviewData(student.stdNum);
+            const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
+            //const member = await fetchData(student.stdNum);
+            const member = await fetchData(student.stdNum);
+
+            // Check if the student is already in the keep list
+            const keep = await Keep.findOne({
+                where: {
+                    seniorNum: user.memberNum,
+                    stdNum: student.stdNum
+                }
+            });
+            const isKeep = !!keep;
+
+            return res.render('stdDetailedPromise', { student, member, encodedImageBase64String, interests: interestField, review, isKeep, user, age: year });
+        } else if (senior) {
+            const year = calculateKoreanAgeByYear(senior.yearOfBirth);
+            const interestField = await interestFieldData(senior.seniorNum);
+            const review = await reviewData(senior.seniorNum);
+            const encodedImageBase64String = senior.profileImage ? Buffer.from(senior.profileImage).toString('base64') : '';
+            const member = await fetchData(senior.seniorNum);
+            return res.render('seniorDetailedPromise', { senior, member, encodedImageBase64String, interests: interestField, review, user, age: year });
+        } else {
+            return res.status(404).send('회원 정보를 찾을 수 없습니다.');
+        }
+*/
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
 
 // 약속 거절
 exports.rejectProfilePromise = async (req, res) => {
@@ -243,6 +417,46 @@ exports.showPromiseDeposit = async (req, res) => {
     }
 };
 */
+
+exports.showProfileDepoistDetail = async (req, res) => {
+    try {
+        console.log("show student deposit detail...");
+        const { promiseNum, stdNum } = req.params;
+        const user = req.session.userID;
+
+        console.log("promiseNum: ", promiseNum);
+        //console.log("promiseSender: ", stdNum);
+        console.log("user: ", user);
+
+        const promise = await Promise.findOne({ where: { promiseNum: promiseNum } });
+
+        if (!promise) {
+            console.log(`Promise with ID ${promiseNum} not found.`);
+            return res.status(404).json({ error: '약속을 찾을 수 없습니다.' });
+        }
+
+        let student;
+        if (parseInt(stdNum) === promise.stdNum) {
+            student = await fetchData3(promise.stdNum);
+
+            const year = calculateKoreanAgeByYear(student.yearOfBirth);
+            const interestField = await interestFieldData(student.stdNum);
+            const review = await reviewData(student.stdNum);
+            const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
+            //const member = await fetchData(student.stdNum);
+            const member = await fetchData(student.stdNum);
+
+            return res.render('stdPromiseDepositDetail', { student, member, encodedImageBase64String, interests: interestField, review, user, age: year, promise });
+        }else {
+            console.log("Invalid userProfile.");
+            return res.status(400).json({ error: '올바르지 않은 사용자 프로필입니다.' });
+        }
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
 exports.showPromiseDeposit = async (req, res) => {
     try {
         console.log("render deposit page");
@@ -262,6 +476,11 @@ exports.showPromiseDeposit = async (req, res) => {
         // 매칭(Matching) 데이터베이스에서 해당 약속(promiseNum)을 찾습니다.
         const matching = await Matching.findOne({ where: { promiseNum: promiseNum } });
         const depositStatus = matching ? matching.depositStatus : false;
+        const reportStatus = matching ? matching.reportStatus : false;
+        // 약속에 연결된 회원들의 이름을 가져옵니다.
+        const student = await Member.findOne({ where: { memberNum: promise.stdNum } });
+        const protector = await Member.findOne({ where: { memberNum: promise.protectorNum } });
+        const senior = await SeniorProfile.findOne({ where: { seniorNum: promise.protectorNum } });
 
         const formattedDate = format(new Date(promise.promiseDay), 'yyyy.MM.dd (E)');
 
@@ -271,16 +490,43 @@ exports.showPromiseDeposit = async (req, res) => {
         console.log("promise stdNum: ", promise.stdNum);
         console.log("promise seniorNum: ", promise.protectorNum);
 
+        const promiseDetail = {
+            studentName: student.name,
+            protectorName: protector.name,
+            seniorName: senior.seniorName,
+        }
+/*
         if (user === promise.stdNum) {
-            res.render('stdPromiseDeposit', { stdNum:promise.stdNum, promise: promise, depositStatus: depositStatus });
+            // 학생의 경우
+            if (!matching.reportNum) {
+                // 보고서가 작성되지 않은 경우
+                res.render('stdPromiseDeposit', { stdNum: promise.stdNum, promise: promise, matching: matching, promiseDetail, depositStatus: depositStatus, reportNotWritten: false });
+            } else {
+                // 보고서가 작성된 경우
+                res.render('stdPromiseDeposit', { stdNum: promise.stdNum, promise: promise, matching: matching, promiseDetail, depositStatus: depositStatus, reportNotWritten: true });
+            }
         } else if (user === promise.protectorNum) {
-            res.render('seniorPromiseDeposit', { seniorNum: promise.protectorNum, promise: promise, depositStatus: depositStatus });
+            // 보호자의 경우
+            res.render('seniorPromiseDeposit', { seniorNum: promise.protectorNum, promise: promise, matching: matching, promiseDetail, depositStatus: depositStatus, reportStatus: reportStatus });
         } else {
             console.log("Invalid userProfile.");
             return res.status(400).json({ error: '올바르지 않은 사용자 프로필입니다.' });
         }    
+*/
+        if (user === promise.stdNum) {
+            //res.render('stdPromiseDeposit', { stdNum:promise.stdNum, promise: promise, depositStatus: depositStatus });
+            //res.render('stdPromiseDeposit', { stdNum: promise.stdNum, promise: promise, matching: matching });
+            res.render('stdPromiseDeposit', { stdNum: promise.stdNum, promise: promise, matching: matching, promiseDetail, depositStatus: depositStatus, reportStatus: reportStatus });
+        } else if (user === promise.protectorNum) {
+            //res.render('seniorPromiseDeposit', { seniorNum: promise.protectorNum, promise: promise, depositStatus: depositStatus });
+            res.render('seniorPromiseDeposit', { seniorNum: promise.protectorNum, promise: promise, matching: matching, promiseDetail, depositStatus: depositStatus, reportStatus: reportStatus });
+        } else {
+            console.log("Invalid userProfile.");
+            return res.status(400).json({ error: '올바르지 않은 사용자 프로필입니다.' });
+        }  
 
-        console.log("압금 여부", depositStatus);
+        console.log("입금 여부", depositStatus);
+        console.log("보고서 확인 여부", reportStatus);
     } catch (error) {
         console.error('Error showing promise page:', error);
         res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });
@@ -311,7 +557,7 @@ exports.confirmDeposit = async (req, res) => {
 
         // 성공적으로 업데이트되었음을 응답합니다.
         //res.status(200).json({ message: '입금 확인이 정상적으로 완료되었습니다.' });
-        res.redirect('/promiseList');
+        res.redirect('/promiseList/matchingPromiseList');
     } catch (error) {
         console.error('Error confirming deposit:', error);
         res.status(500).json({ error: '입금 확인 중 오류가 발생했습니다.' });

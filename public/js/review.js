@@ -1,5 +1,6 @@
 const user = "<%= user %>";
 
+
 document.addEventListener('DOMContentLoaded', function () {
     const stars = document.querySelectorAll('.star-rating .star');
     let selectedRating = 0;
@@ -66,8 +67,10 @@ function handleSubmit(event) {
     });
 
     console.log("rating: ",formData.rating);
+    const promiseNum = document.getElementById('promiseNum').value;
+    const matchingNum = document.getElementById('matchingNum').value;
 
-    const url = '/review/write';
+    const url = `/review/${promiseNum}/${matchingNum}`;
 
     //fetch 함수를 사용해 서버로 입력받은 데이터 전달
     fetch(url, {
@@ -89,7 +92,7 @@ function handleSubmit(event) {
     .then(data => {
         console.log('서버로부터의 응답:', data);
         alert("후기가 작성되었습니다.");
-        window.location.href = '/main'; //리뷰를 성공적으로 작성하면 
+        window.location.href = '/promiseList'; //리뷰를 성공적으로 작성하면 
     })
     .catch(error => {
         console.error('서버 응답 오류:', error);

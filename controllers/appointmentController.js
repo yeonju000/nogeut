@@ -8,10 +8,10 @@ const Matching = require("../models/matching");
 //학생프로필과 약속
 exports.showPage = async (req, res) => {
     try {
-        console.log("Rendering appointment page");
+        console.log("약속 페이지 렌더링");
         res.render('appointment');
     } catch (error) {
-        console.error('Error showing appointment page:', error);
-        res.status(500).json({ error: 'An error occurred while loading the page.' });
+        console.error('Error showing promise page:', error);
+        res.status(500).json({ error: '페이지를 불러오는 동안 오류가 발생했습니다.' });
     }
 };

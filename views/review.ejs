@@ -65,8 +65,8 @@
     <div class="review-container">
         <section>
             <h1>후기 작성</h1>
-            <!--<form id="reviewForm" action="/review/write/<%= user %>/<%= matchingNum %>" method="post" onsubmit="return handleSubmit(event)">-->
-                <form id="reviewForm" action="/review/write" method="post"
+
+                <form id="reviewForm" action="/review/<%=promiseNum%>/<%=matchingNum%>" method="post"
                     onsubmit="return handleSubmit(event)">
                 <div class="satisfaction-sticker">
                     <article>
@@ -104,6 +104,9 @@
         </section>
     </div>
 </main>
+<!-- Hidden input fields to store promiseNum and matchingNum -->
+    <input type="hidden" id="promiseNum" value="<%= promiseNum %>">
+    <input type="hidden" id="matchingNum" value="<%= matchingNum %>">
 
     <script src="review.js"></script>
 
