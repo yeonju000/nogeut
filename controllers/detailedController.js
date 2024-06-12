@@ -128,7 +128,7 @@ exports.detail = async (req, res) => {
             const interestField = await interestFieldData(senior.seniorNum);
             const review = await reviewData(senior.seniorNum);
             const encodedImageBase64String = Buffer.from(senior.profileImage).toString('base64');
-            return res.render('DetaileProfile_old', { senior, age: year, encodedImageBase64String, interests: interestField, review, user });
+            return res.render('MyDetaileProfile_old', { senior, age: year, encodedImageBase64String, interests: interestField, review, user });
         }
 
         if (student) {
@@ -136,7 +136,7 @@ exports.detail = async (req, res) => {
             const interestField = await interestFieldData(student.stdNum);
             const review = await reviewData(student.stdNum);
             const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
-            return res.render('DetaileProfile_young', { student, user, age: year, encodedImageBase64String, interests: interestField, review, user });
+            return res.render('DetailedProfile_young', { student, user, age: year, encodedImageBase64String, interests: interestField, review, user });
         }
 
         // If neither senior nor student profile exists
@@ -145,6 +145,7 @@ exports.detail = async (req, res) => {
         res.status(500).send(error.message);
     }
 }
+
 
 
 exports.oldDetail = async (req, res) => {

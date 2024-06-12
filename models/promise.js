@@ -1,5 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
+const SeniorProfile = require("./seniorProfile");
+const StudentProfile = require("./studentProfile");
 
 const Promise = sequelize.define("Promise", {
   promiseNum: {
@@ -10,15 +12,23 @@ const Promise = sequelize.define("Promise", {
   },
   stdNum: {
     type: DataTypes.BIGINT,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: StudentProfile,
+      key: 'stdNum'
+    }
   },
   protectorNum: {
     type: DataTypes.BIGINT,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: SeniorProfile,
+      key: 'seniorNum'
+    }
   },
   roomNum: {
     type: DataTypes.INTEGER,
-    allowNull: true
+    allowNull: false
   },
   promiseCreationDate: {
     type: DataTypes.DATE,
@@ -41,10 +51,6 @@ const Promise = sequelize.define("Promise", {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
-  },
-  promiseSender: {
-    type: DataTypes.BIGINT,
-    allowNull: true
   }
 });
 

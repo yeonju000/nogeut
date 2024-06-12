@@ -151,12 +151,14 @@ body{
   font-size: var(--font-xsmall);
 }
 .list-container {
+  min-height: 600px;
     width: 800px;
     margin: auto;
     background-color: white;
     padding: 2%;
+    overflow-y: auto; /* 세로 스크롤바를 내용이 넘칠 때만 표시되도록 함 */
+    max-height: 80vh; /* 최대 높이를 화면의 80%로 설정하여 화면이 작을 때 스크롤이 생성되도록 함 */
 }
-
 .first-report-item {
     background-color: #E1EFD7;
     width: 500px;

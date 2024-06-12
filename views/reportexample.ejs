@@ -23,7 +23,7 @@
                 </li>
                 <li class="nav__list-item"><a href="#"> 매칭하기 </a></li>
                 <li class="nav__list-item"><a href="#"> 채팅 </a></li>
-                <li class="nav__list-item"><a href="/submit-report"> 보고서작성 </a></li>
+                <li class="nav__list-item"><a href="#"> 보고서작성 </a></li>
                 <li class="nav__list-item"><a href="#"> 후기작성 </a></li>
                 <li class="nav__list-item"><a href="#"> 보고서확인 </a></li>
             </ul>
@@ -46,9 +46,9 @@
             </div>
             
             <ol>
-                <li> 1.보고서는 활동 후 3일 이내에 작성해야 합니다.</li>
-                <li> 2.활동 내용은 진행한 수업에 대한 간단한 내용을 포함해야 합니다.</li>
-                <li> 3.자세하게 작성할 필요는 없으나 당일 수업에서 무엇을 했는지 알 수 있을 정도로 작성하세요.</li>
+                <li>&nbsp;&nbsp;&nbsp;  1.보고서는 활동 후 3일 이내에 작성해야 합니다.</li>
+                <li>&nbsp;&nbsp;&nbsp;  2.활동 내용은 진행한 수업에 대한 간단한 내용을 포함해야 합니다.</li>
+                <li>&nbsp;&nbsp;&nbsp;  3.자세하게 작성할 필요는 없으나 당일 수업에서 무엇을 했는지 알 수 있을 정도로 작성하세요.</li>
             </ol>
             <!-- 날짜와 시간 입력란 -->
             <div id="date" style="margin-left: 30px;">
@@ -57,14 +57,14 @@
                 </div>
                 <!-- 이름 입력란 -->
                 <div id="name" style="margin-left: 30px;">
-                    학생 이름 <input type="hidden" name="stdNum" value="강수정" required>강수정
-                    노인 이름 <input type="hidden" name="seniorNum" value="강노인" required>강노인
-                    보호자 이름 <input type="hidden" name="protectorNum" value="보호자 " required>보호자
+                    학생 이름 <input type="text" name="stdNum" value="강수정" required>
+                    노인 이름 <input type="text" name="seniorNum" value="강노인" required>
+                    보호자 이름 <input type="text" name="protectorNum" value="보호자 " required>
                 </div>
             <!-- 활동 내용 입력란 -->
             <div id="contents" style="margin-left: 30px;">
                 <label for="reportContent">활동 내용:</label><br>
-                <textarea id="reportContent" name="reportContent" rows="4" cols="50" required>안녕하세요 반갑습니다.</textarea><br>
+                <textarea id="reportContent" name="reportContent" rows="4" cols="50" readonly>안녕하세요 반갑습니다.</textarea><br>
             </div>
                            <!-- 사진 업로드 -->
             <div id="text"style="margin-left:30px;">사진</div>

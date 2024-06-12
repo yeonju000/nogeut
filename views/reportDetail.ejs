@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>보고서 상세</title>
     <link href="/css/reportDetail.css?v=1.0" rel="stylesheet" type="text/css">
+    <link href="/css/header?v=1.0" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <header class="header__container">
+     <header class="header__container">
         <h1 class="main-title">노긋메인홈</h1>
         <div class="header__block">
             <a href="#"> 마이페이지 </a>
@@ -14,26 +15,53 @@
         </div>
         <nav class="header__nav-block">
             <ul class="nav__list" role="navigation">
+                <li class="nav__list-item">
+                    <a href="#" aria-label="노긋노긋 홈페이지">
+                        <img src="/images/logo.png" width="50px" alt="로고">
+                    </a>
+                </li>
                 <li class="nav__list-item"><a href="#"> 매칭하기 </a></li>
                 <li class="nav__list-item"><a href="#"> 채팅 </a></li>
-                <li class="nav__list-item"><a href="#"> 보고서작성 </a></li>
+                <li class="nav__list-item"><a href="/reportList"> 보고서작성 </a></li>
                 <li class="nav__list-item"><a href="#"> 후기작성 </a></li>
                 <li class="nav__list-item"><a href="#"> 보고서확인 </a></li>
             </ul>
         </nav>
-    </header>
-    <div class="report-detail-container">
-        <h2>보고서 상세</h2>
-        <div>
-            <span>보고서 번호: <%= report.reportNum %></span>
-            <span>학생 이름: <%= student.name %></span>
-            <span>노인 이름: <%= senior.seniorName %></span>
-            <span>내용: <%= report.reportContent %></span>
-            <img src="data:image/png;base64,<%= base64Image %>" alt="Report Image">
-            <span>보고서 작성 날짜: <%= report.createdAt.toLocaleString() %></span>
-            <span>약속 날짜: <%= promiseDay.toLocaleDateString() %> <%= startTime %> - <%= finishTime %></span>
-            <span>확인 날짜: <% if (report.reportStatus) { %><%= report.updatedAt.toLocaleString() %><% } else { %>아직 확인하지 않았습니다.<% } %></span>
+        <div class="side__nav-container">
+            <ul class="nav__list" role="navigation">
+                <li class="nav__review__list-item">
+                    <a href="/reportexample"> 예시 </a>
+                </li>
+                <li class="nav__review__list-item">
+                    <a href="/reportList">보고서 목록</a>
+                </li>
+            </ul>
         </div>
+    </header>
+  <div id="container" style="width: 900px; margin: auto;">
+    <div id="container1" style="background-color: white; width: 900px;">
+        <div class="report-number" style="margin-top: 20px;">
+            <h2>보고서 상세페이지</h2>
+        </div>
+        <div id="date" style="margin-left: 30px; margin-top: 50px;">
+            <div>보고서 번호: <%= report.reportNum %></div>
+            <div>보고서 작성 날짜: <%= report.createdAt.toLocaleString() %> </div>
+            <div>약속 날짜: <%= promiseDay.toLocaleDateString() %> <%= startTime %> - <%= finishTime %></div>
+            <div>확인 날짜: <% if (report.reportStatus) { %><%= report.updatedAt.toLocaleString() %><% } else { %>아직 확인하지 않았습니다.<% } %></div>
+        </div>
+        <div id="name" style="margin-left: 30px; margin-top: 20px;">
+            <div>학생 이름: <%= student.name %></div>
+            <div>노인 이름: <%= senior.seniorName %></div>
+        </div>
+        <div id="contents" style="margin-left: 30px; margin-top: 20px;">
+            <label for="reportContent">활동 내용:</label><br>
+            <textarea id="reportContent" name="reportContent" rows="4" cols="50"  readonly><%= report.reportContent %></textarea><br>
+        </div>
+        <div class="image-container" style="width: 700px; height: 300px; text-align: center; margin-left: 30px; margin-top: 20px;">
+            <img src="data:image/png;base64,<%= base64Image %>" alt="Report Image">
+        </div>
+    </div>
+    <div class="report-confirm"style="text-align:center; margin-top: 20px;">
         <% if (user.userType === 'senior') { %>
             <% if (!report.reportStatus) { %>
                 <button onclick="confirmReport(<%= report.reportNum %>)">확인</button>
@@ -61,5 +89,7 @@
                 .catch(error => console.error('Error:', error));
         }
     </script>
+
+
 </body>
 </html>

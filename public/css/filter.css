@@ -133,202 +133,46 @@ body {
   margin-right: 15px;
 }
 
-/* Main CSS */
-.top_category2 {
-  width: 80px;
-  display: flex;
-  align-items: center;
-  height: 30px;
-  border-radius: 15px;
-  background-color: var(--color-green);
-  display: inline-block;
-  margin-right: 15px;
-  font-size: 12px;
-  text-align: center;
-}
-
-.top_category {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: center;
-}
-
-.top_category2:hover {
-  background-color: var(--color-deepgreen);
-}
-
-.profile2 {
-  background-color: var(--color-white-basic);
-  border-radius: 20px;
-  margin: 0 20% 0 20%;
-  padding: 10px;
-  margin-bottom: 10px;
-  font-weight: var(--weight-bold);
-  font-style: var(--color-deepgreen);
-}
-
-.profile3 {
-  background-color: var(--color-white-basic);
-  font-weight: var(--weight-bold);
-  font-style: var(--color-deepgreen);
-}
-
-.profile4 {
-  background-color: var(--color-white-basic);
-  font-size: var(--font-small);
-}
-
-.profile5 {
-  background-color: var(--color-white-basic);
-  font-size: var(--font-xsmall);
-  font-weight: 100;
-}
-
-.profile6 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Add this line */
-  padding-left: 15px;
-}
-
-.profile7 {
-  font-size: var(--font-xsmall);
-  font-weight: 100;
-  padding-left: 0;
-  padding-right: 10px;
-}
-
-/* Footer CSS */
-.footer__container {
-  width: 100%;
-  background-color: var(--color-light-grey);
-}
-
-.pages__container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  width: 100%;
-  height: 50px;
-  justify-content: center;
-  max-width: 1440px;
-  padding: 0 var(--space-basic);
-  margin: 0 auto;
-}
-
-.pages__container > a {
-  margin-right: var(--space-basic);
-  font-size: var(--font-xsmall);
-}
-
 /* Filter Specific CSS */
-.selected {
-  color: var(--color-deepgreen)
+#filterForm {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .chart {
-  height: auto;
   display: flex;
   justify-content: center;
-  background-color: var(--color-white-basic);
-  background-color: #E1EFD7;
+  align-items: flex-start;
+  width: 100%;
 }
 
-.chart ul {
+.filter-list {
+  display: flex;
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 20px 0;
+  gap: 20px; /* 항목 간의 간격 조절 */
+  justify-content: center;
+}
+
+.filter-item {
   display: flex;
-  justify-content: center;
-}
-
-.chart ul li {
-  position: relative;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  text-align: center;
 }
 
-.chart ul li a {
-  display: block;
-  width: 110px;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  justify-content: center;
-  color: black;
-  font-size: var(--font-xsmall);
-  font-weight: var(--weight-bold);
-  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+.filter-item label {
+  margin-bottom: 5px;
 }
 
-.chart ul li a:hover {
-  background: #2D6210;
-  color: white;
-}
-
-.chart ul .dropdown {
-  width: 110px;
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: white;
-  z-index: 1;
-  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
-}
-
-.chart ul .dropdown li {
-  justify-content: center;
-  align-content: center;
-}
-
-.chart ul .dropdown li a {
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
-}
-
-.chart ul .dropdown li a:hover {
-  background: #E1EFD7;
-  color: black;
-}
-
-.chart ul .dropdown.show {
-  display: block;
-}
-
-.chart .nav-selected {
-  background: #E1EFD7;
-}
-
-.notA {
-  padding-top: 7px;
-  padding-bottom: 7px;
-  font-size: var(--font-xsmall);
-  font-weight: var(--weight-bold);
-  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
-}
-
-/* 지역 2차토글 추가 내용 */
-.chart ul .dropdown-child {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: -110px; /* 왼쪽으로 배치 */
-  background: white;
-  z-index: 1;
-  box-sizing: border-box;
-}
-
-.chart ul .dropdown-child.show {
-  display: block;
-}
-
-.chart ul .dropdown .parent:hover .dropdown-child {
-  display: block;
-}
-
+.filter-item select,
 #searchButton {
-  width: 110px;
+  padding: 5px;
+  font-size: 16px;
+  width: 120px; /* 드롭다운과 버튼의 너비 설정 */
+  background-color: #E1EFD7;
+  border-radius: 20px;
+  font-weight: var(--weight-bold);
+  font-style: var(--color-deepgreen);
 }

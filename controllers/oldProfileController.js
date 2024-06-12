@@ -307,6 +307,14 @@ exports.updateSeniorProfile = async (req, res) => {
             },
         );
         await SeniorProfile.update(
+            { profileImage: profileImage, },
+            {
+                where: {
+                    seniorNum: userId,
+                },
+            },
+        );
+        await SeniorProfile.update(
             { precautions: formatCaution },
             {
                 where: {
