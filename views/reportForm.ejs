@@ -48,9 +48,6 @@
   </header>
     <div id="container" style="width: 900px; margin: auto;">
         <div id="container1" style="background-color: white; width: 900px;">
-            <div style="text-align: right; padding: 10px;">
-                <a href="/reportexample" class="button" style="background-color: #007BFF; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">예시 보기</a>
-            </div>
             <form id="reportForm" action="/submitReport" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="promiseNum" value="<%= promiseDetails.promiseNum %>">
                 <input type="hidden" name="seniorNum" value="<%= promiseDetails.seniorNum %>">
