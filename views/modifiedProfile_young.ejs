@@ -1,5 +1,3 @@
-//modifiedProfile_young.ejs
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -84,8 +82,8 @@
                 <br><br>
 
                 <h3>성별</h3> <h6> 성별은 변경할 수 없습니다.</h6>
-                <input type="radio" name="gender" id="female" value="여성" <%- student.gender === '여성' ? 'checked' : '' %> disabled>여성
-                <input type="radio" name="gender" id="male" value="남성" <%- student.gender === '남성' ? 'checked' : '' %> disabled>남성
+                <input type="radio" name="gender" id="female" value="female" <%- student.gender === '여성' ? 'checked' : '' %> disabled >여성
+                <input type="radio" name="gender" id="male" value="male" <%- student.gender === '남성' ? 'checked' : '' %> disabled >남성
                 <br><br>
 
                 <h3>대학명</h3> <h6> 재학 혹은 졸업한 대학 이름을 입력해 주세요.</h6>

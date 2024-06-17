@@ -221,6 +221,7 @@ exports.modifiedStudentProfile = async (req, res) => {
 // XXX
 exports.updateStudentProfile = async (req, res) => {
     const {
+        gender,
         account,
         university,
         major,
@@ -300,6 +301,14 @@ exports.updateStudentProfile = async (req, res) => {
             },
         );
         await StudentProfile.update(
+            { gender: gender === 'male' ? '남성' : '여성' },
+            {
+                where: {
+                    stdNum: userId,
+                },
+            },
+        );
+        await StudentProfile.update(
             { university: university },
             {
                 where: {
@@ -348,7 +357,7 @@ exports.updateStudentProfile = async (req, res) => {
             },
         );
         await StudentProfile.update(
-            { availableTime: ableTimeMapping[ableTime] },
+            { availableTime: ableTime },
             {
                 where: {
                     stdNum: userId,
