@@ -12,7 +12,6 @@
         integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f"
         crossorigin="anonymous"></script>
     <script>
-        // 자기 소개와 주의 사항에서 엔터 키를 <br> 태그로 대체하여 줄 바꿈을 유지
         const selfIntroTextarea = document.querySelector('textarea[name="selfIntro"]');
         const cautionTextarea = document.querySelector('textarea[name="caution"]');
 
@@ -150,9 +149,7 @@
         </div>
     </div>
     <script>
-        // 확인 버튼에 클릭 이벤트 리스너 추가
         document.getElementById("confirmButton").addEventListener("click", function () {
-            // 메인 페이지로 이동
             window.location.href = "/promiseList/<%=promise.promiseNum%>/request";
         });
     </script>

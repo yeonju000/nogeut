@@ -52,7 +52,7 @@
                         <span>보고서 번호: <%= report.reportNum %></span>
                         <span>학생 이름: <%= report.student.name %></span>
                         <span>작성 날짜: <%= new Date(report.createdAt).toLocaleString() %></span>
-                        <span>매칭 여부: <%= report.reportStatus ? '매칭됨' : '미매칭' %></span>
+                        <span>확인 여부: <%= report.reportStatus ? '확인' : '미확인' %></span>
                         <% if (report.encodedImageBase64String) { %>
                             <img src="data:image/jpeg;base64,<%= report.encodedImageBase64String %>" alt="프로필 이미지" class="profile-image">
                         <% } %>

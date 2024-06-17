@@ -80,7 +80,7 @@ exports.showPromiseRequest = async (req, res) => {
         const { stdNum, promiseNum } = req.params;
         const user = req.session.userID;
 
-        // 요청이 도착했는지 확인
+        //요청이 도착했는지 확인
         console.log(`Received request to show promise complete page for stdNum: ${stdNum},promiseNum: ${promiseNum}`);
 
         const promise = await Promise.findOne({ where: { promiseNum: promiseNum } });
@@ -93,10 +93,10 @@ exports.showPromiseRequest = async (req, res) => {
         console.log("Promise found:", promise);
 
         //npm install date-fns
-        // 날짜 형식을 'yyyy.MM.dd (E)' 형식으로 변환
+        //날짜 형식을 'yyyy.MM.dd (E)' 형식으로 변환
         const formattedDate = format(new Date(promise.promiseDay), 'yyyy.MM.dd (E)');
 
-        // 변환된 날짜를 promise 객체에 추가
+        //변환된 날짜를 promise 객체에 추가
         promise.formattedPromiseDay = formattedDate;
 
         res.render('stdPromiseSender', { stdNum: stdNum, promise: promise, user:user });

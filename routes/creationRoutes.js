@@ -19,11 +19,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get("/", creationController.create);
-router.get("/creation", creationController.create); // 소문자로 경로 설정 //nonProfile.ejs or login
+router.get("/creation", creationController.create);
 router.get("/login", creationController.create);
-router.get("/senior", oldProfileController.createOldProfile); // 소문자로 경로 설정
+router.get("/senior", oldProfileController.createOldProfile);
 router.post("/senior", upload.single('profileImage'), oldProfileController.createSeniorProfile);
-router.get("/student", youngProfileController.createYoungProfile); // 68 수정
-router.post("/student", upload.single('profileImage'), youngProfileController.createStudentProfile); // 오타 수정
+router.get("/student", youngProfileController.createYoungProfile);
+router.post("/student", upload.single('profileImage'), youngProfileController.createStudentProfile); //오타 수정
 
 module.exports = router;

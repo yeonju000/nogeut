@@ -155,7 +155,7 @@ h6{
 }
 .text
 {
-    line-height: 1.5; /* 행간을 1.5배로 설정 */
+    line-height: 1.5;
     color: #000;
 }
 *{
@@ -199,8 +199,8 @@ textarea {
             height: 200px;
             border: 2px solid #ccc;
             border-radius: 5px;
-            overflow: hidden; /* 내부 컨텐츠가 넘칠 때 틀 내부로 보이지 않도록 설정 */
-            position: relative; /* 포지셔닝을 사용하여 내부에 input 요소를 겹쳐놓을 것임 */
+            overflow: hidden; 
+            position: relative; 
         }
 img{
     position: center;

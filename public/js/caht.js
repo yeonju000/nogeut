@@ -6,15 +6,15 @@ $(document).ready(() => {
       const text = $("#chat-input").val(),
             userName = $("#chat-user-name").val(),
             userId = $("#chat-user-id").val(),
-            roomNum = $("#chat-room-id").val(); // 숨겨진 입력 필드에서 roomNum 가져오기
+            roomNum = $("#chat-room-id").val(); //숨겨진 입력 필드에서 roomNum 가져오기
   
       socket.emit("message", {
         content: text,
         userName: userName,
         userId: userId,
-        roomNum: roomNum, // roomNum을 서버로 전송
-        senderNum: userId, // senderNum을 userId로 설정
-        receiverNum: getReceiverId() // receiverNum을 가져오는 함수 구현
+        roomNum: roomNum, //roomNum을 서버로 전송
+        senderNum: userId, //senderNum을 userId로 설정
+        receiverNum: getReceiverId() //receiverNum을 가져오는 함수 구현
       });
   
       $("#chat-input").val("");
@@ -55,8 +55,8 @@ $(document).ready(() => {
     };
   
     const getReceiverId = () => {
-      // 채팅방 또는 컨텍스트에 따라 receiver ID를 결정하는 로직 구현
-      return someReceiverId; // 실제 로직으로 교체
+      //채팅방 또는 컨텍스트에 따라 receiver ID를 결정하는 로직 구현
+      return someReceiverId; //실제 로직으로 교체
     };
   });
   

@@ -12,7 +12,7 @@
     integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f"
     crossorigin="anonymous"></script>
   <script>
-    // 자기 소개와 주의 사항에서 엔터 키를 <br> 태그로 대체하여 줄 바꿈을 유지
+    //자기 소개와 주의 사항에서 엔터 키를 <br> 태그로 대체하여 줄 바꿈을 유지
     const selfIntroTextarea = document.querySelector('textarea[name="selfIntro"]');
     const cautionTextarea = document.querySelector('textarea[name="caution"]');
 
@@ -139,6 +139,12 @@
       </div>
       <br>
       <hr>
+      <h4>후기 평점</h4>
+        <div style="width: 70px; height: 30px; border-radius: 15px; background-color: #E1EFD7; display: flex; justify-content: center; align-items: center;">
+         <%= senior.score %>점
+        </div>
+        <br>
+        <hr>
       <h4>자기소개</h4>
       <div class="self-intro" style="background-color: #F8F8F8; border-radius: 20px; padding: 10px;">
         <%- senior.introduce %>
@@ -165,7 +171,7 @@
   </div>
   <script>
     function redirectToUpdate() {
-      window.location.href = '/Update/Senior'; // 원하는 경로로 변경
+      window.location.href = '/modified'; 
     }
   </script>
 </body>

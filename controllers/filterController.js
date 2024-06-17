@@ -19,7 +19,7 @@ module.exports = {
         return res.redirect("/login");
       }
 
-      const user = req.user; // 로그인된 사용자 정보를 세션에서 가져옴
+      const user = req.user; //로그인된 사용자 정보를 세션에서 가져옴
       const userType = user.userType;
 
       res.render("filter", {
@@ -45,10 +45,10 @@ module.exports = {
       if (day) filterConditions.availableDay = day;
       if (time) filterConditions.availableTime = time;
 
-      console.log('Filter conditions:', filterConditions); // 필터 조건 로그 출력
+      console.log('Filter conditions:', filterConditions); //필터 조건 로그 출력
 
       let profiles = [];
-      const user = req.user; // 로그인된 사용자 정보를 세션에서 가져옴
+      const user = req.user; //로그인된 사용자 정보를 세션에서 가져옴
 
       if (user.userType === 'student') {
         profiles = await SeniorProfile.findAll({
@@ -64,7 +64,7 @@ module.exports = {
         return res.redirect("/main");
       }
 
-      console.log('Profiles:', profiles); // 필터링된 프로필 로그 출력
+      console.log('Profiles:', profiles); //필터링된 프로필 로그 출력
       console.log('Profiles to be sent to template:', profiles);
       res.render("category", {
         categories: profiles,

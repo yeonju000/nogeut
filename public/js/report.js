@@ -1,8 +1,8 @@
  const reportContent = "보고서 내용";
-        const reportMedia = "보고서 미디어"; // 예를 들어 이미지 또는 파일의 경로
+        const reportMedia = "보고서 미디어";
         const studentNumber = "학생 번호";
 
-        // 서버로 데이터를 전송
+        //서버로 데이터를 전송
         fetch('/submit-report', {
             method: 'POST',
             headers: {

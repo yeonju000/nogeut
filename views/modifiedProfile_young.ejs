@@ -1,3 +1,4 @@
+//modifiedProfile_young.ejs
 
 <!DOCTYPE html>
 <html>
@@ -49,7 +50,7 @@
         <h2>내 프로필 수정하기</h2>
         <div class="form-container">
           <!--경로 소문자로 설정-->
-            <form action="/update/student" method="POST" enctype="multipart/form-data">
+            <form action="/edit/student" method="POST" enctype="multipart/form-data">
 
                 <h3>프로필 사진</h3>
                 <img id="profileImage" src="data:image/jpeg;base64,<%= encodedImageBase64String %>"
@@ -74,7 +75,7 @@
                 <br><br>
 
                 <h3>계좌번호</h3> <h6> 한국 123456789 (숫자만 입력해주세요.)</h6>
-                <input type="text" name="acoount" class="input-text" value="<%= student.account %>">
+                <input type="text" name="account" class="input-text" value="<%= student.account %>">
                 <br><br>
 
                 <h3>전화번호</h3>
@@ -109,12 +110,12 @@
 
                 
                 <h3>자신있는 분야</h3> <h6> 자신있는 분야를 선택해 주세요. (중복 선택 가능)</h6>
-                <input type="checkbox" name="favoField" value="FF_exercise" <%-interests.includes('운동') ? 'checked' : '' %>>운동
-                <input type="checkbox" name="favoField" value="FF_craft" <%-interests.includes('수공예') ? 'checked' : '' %>>수공예
-                <input type="checkbox" name="favoField" value="FF_digital" <%-interests.includes('디지털') ? 'checked' : '' %>>디지털
-                <input type="checkbox" name="favoField" value="FF_music" <%-interests.includes('음악') ? 'checked' : '' %>>음악
-                <input type="checkbox" name="favoField" value="FF_art" <%-interests.includes('미술') ? 'checked' : '' %>>미술
-                <input type="checkbox" name="favoField" value="FF_companion" <%-interests.includes('말동무') ? 'checked' : '' %>>말동무
+                <input type="checkbox" name="favoField" value="FF_exercise" <%=interests.includes('운동') ? 'checked' : '' %>>운동
+                <input type="checkbox" name="favoField" value="FF_craft" <%=interests.includes('수공예') ? 'checked' : '' %>>수공예
+                <input type="checkbox" name="favoField" value="FF_digital" <%=interests.includes('디지털') ? 'checked' : '' %>>디지털
+                <input type="checkbox" name="favoField" value="FF_music" <%=interests.includes('음악') ? 'checked' : '' %>>음악
+                <input type="checkbox" name="favoField" value="FF_art" <%=interests.includes('미술') ? 'checked' : '' %>>미술
+                <input type="checkbox" name="favoField" value="FF_companion" <%=interests.includes('말동무') ? 'checked' : '' %>>말동무
                 <br><br>
 
                 <h3>희망 금액</h3> <h6> 원하시는 금액대를 선택해 주세요.</h6>
@@ -137,9 +138,9 @@
                 <br>
 
                 <h4>시간</h4>
-                <input type="radio" name="availableTime" value="오전" <%=student.availableTime === '오전' ? 'checked' : '' %>>오전
-                <input type="radio" name="availableTime" value="오후" <%=student.availableTime === '오후' ? 'checked' : '' %>>오후
-                <input type="radio" name="availableTime" value="협의" <%=student.availableTime === '협의' ? 'checked' : '' %>>협의
+                <input type="radio" name="ableTime" value="오전" <%=student.availableTime === '오전' ? 'checked' : '' %>>오전
+                <input type="radio" name="ableTime" value="오후" <%=student.availableTime === '오후' ? 'checked' : '' %>>오후
+                <input type="radio" name="ableTime" value="협의" <%=student.availableTime === '협의' ? 'checked' : '' %>>협의
                 <br><br>
 
                 <h3>자기 소개</h3>
@@ -151,24 +152,24 @@
                 <input type="checkbox" name="enableMatching" value= <%=student.enableMatching ? 'checked' : '' %>>활성화
               -->
                 <br><br>
+                <input type="submit" value="저장"
+          style="font-size: 15px; color: white; border: 0; border-radius: 15px; background-color:#2D6210; padding: 10px; padding-left: 20px; padding-right: 20px; display: inline-block;">
+      
 
-                <input type="submit" class="submit-button" value="완료">
-            </form>
+                </form>
 
             <script>
-                // 프로필 수정 완료
+                //프로필 수정 완료
                 function redirectToUpdate() {
                   window.location.href = '/main'; // 임시
                 }
 
-                // 시작 연도와 종료 연도를 설정합니다.
+                //시작 연도와 종료 연도를 설정
                 const startYear = 1940;
                 const endYear = 2024;
         
-                // select 요소를 가져옵니다.
                 const birthYearSelect = document.getElementById('birthYear');
         
-                // 시작 연도부터 종료 연도까지 반복하며 option 요소를 추가합니다.
                 for (let year = startYear; year <= endYear; year++) {
                   const option = document.createElement('option');
                   option.value = year;
@@ -176,13 +177,11 @@
                   birthYearSelect.appendChild(option);
                 }
         
-                // 기본적으로 size는 1로 설정, 사용자가 선택하면 size를 다시 1로 변
         
                 birthYearSelect.addEventListener('mousedown', function () {
-                  this.size = 1; // 선택 후 다시 size를 1로 변경
+                  this.size = 1; 
                 });
         
-                // 시/도와 구/군 데이터를 정의합니다.
                 const regionData = {
                   "서울특별시": ["강남구", "강동구", "강북구", "강서구", "관악구", "광진구", "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구", "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구", "용산구", "은평구", "종로구", "중구", "중랑구"],
                   "부산광역시": ["강서구", "금정구", "기장군", "남구", "동구", "동래구", "부산진구", "북구", "사상구", "사하구", "서구", "수영구", "연제구", "영도구", "중구", "해운대구"],
@@ -203,11 +202,9 @@
                   "제주특별자치도": ["서귀포시", "제주시"]
                 };
         
-                // 시/도 select 요소를 가져옵니다.
                 const sidoSelect = document.getElementById('sido');
                 const gugunSelect = document.getElementById('gugun');
         
-                // 시/도 select 요소에 시/도 데이터를 추가합니다.
                 for (const sido in regionData) {
                   const option = document.createElement('option');
                   option.value = sido;
@@ -215,16 +212,12 @@
                   sidoSelect.appendChild(option);
                 }
         
-                // 시/도 선택 시 구/군 데이터를 업데이트합니다.
                 sidoSelect.addEventListener('change', function () {
-                  // 구/군 select 요소를 초기화합니다.
                   gugunSelect.innerHTML = '<option value="">선택하세요</option>';
         
-                  // 선택된 시/도의 구/군 데이터를 가져옵니다.
                   const selectedSido = this.value;
                   const gugunList = regionData[selectedSido];
         
-                  // 구/군 데이터를 구/군 select 요소에 추가합니다.
                   if (gugunList) {
                     gugunList.forEach(function (gugun) {
                       const option = document.createElement('option');
@@ -235,12 +228,12 @@
                   }
                 });
         
-                // 이미지 미리보기 기능
+                //이미지 미리보기 기능
                 function loadFile(event) {
                   const output = document.getElementById('profileImage');
                   output.src = URL.createObjectURL(event.target.files[0]);
                   output.onload = function () {
-                    URL.revokeObjectURL(output.src) // free memory
+                    URL.revokeObjectURL(output.src)
                   }
                 }
               

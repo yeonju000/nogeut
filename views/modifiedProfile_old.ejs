@@ -114,7 +114,7 @@
         <input type="radio" name="desiredAmount" value="DA_1" <%=senior.desiredAmount==='1만원' ? 'checked' : '' %>>1만원
         <input type="radio" name="desiredAmount" value="DA_3" <%=senior.desiredAmount==='3만원' ? 'checked' : '' %>>3만원
         <input type="radio" name="desiredAmount" value="DA_5" <%=senior.desiredAmount==='5만원' ? 'checked' : '' %>>5만원
-        <input type="radio" name="desiredAmount" value="DA_10" <%=senior.desiredAmount==='협의' ? 'checked' : '' %>>협의
+        <input type="radio" name="desiredAmount" value="DA_disccu" <%=senior.desiredAmount==='협의' ? 'checked' : '' %>>협의
         <br><br><br>
         <h3 style="display: inline;">가능 시간</h3>
         <h6 style="display: inline;"> 가능한 시간대를 선택해 주세요.(중복 선택 가능)</h6><br><br>
@@ -145,14 +145,13 @@
     </div>
   </div>
   <script>
-    // 시작 연도와 종료 연도를 설정합니다.
+
     const startYear = 1940;
     const endYear = 2024;
 
-    // select 요소를 가져옵니다.
+
     const birthYearSelect = document.getElementById('birthYear');
 
-    // 시작 연도부터 종료 연도까지 반복하며 option 요소를 추가합니다.
     for (let year = startYear; year <= endYear; year++) {
       const option = document.createElement('option');
       option.value = year;
@@ -160,13 +159,13 @@
       birthYearSelect.appendChild(option);
     }
 
-    // 기본적으로 size는 1로 설정, 사용자가 선택하면 size를 다시 1로 변
+
 
     birthYearSelect.addEventListener('mousedown', function () {
-      this.size = 1; // 선택 후 다시 size를 1로 변경
+      this.size = 1;
     });
 
-    // 시/도와 구/군 데이터를 정의합니다.
+
     const regionData = {
       "서울특별시": ["강남구", "강동구", "강북구", "강서구", "관악구", "광진구", "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구", "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구", "용산구", "은평구", "종로구", "중구", "중랑구"],
       "부산광역시": ["강서구", "금정구", "기장군", "남구", "동구", "동래구", "부산진구", "북구", "사상구", "사하구", "서구", "수영구", "연제구", "영도구", "중구", "해운대구"],
@@ -187,11 +186,11 @@
       "제주특별자치도": ["서귀포시", "제주시"]
     };
 
-    // 시/도 select 요소를 가져옵니다.
+
     const sidoSelect = document.getElementById('sido');
     const gugunSelect = document.getElementById('gugun');
 
-    // 시/도 select 요소에 시/도 데이터를 추가합니다.
+
     for (const sido in regionData) {
       const option = document.createElement('option');
       option.value = sido;
@@ -199,16 +198,12 @@
       sidoSelect.appendChild(option);
     }
 
-    // 시/도 선택 시 구/군 데이터를 업데이트합니다.
     sidoSelect.addEventListener('change', function () {
-      // 구/군 select 요소를 초기화합니다.
       gugunSelect.innerHTML = '<option value="">선택하세요</option>';
 
-      // 선택된 시/도의 구/군 데이터를 가져옵니다.
       const selectedSido = this.value;
       const gugunList = regionData[selectedSido];
 
-      // 구/군 데이터를 구/군 select 요소에 추가합니다.
       if (gugunList) {
         gugunList.forEach(function (gugun) {
           const option = document.createElement('option');
@@ -219,12 +214,11 @@
       }
     });
 
-    // 이미지 미리보기 기능
     function loadFile(event) {
       const output = document.getElementById('profileImage');
       output.src = URL.createObjectURL(event.target.files[0]);
       output.onload = function () {
-        URL.revokeObjectURL(output.src) // free memory
+        URL.revokeObjectURL(output.src) 
       }
     }
 
@@ -235,7 +229,7 @@
         return false;
       }
       if (!form.phoneNumber.value) {
-        alert("전화번호를 입력해주세요"); // 전화번호 입력 안했을 때 경고창
+        alert("전화번호를 입력해주세요"); 
         form.phoneNumber.focus();
         return false;
       }

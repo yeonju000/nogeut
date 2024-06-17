@@ -89,11 +89,18 @@ const StudentProfile = sequelize.define("StudentProfile", {
     type: DataTypes.STRING(50),
     allowNull: false
   },
+  score: {
+    type: DataTypes.DOUBLE,
+    allowNull: false
+  },
   scoreCount: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  scoreTotal: {
     type: DataTypes.INTEGER,
     allowNull: true
   }
 });
-
 
 module.exports = StudentProfile;

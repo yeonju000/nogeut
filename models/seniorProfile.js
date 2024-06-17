@@ -87,6 +87,10 @@ const SeniorProfile = sequelize.define("SeniorProfile", {
   scoreCount: {
     type: DataTypes.INTEGER,
     allowNull: true
+  },
+  scoreTotal: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   }
 });
 

@@ -2,13 +2,44 @@ const Member = require('../models/member');
 const Promise = require('../models/promise');
 const Matching = require('../models/matching');
 const Review = require('../models/review');
+const StudentProfile = require("../models/studentProfile");
+const SeniorProfile = require("../models/seniorProfile");
 const { Op } = require('sequelize');
 
+async function fetchData2(userID) {
+    try {
+        const senior = await SeniorProfile.findOne({ where: { seniorNum: userID } });
+        if (senior) {
+            console.log("시니어 회원");
+        } else {
+            console.log("시니어 회원 아닙니다.");
+        }
+        return senior;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+async function fetchData3(userID) {
+    try {
+        const student = await StudentProfile.findOne({ where: { stdNum: userID } });
+        if (student) {
+            console.log("주니어 회원");
+        } else {
+            console.log("주니어 회원이 아닙니다.");
+        }
+        return student;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 
 async function fetchData(userID) {
     try {
         const user = await Member.findOne({ where: { memberNum: userID } });
-        return user; // fetchData 함수가 Promise를 반환하도록 수정
+        return user;
     } /*catch (error) {
         console.error(error);
         throw error;
@@ -30,7 +61,7 @@ exports.createReview = async (req, res) => {
     try {
         console.log("Review creation process started.");
     
-        const userID = req.session.userID; // 세션 아이디를 가져옵니다.
+        const userID = req.session.userID;
         const { reviewContent, rating } = req.body;
         const { promiseNum, matchingNum } = req.params;
         const score = parseInt(rating, 10);
@@ -38,7 +69,6 @@ exports.createReview = async (req, res) => {
         console.log("userId: ", userID)
         console.log("Request body: ", req.body);
         console.log("req.params: ", req.params)
-        // 사용자 정보를 조회합니다.
         const user = await fetchData(userID);
 
         if (!user) {
@@ -47,19 +77,21 @@ exports.createReview = async (req, res) => {
 
         console.log("find promise...");
 
+        //약속 정보 조회
         const promise = await Promise.findOne({ where: { promiseNum: parseInt(promiseNum) } });
 
         if (!promise) {
             return res.status(400).json({ error: '약속을 찾을 수 없습니다.' });
         }
 
-        // 약속 정보를 기반으로 매칭 정보를 조회합니다.
+        //약속 정보를 기반으로 매칭 정보를 조회합니다.
         const matching = await Matching.findOne({ where: { matchingNum: parseInt(matchingNum) } });
 
         if (!matching) {
             return res.status(400).json({ error: '해당 약속에 대한 매칭을 찾을 수 없습니다.' });
         }
 
+        //sender, receiver 구분하기
         let reviewSender, reviewReceiver;
         if (userID === promise.stdNum) {
             reviewSender = promise.stdNum;
@@ -89,14 +121,40 @@ exports.createReview = async (req, res) => {
             return res.status(409).json({ error: '후기가 이미 존재합니다.' });
         }
 
-        // 후기가 존재하지 않을 경우 후기를 작성.
+        // 후기가 존재하지 않을 경우 후기를 작성
         const review = await Review.create({
             matchingNum: matchingNum,
-            reviewSender: reviewSender, // 후기 작성자는 사용자의 회원 번호입니다.
-            reviewReceiver: reviewReceiver, // 이 부분은 필요에 따라 수정하세요.
+            reviewSender: reviewSender, 
+            reviewReceiver: reviewReceiver, 
             reviewContent: reviewContent,
             score: score
         });
+
+        if (reviewReceiver == promise.stdNum) {
+            const student = await fetchData3(promise.stdNum);
+            //학생 프로필 업데이트
+            if (student) {
+                student.scoreCount += 1;
+                student.scoreTotal += score;
+                student.score = student.scoreTotal / student.scoreCount;
+                await student.save();
+            } else {
+                console.log("Student profile not found for user: ", promise.stdNum);
+                return res.status(400).json({ error: '학생 프로필을 찾을 수 없습니다.' });
+            }
+        } else if (reviewReceiver == promise.protectorNum) {
+            const senior = await fetchData2(promise.protectorNum);
+            //노인 프로필 업데이트
+            if (senior) {
+                senior.scoreCount += 1;
+                senior.scoreTotal += score;
+                senior.score = senior.scoreTotal / senior.scoreCount;
+                await senior.save();
+            } else {
+                console.log("Senior profile not found for user: ", promise.protectorNum);
+                return res.status(400).json({ error: '노인 프로필을 찾을 수 없습니다.' });
+            }
+        }
 
         console.log("Review created:", review);
         res.status(201).json(review);
@@ -106,15 +164,15 @@ exports.createReview = async (req, res) => {
     }
 };
 
-// 리뷰 작성 페이지 렌더링 함수
+//리뷰 작성 페이지 렌더링 함수
 exports.renderReviewPage = (req, res) => {
     console.log("Review render process started.");
     //const { matchingNum, userProfile } = req.params; 
-    const { promiseNum, matchingNum } = req.params; // URL에서 matchingNum 가져오기
-    const user = req.session.userID; // 세션에서 userProfile 가져오기
+    const { promiseNum, matchingNum } = req.params; //URL에서 matchingNum 가져오기
+    const user = req.session.userID; //세션에서 userProfile 가져오기
     const stickerValues = [1, 2, 3, 4, 5];
-    const reviewContent = ""; // 초기화할 값 또는 데이터베이스에서 가져온 값
-    const score = 0; // 초기화할 값 또는 데이터베이스에서 가져온 값
+    const reviewContent = ""; //초기화할 값 또는 데이터베이스에서 가져온 값
+    const score = 0; //초기화할 값 또는 데이터베이스에서 가져온 값
 
     res.render("review", {
         stickerValues: stickerValues,

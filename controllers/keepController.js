@@ -49,7 +49,7 @@ module.exports = {
 
         if (profile) {
           profile = profile.toJSON();
-          profile.keepTime = keep.keepTime; // Attach the keep time to profile
+          profile.keepTime = keep.keepTime; 
           if (profile.profileImage) {
             profile.encodedImageBase64String = Buffer.from(profile.profileImage).toString('base64');
           } else {

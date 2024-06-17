@@ -138,14 +138,14 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 45px 45px; /* Adjusted padding for overall spacing */
+  padding: 45px 45px; 
 }
 
 .content-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px; /* Adjusted gap */
+  gap: 20px; 
 }
 
 .image-placeholder {
@@ -164,7 +164,7 @@ body {
 
 .introduction {
   width: 45%;
-  margin-left: -130px; /* Added margin to move introduction left */
+  margin-left: -130px;
 }
 
 .introduction span {

@@ -80,7 +80,7 @@ exports.showPromiseRequest = async (req, res) => {
         const { seniorNum, promiseNum } = req.params;
         const user = req.session.userID;
 
-        // 요청이 도착했는지 확인
+        //요청이 도착했는지 확인
         console.log(`Received request to show promise complete page for seniorNum: ${seniorNum},promiseNum: ${promiseNum}`);
 
         const promise = await Promise.findOne({ where: { promiseNum: promiseNum } });

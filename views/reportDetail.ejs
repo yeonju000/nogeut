@@ -54,7 +54,7 @@
             <div>보고서 번호: <%= report.reportNum %></div>
             <div>보고서 작성 날짜: <%= report.createdAt.toLocaleString() %> </div>
             <div>약속 날짜: <%= promiseDay.toLocaleDateString() %> <%= startTime %> - <%= finishTime %></div>
-            <div>확인 날짜: <% if (report.reportStatus) { %><%= report.updatedAt.toLocaleString() %><% } else { %>아직 확인하지 않았습니다.<% } %></div>
+            <div>확인 여부: <% if (report.reportStatus) { %><%= report.updatedAt.toLocaleString() %><% } else { %>아직 확인하지 않았습니다.<% } %></div>
         </div>
         <div id="name" style="margin-left: 30px; margin-top: 20px;">
             <div>학생 이름: <%= student.name %></div>

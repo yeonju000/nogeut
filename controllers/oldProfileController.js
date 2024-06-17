@@ -8,7 +8,7 @@ const Review = require("../models/review");
 async function fetchData(userID) {
     try {
         const users = await Member.findOne({ where: { memberNum: userID } });
-        return users; // fetchData 함수가 Promise를 반환하도록 수정
+        return users;
     } catch (error) {
         console.error(error);
         throw error;
@@ -60,7 +60,7 @@ exports.createSeniorProfile = async (req, res) => {
         const profileImagePath = req.file ? req.file.path : null;
         let profileImage = null;
 
-        // 이미지 파일을 읽어 BLOB 데이터로 변환합니다.
+        // 이미지 파일을 읽어 BLOB 데이터로 변환
         if (profileImagePath) {
             profileImage = await fs.readFile(profileImagePath);
         }
@@ -171,7 +171,7 @@ async function interestFieldData(seniorID) {
     try {
         const interests = await InterestField.findAll({
             where: { memberNum: seniorID },
-            attributes: ['interestField'] // 이 부분을 추가하여 관심 분야만 선택
+            attributes: ['interestField']
         });
 
         const interestFields = interests.map(interest => interest.interestField);
@@ -260,7 +260,7 @@ exports.updateSeniorProfile = async (req, res) => {
     }
     let profileImage = null;
 
-    // 이미지 파일을 읽어 BLOB 데이터로 변환합니다.
+    
     if (profileImagePath) {
         profileImage = await fs.readFile(profileImagePath);
     }
@@ -285,7 +285,7 @@ exports.updateSeniorProfile = async (req, res) => {
         'DA_3': '3만원',
         'DA_5': '5만원',
         'DA_free': '무료',
-        'DA_disscu': '협의'
+        'DA_disccu': '협의'
     };
 
     try {
@@ -306,14 +306,20 @@ exports.updateSeniorProfile = async (req, res) => {
                 },
             },
         );
-        await SeniorProfile.update(
-            { profileImage: profileImage, },
-            {
-                where: {
-                    seniorNum: userId,
+        if (req.file) {
+            const profileImage = await fs.readFile(req.file.path);
+            await SeniorProfile.update(
+                { profileImage: profileImage },
+                {
+                    where: {
+                        seniorNum: userId,
+                    },
                 },
-            },
-        );
+            );
+            console.log("이미지가 있습니다.");
+        } else {
+            console.log("이미지 경로가 없습니다");
+        }
         await SeniorProfile.update(
             { precautions: formatCaution },
             {

@@ -1,4 +1,4 @@
-//68 수정
+//youngProfileController.js
 const StudentProfile = require('../models/studentProfile');
 const Member = require('../models/member');
 const Sequelize = require('sequelize');
@@ -10,7 +10,7 @@ const Review = require("../models/review");
 async function fetchData(userID) {
     try {
         const users = await Member.findOne({ where: { memberNum: userID } });
-        return users; // fetchData 함수가 Promise를 반환하도록 수정
+        return users;
     } catch (error) {
         console.error(error);
         throw error;
@@ -20,7 +20,7 @@ async function fetchData(userID) {
 async function fetchData3(userID) {
     try {
         const student = await StudentProfile.findOne({ where: { stdNum: userID } });
-        return student; // fetchData 함수가 Promise를 반환하도록 수정
+        return student;
     } catch (error) {
         console.error(error);
         throw error;
@@ -108,7 +108,7 @@ exports.createStudentProfile = async (req, res) => {
         const profileImagePath = req.file ? req.file.path : null;
         let profileImage = null;
 
-        // 이미지 파일을 읽어 BLOB 데이터로 변환합니다.
+        //이미지 파일을 읽어 BLOB 데이터로 변환합니다.
         if (profileImagePath) {
             profileImage = await fs.readFile(profileImagePath);
         }
@@ -221,13 +221,10 @@ exports.modifiedStudentProfile = async (req, res) => {
 // XXX
 exports.updateStudentProfile = async (req, res) => {
     const {
-        //name,
-        //birthYear,
         account,
         university,
         major,
         phoneNumber,
-        //gender,
         sido,
         gugun,
         favoField,
@@ -238,17 +235,24 @@ exports.updateStudentProfile = async (req, res) => {
     } = req.body;
     console.log(req.body);
 
-    const formatSelfIntro = selfIntro ? selfIntro.replace(/\r\n/g, "<br>") : '';
-
+    const userId = req.session.userID;
+    
     const profileImagePath = req.file ? req.file.path : null;
     if (req.file) {
+        const profileImage = await fs.readFile(req.file.path);
+        await StudentProfile.update(
+            { profileImage: profileImage },
+            {
+                where: {
+                    stdNum: userId,
+                },
+            },
+        );
         console.log("이미지가 있습니다.");
     } else {
         console.log("이미지 경로가 없습니다");
     }
-    let profileImage = null;
 
-    // 이미지 파일을 읽어 BLOB 데이터로 변환합니다.
     if (profileImagePath) {
         profileImage = await fs.readFile(profileImagePath);
     }
@@ -277,7 +281,7 @@ exports.updateStudentProfile = async (req, res) => {
     };
 
     try {
-        const userId = req.session.userID;
+        //const userId = req.session.userID;
 ;
         await StudentProfile.update(
             { desiredAmount: DesireMapping[desiredAmount] },
@@ -288,7 +292,7 @@ exports.updateStudentProfile = async (req, res) => {
             },
         );
         await StudentProfile.update(
-            { introduce: formatSelfIntro },
+            { introduce: selfIntro },
             {
                 where: {
                     stdNum: userId,
@@ -339,7 +343,7 @@ exports.updateStudentProfile = async (req, res) => {
             { availableDay: ableDayMapping[ableDay] },
             {
                 where: {
-                    stdrNum: userId,
+                    stdNum: userId,
                 },
             },
         );

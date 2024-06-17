@@ -12,18 +12,18 @@ module.exports = {
     const t = await sequelize.transaction();
 
     try {
-      // 매칭 정보를 가져옵니다.
+      //매칭 정보를 가져옵니다.
       const matching = await Matching.findByPk(matchingNum, { transaction: t });
       if (!matching) {
         throw new Error('Matching not found');
       }
 
-      // 보고서가 작성되었고, 입금 및 확인이 완료되었는지 확인합니다.
+      //보고서가 작성되었고, 입금 및 확인이 완료되었는지 확인합니다.
       if (!matching.reportStatus || !matching.depositStatus) {
         throw new Error('Report or deposit not completed');
       }
 
-      // 리뷰가 작성되었는지 확인합니다.
+      //리뷰가 작성되었는지 확인합니다.
       const review = await Review.findOne({
         where: { matchingNum },
         transaction: t
@@ -32,7 +32,7 @@ module.exports = {
         throw new Error('Review not completed');
       }
 
-      // 매칭 횟수를 증가시키고, 최근 매칭 시간을 업데이트합니다.
+      //매칭 횟수를 증가시키고, 최근 매칭 시간을 업데이트합니다.
       await StudentProfile.update(
         {
           matchingCount: Sequelize.literal('matchingCount + 1'),
@@ -55,12 +55,12 @@ module.exports = {
         }
       );
 
-      // 트랜잭션 커밋
+      //트랜잭션 커밋
       await t.commit();
 
       res.status(200).send('Matching completed successfully');
     } catch (error) {
-      // 트랜잭션 롤백
+      //트랜잭션 롤백
       await t.rollback();
       console.error(error);
       res.status(500).send('Error completing matching');

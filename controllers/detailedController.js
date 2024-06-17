@@ -11,7 +11,7 @@ async function fetchData(userID) {
     try {
         const users = await Member.findOne({ where: { memberNum: userID } });
         console.log("users");
-        return users; // fetchData 함수가 Promise를 반환하도록 수정
+        return users; //fetchData 함수가 Promise를 반환하도록 수정
     } catch (error) {
         console.error(error);
         throw error;
@@ -140,7 +140,6 @@ exports.detail = async (req, res) => {
             return res.render('MyDetaileProfile_young', { student, user, age: year, encodedImageBase64String, interests: interestField, review, user });
         }
 
-        // If neither senior nor student profile exists
         return res.status(404).send('회원 정보를 찾을 수 없습니다.');
     } catch (error) {
         res.status(500).send(error.message);
@@ -219,7 +218,7 @@ exports.studentDetail = async (req, res) => {
             const encodedImageBase64String = student.profileImage ? Buffer.from(student.profileImage).toString('base64') : '';
             const member = await fetchData(student.stdNum);
 
-            // Check if the student is already in the keep list
+    
             const keep = await Keep.findOne({
                 where: {
                     seniorNum: user.memberNum,

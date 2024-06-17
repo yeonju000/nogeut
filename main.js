@@ -13,6 +13,7 @@ const cookieParser = require("cookie-parser");
 const expressValidator = require("express-validator");
 const connectFlash = require("connect-flash");
 const uploadDir = path.join(__dirname, 'uploads');
+const modifiedController = require("./controllers/modifiedController.js");
 
 // 라우트
 const creationRoutes = require('./routes/creationRoutes');
@@ -38,16 +39,16 @@ const loginController = require("./controllers/loginController");
 const mainController = require("./controllers/mainController");
 const detailedController = require("./controllers/detailedController");
 const oldProfileController = require("./controllers/oldProfileController");
-const youngProfileController = require('./controllers/youngProfileController'); // 68 추가
+const youngProfileController = require('./controllers/youngProfileController'); //68 추가
 const reportController=require("./controllers/reportController.js");
 const app = express();
 app.set("port", process.env.PORT || 8080);
 
-// EJS 설정 추가
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, 'views'));
 
-// 모델 관계 설정
+//모델 관계 설정
 const models = [
   require("./models/member"),
   require("./models/studentProfile"),
@@ -65,7 +66,7 @@ const models = [
 
 const [Member, StudentProfile, ChatRoom, Message, SeniorProfile, Matching, Promise, Review, InterestField, Report, Keep, MemberChatRoom] = models;
 
-// 모델 관계 설정
+//모델 관계 설정
 Member.hasOne(StudentProfile, { foreignKey: "memberNum" });
 StudentProfile.belongsTo(Member, { foreignKey: "memberNum" });
 
@@ -83,20 +84,20 @@ Message.belongsTo(ChatRoom, { foreignKey: "roomNum" });
 Message.belongsTo(Member, { as: 'Sender', foreignKey: 'senderNum' });
 Message.belongsTo(Member, { as: 'Receiver', foreignKey: 'receiverNum' });
 
-// 학생 - 약속 - 노인 (N:M)
+//학생 - 약속 - 노인 (N:M)
 StudentProfile.belongsToMany(SeniorProfile, { through: Promise, foreignKey: "stdNum" });
 SeniorProfile.belongsToMany(StudentProfile, { through: Promise, foreignKey: "seniorNum" });
-// 매칭 - 약속 관계 (1:1)
+//매칭 - 약속 관계 (1:1)
 Promise.hasOne(Matching, { foreignKey: 'promiseNum' });
 Matching.belongsTo(Promise, { foreignKey: 'promiseNum' });
-// 매칭 - 후기 관계 (1:N)
+//매칭 - 후기 관계 (1:N)
 Matching.hasMany(Review, { foreignKey: 'matchingNum' });
 Review.belongsTo(Matching, { foreignKey: 'matchingNum' });
 
 app.use(methodOverride("_method", { methods: ["POST", "GET"] }));
 app.use(express.json());
 
-// 이미지 업로드
+//이미지 업로드
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -107,7 +108,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// 디렉토리가 존재하지 않으면 생성
+//디렉토리가 존재하지 않으면 생성
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
   console.log('업로드 디렉토리를 생성했습니다:', uploadDir);
@@ -116,7 +117,7 @@ if (!fs.existsSync(uploadDir)) {
 app.use('/uploads', express.static('uploads'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 세션
+//세션
 app.use(cookieParser("secretCuisine123"));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -135,7 +136,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// 라우트 설정
+//라우트 설정
 app.use('/', mainhomeRoutes);
 app.use('/filter', filterRoutes);
 app.get("/login", loginController.login);
@@ -145,13 +146,13 @@ app.get('/logout', loginController.logout);
 app.get("/Detail", detailedController.myDetail);
 app.get("/Detail/profile", detailedController.detail);
 app.get("/Detail/Senior", detailedController.oldDetail);
-app.use('/senior', seniorProfileRoutes); // 시니어 프로필 라우터 추가
+app.use('/senior', seniorProfileRoutes); //시니어 프로필 라우터 추가
 app.use('/Creation', creationRoutes);
-app.get("/Update/Senior", oldProfileController.modifiedSeniorProfile);
+app.get("/modified", modifiedController.modified);
+//app.get("/Update/Senior", oldProfileController.modifiedSeniorProfile);
 app.post("/Update/Senior", upload.single('profileImage'), oldProfileController.updateSeniorProfile);
 app.use("/student", studentProfileRoutes); // 68 수정
-app.use("/edit/student", youngProfileController.modifiedStudentProfile);
-app.use("/update/student", youngProfileController.updateStudentProfile);
+app.post("/edit/student", upload.single('profileImage'), youngProfileController.updateStudentProfile);
 app.get("/reportexample", (req, res) => {
     res.render("reportexample");
 });
@@ -169,13 +170,13 @@ app.use('/promiseTosn', promiseToSnRoutese)
 app.use('/promiseList', promiseListRoutes);
 app.use('/', appointmentRoutes);
 
-// 라우트 설정
-app.use('/', reportRoutes); // reportRoutes 추가
+//라우트 설정
+app.use('/', reportRoutes); //reportRoutes 추가
 
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 
-// 데이터베이스 동기화 및 서버 시작
+//데이터베이스 동기화 및 서버 시작
 const server = app.listen(app.get("port"), () => {
   console.log(`Server running at http://localhost:${app.get("port")}`);
 });

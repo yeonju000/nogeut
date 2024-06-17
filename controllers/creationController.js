@@ -21,11 +21,11 @@ async function fetchData(userID) {
 exports.create = async (req, res) => {
     try {
         if (req.session.user) {
-            const userType = req.session.userType; // Assume you have this stored in the session
+            const userType = req.session.userType;
             console.log('Creation page accessed by user:', req.session.user);
             res.render('nonProfile', { user: req.session.user, userType: userType });
         } else {
-            res.redirect('/login'); // Redirect to login page if the user is not logged in
+            res.redirect('/login');
         }
     } catch (error) {
         console.error('Internal Server Error:', error);

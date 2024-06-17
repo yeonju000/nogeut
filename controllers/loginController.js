@@ -28,7 +28,7 @@ exports.postLogin = async (req, res, next) => {
                         return next(err);
                     }
                     console.log('로그인 성공:', user);
-                    req.session.user = user; // 세션에 사용자 정보 저장
+                    req.session.user = user; //세션에 사용자 정보 저장
                     req.session.userID = user.memberNum;
                     req.session.userType = user.userType;
                     console.log("세션 아이디");
@@ -37,7 +37,7 @@ exports.postLogin = async (req, res, next) => {
                         res.redirect('/main');
                     } else {
                         console.log('프로필 생성 상태: false');
-                        res.redirect('/creation'); // 소문자로 통일
+                        res.redirect('/creation'); //소문자로 통일
                     }
                 });
             } else {

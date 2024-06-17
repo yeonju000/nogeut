@@ -1,18 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     const filterForm = document.getElementById('filterForm');
 
-    // Helper function to set the value of a hidden input
     function setHiddenValue(inputId, value) {
         document.getElementById(inputId).value = value;
     }
 
-    // Event listener for main nav items
     document.getElementById('a').addEventListener('click', function(event) {
         event.preventDefault();
         toggleDropdown('a-dropdown');
     });
 
-    // Generalized event listener for region and city dropdowns
     function addRegionEventListeners(regionClass, dropdownId) {
         document.querySelectorAll(`.${regionClass}`).forEach(item => {
             item.addEventListener('click', function(event) {
@@ -41,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Add event listeners for all regions
     addRegionEventListeners('a-seoul', 'seoul-dropdown');
     addRegionEventListeners('a-gyeonggi', 'gyeonggi-dropdown');
     addRegionEventListeners('a-busan', 'busan-dropdown');
@@ -58,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
     addRegionEventListeners('a-gyeongnam', 'gyeongnam-dropdown');
     addRegionEventListeners('a-jeju', 'jeju-dropdown');
 
-    // Event listener for gender dropdown items
     document.querySelectorAll('.b-item').forEach(item => {
         item.addEventListener('click', function(event) {
             event.preventDefault();
@@ -69,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Event listener for amount dropdown items
     document.querySelectorAll('.c-item').forEach(item => {
         item.addEventListener('click', function(event) {
             event.preventDefault();
@@ -84,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Event listener for day dropdown items
     document.querySelectorAll('.f-item').forEach(item => {
         item.addEventListener('click', function(event) {
             event.preventDefault();
@@ -95,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Event listener for time dropdown items
     document.querySelectorAll('.g-item').forEach(item => {
         item.addEventListener('click', function(event) {
             event.preventDefault();
@@ -105,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Function to toggle dropdown visibility
     function toggleDropdown(id) {
         const dropdown = document.getElementById(id);
         if (dropdown) {
@@ -113,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to ensure dropdown is visible
     function ensureDropdownVisible(id) {
         const dropdown = document.getElementById(id);
         if (dropdown) {
@@ -121,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to hide dropdown
     function hideDropdown(id) {
         const dropdown = document.getElementById(id);
         if (dropdown) {
@@ -129,12 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to toggle selected item
     function toggleSelectedItem(item) {
         item.classList.toggle('nav-selected');
     }
 
-    // Function to hide dropdown with delay
     function hideDropdownWithDelay(id, triggerClass) {
         setTimeout(() => {
             const dropdown = document.getElementById(id);
@@ -145,13 +132,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 200);
     }
 
-    // Add event listener to search button
     document.getElementById('searchButton').addEventListener('click', function() {
         updateHiddenInputs();
         filterForm.submit();
     });
 
-    // Function to update hidden inputs based on selected items
     function updateHiddenInputs() {
         document.getElementById('region').value = getSelectedText('a-item');
         document.getElementById('city').value = getSelectedText('seoul-item') || getSelectedText('gyeonggi-item');
@@ -161,7 +146,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('time').value = getSelectedText('g-item');
     }
 
-    // Function to get selected text from dropdown
 function getSelectedText(className) {
     const selectedItem = document.querySelector(`.${className}.nav-selected`);
     return selectedItem ? selectedItem.textContent.trim() : '';

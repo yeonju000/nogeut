@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const promiseListController = require("../controllers/promiseListController");
 
-//약속 목록
 router.get('/', promiseListController.showPromisesList);
 router.get('/matchingPromiseList', promiseListController.getMatchingPromises);
 router.get('/notMatchingPromiseList', promiseListController.getNotMatchingPromises);

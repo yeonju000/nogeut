@@ -12,7 +12,7 @@
     integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f"
     crossorigin="anonymous"></script>
   <script>
-    // 자기 소개에서 엔터 키를 <br> 태그로 대체하여 줄 바꿈을 유지
+    //자기 소개에서 엔터 키를 <br> 태그로 대체하여 줄 바꿈을 유지
     const selfIntroTextarea = document.querySelector('textarea[name="selfIntro"]');
     selfIntroTextarea.value = selfIntroTextarea.value.replace(/\n/g, '<br>');
   </script>
@@ -195,7 +195,7 @@
   </div>
   <script>
     function redirectToUpdate() {
-      window.location.href = '/edit/student'; // myPage에도 프로필 수정하기 기능이 있어서 둘 중 하나는 삭제 예정.
+      window.location.href = '/modified';
     }
   </script>
 </body>
